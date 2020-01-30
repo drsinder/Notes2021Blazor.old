@@ -1,0 +1,119 @@
+﻿@page "/"
+@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using System.Timers
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService _localStorage
+<h2 class="center">Welcome to Notes 2021 Blazor Edition <img src="/favicon.ico" width="32" /></h2>
+
+@if (model == null)
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <h5 class="center">
+        <span id="homepagetime">
+            @myTime
+        </span>
+    </h5>
+}
+
+@if (fileList == null || nameList == null)
+{
+    <p class="center"><em>Loading...</em></p>
+
+}
+else
+{
+    <AuthorizeView>
+        <Authorized Context="Outer">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-4 roundedgrayindexinput keep-center">
+                    <EditForm Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                            <p>
+                                <label>
+                                    <strong>Enter a NoteFile Name and press Enter:</strong>
+                                    <InputText @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
+                                </label>
+                            </p>
+                            or
+                            <InputSelect @bind-Value="dummyFile.Id" id="fileselect" class="btn btn-file dropdown-toggle form-control short-input" 
+
+                                         >
+                                <option value="0">-- Select a file --</option>
+                                @foreach (var item in fileList)
+                                    {
+                                    <option value=@item.Id>@item.NoteFileName</option>
+                                    }
+                            </InputSelect>
+                            <br />or
+                            <InputSelect @bind-Value="dummyFile.Id" id="nameselect" class="btn btn-title dropdown-toggle form-control short-input">
+                                <option value="0">-- Select a title --</option>
+                                @foreach (NoteFile item in nameList)
+                                    {
+                                    <option value=@item.Id.ToString()>@item.NoteFileTitle</option>
+                                    }
+                            </InputSelect>
+                    </EditForm>
+                </div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@functions {
+    private HomePageModel model;
+    private Timer myTimer;
+    private string myTime;
+    private List<NoteFile> fileList;
+    private List<NoteFile> nameList;
+    private NoteFile dummyFile = new NoteFile { Id = 0, NoteFileName = "", NoteFileTitle = "" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _localStorage.SetItemAsync("ArchiveId", 0);
+        await _localStorage.RemoveItemAsync("IsSearch");
+
+        HomePageModel model1 = await Http.GetJsonAsync<HomePageModel>("api/HomePageData");
+        myTime = model1.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongTimeString()
+            + " " + model1.TimeZone.Abbreviation + " - "
+            + model1.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongDateString();
+
+        model = model1;
+
+        myTimer = new Timer(1000);
+        myTimer.Elapsed += OnTimedEvent;
+        myTimer.AutoReset = true;
+        myTimer.Enabled = true;
+
+        fileList = model.NoteFiles.OrderBy(p => p.NoteFileName).ToList();
+        nameList = model.NoteFiles.OrderBy(p => p.NoteFileTitle).ToList();
+
+    }
+
+    protected void OnTimedEvent(Object source, ElapsedEventArgs e)
+    {
+        myTime = model.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongTimeString()
+            + " " + model.TimeZone.Abbreviation + " - "
+            + model.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongDateString();
+
+        this.StateHasChanged();
+    }
+
+    private void HandleValidSubmit()
+    {
+    }
+
+    private void FileHasChanged(int value)
+    {
+
+    }
+}
