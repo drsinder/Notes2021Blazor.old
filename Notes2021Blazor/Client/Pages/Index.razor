@@ -1,4 +1,5 @@
 ﻿@page "/"
+@layout IndexLayout
 @using Notes2021Blazor.Shared
 @using Blazored.LocalStorage
 @using System.Timers
@@ -6,81 +7,84 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
-<h2 class="center">Welcome to Notes 2021 Blazor Edition <img src="/favicon.ico" width="32" /></h2>
 
-@if (model == null)
-{
-    <p class="center"><em>Loading...</em></p>
-}
-else
-{
-    <h5 class="center">
-        <span id="homepagetime">
-            @myTime
-        </span>
-    </h5>
-}
+<div>
+    <h2 class="center">Welcome to Notes 2021 Blazor Edition <img src="/favicon.ico" width="32" /></h2>
 
-@if (fileList == null || nameList == null)
-{
-    <p class="center"><em>Loading...</em></p>
+    @if (model == null)
+    {
+        <p class="center"><em>Loading...</em></p>
+    }
+    else
+    {
+        <h5 class="center">
+            <span id="homepagetime">
+                @myTime
+            </span>
+        </h5>
+    }
 
-}
-else
-{
-    <AuthorizeView>
-        <Authorized Context="Outer">
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-4 roundedgrayindexinput keep-center">
-                    <EditForm Model="@dummyFile">
-                        <p>
-                            <label>
-                                <strong>Enter a NoteFile Name and press Enter:</strong>
-                                <InputText class="form-control short-input keep-center"
-                                           ValueChanged="@( (string val) => TextHasChanged(val) )"
-                                           Value="@dummyFile.NoteFileName"
-                                           ValueExpression="@( () => dummyFile.NoteFileName )"/>
-                            </label>
-                        </p>
-                        or
-                        <InputSelect id="fileselect" class="btn btn-file dropdown-toggle form-control short-input"
-                                     ValueChanged="@( (int val) => FileHasChanged(val) )"
-                                     Value="@dummyFile.Id"
-                                     ValueExpression="@( () => dummyFile.Id )">
-                            <option value="0">-- Select a file --</option>
-                            @foreach (var item in fileList)
-                            {
-                                <option value=@item.Id>@item.NoteFileName</option>
-                            }
-                        </InputSelect>
-                        <br />or
-                        <InputSelect id="nameselect" class="btn btn-title dropdown-toggle form-control short-input"
-                                     ValueChanged="@( (int val) => TitleHasChanged(val) )"
-                                     Value="@dummyFile.Id"
-                                     ValueExpression="@( () => dummyFile.Id )">
-                            <option value="0">-- Select a title --</option>
-                            @foreach (var item in nameList)
+    @if (fileList == null || nameList == null)
+    {
+        <p class="center"><em>Loading...</em></p>
+
+    }
+    else
+    {
+        <AuthorizeView>
+            <Authorized Context="Outer">
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4 roundedgrayindexinput keep-center">
+                        <EditForm Model="@dummyFile">
+                            <p>
+                                <label>
+                                    <strong>Enter a NoteFile Name and press Enter:</strong>
+                                    <InputText class="form-control short-input keep-center"
+                                               ValueChanged="@( (string val) => TextHasChanged(val) )"
+                                               Value="@dummyFile.NoteFileName"
+                                               ValueExpression="@( () => dummyFile.NoteFileName )" />
+                                </label>
+                            </p>
+                            or select a file<br />
+                            <InputSelect class="btn btn-file dropdown-toggle form-control short-input"
+                                         ValueChanged="@( (string val) => TextHasChanged(val) )"
+                                         Value="@dummyFile.NoteFileName"
+                                         ValueExpression="@( () => dummyFile.NoteFileName )">
+                                <option value="InHereBeTigers" selected>-- Select a file --</option>
+                                @foreach (var item in fileList)
                                 {
-                                <option value=@item.Id.ToString()>@item.NoteFileTitle</option>
+                                    <option value=@item.NoteFileName>@item.NoteFileName</option>
                                 }
-                         </InputSelect>
-                    </EditForm>
+                            </InputSelect>
+                            <br />or select a title<br />
+                            <InputSelect class="btn btn-title dropdown-toggle form-control short-input"
+                                         ValueChanged="@( (string val) => TextHasChanged(val) )"
+                                         Value="@dummyFile.NoteFileName"
+                                         ValueExpression="@( () => dummyFile.NoteFileName )">
+                                <option value="InHereBeTigers" selected>-- Select a title --</option>
+                                @foreach (var item in nameList)
+                                {
+                                    <option value=@item.NoteFileName>@item.NoteFileTitle</option>
+                                }
+                            </InputSelect>
+                        </EditForm>
+                    </div>
                 </div>
-            </div>
-        </Authorized>
-        <NotAuthorized>
-        </NotAuthorized>
-    </AuthorizeView>
-}
+            </Authorized>
+            <NotAuthorized>
+            </NotAuthorized>
+        </AuthorizeView>
+    }
+</div>
 
 @functions {
     private HomePageModel model;
     private Timer myTimer;
     private string myTime;
-    private List<localFile> fileList = new List<localFile>();
-    private List<localFile> nameList = new List<localFile>();
-    private localFile dummyFile = new localFile { Id = 0, NoteFileName = " ", NoteFileTitle = " " };
+    [Parameter] public List<localFile> fileList { get; set; }
+    [Parameter] public List<localFile> nameList { get; set; }
+    [Parameter] public localFile dummyFile { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -93,12 +97,16 @@ else
             + model1.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongDateString();
 
 
-        myTimer = new Timer(10000);
+        myTimer = new Timer(1000);
         myTimer.Elapsed += OnTimedEvent;
         myTimer.AutoReset = true;
         myTimer.Enabled = true;
 
         model = model1;
+
+        dummyFile = new localFile { Id = 0, NoteFileName = " ", NoteFileTitle = " " };
+        fileList = new List<localFile>();
+        nameList = new List<localFile>();
 
         List<NoteFile> fileList1 = model.NoteFiles.OrderBy(p => p.NoteFileName).ToList();
         List<NoteFile> nameList1 = model.NoteFiles.OrderBy(p => p.NoteFileTitle).ToList();
@@ -122,24 +130,33 @@ else
         this.StateHasChanged();
     }
 
-    private void FileHasChanged(int value)
-    {
-        myTime = value.ToString();
-    }
-
-    private void TitleHasChanged(int value)
-    {
-        myTime = value.ToString();
-    }
-
     private void TextHasChanged(string value)
     {
-        myTime = value;
+        value = value.Trim().Replace("'\n", "").Replace("'\r", "");
+
+        try
+        {
+            foreach (var item in fileList)
+            {
+                if (value == item.NoteFileName)
+                {
+                    myTime = value + " - " + item.NoteFileTitle + " - " + item.Id;
+
+
+                    return;  // goto notefile
+                }
+            }
+        }
+        catch
+        { }
+
+
+
     }
 
 }
 
-@code { 
+@code {
 
     public class localFile
     {
