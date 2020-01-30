@@ -33,33 +33,38 @@ else
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-4 roundedgrayindexinput keep-center">
-                    <EditForm Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
-                            <p>
-                                <label>
-                                    <strong>Enter a NoteFile Name and press Enter:</strong>
-                                    <InputText @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
-                                </label>
-                            </p>
-                            or
-                            <InputSelect @bind-Value="dummyFile.Id" id="fileselect" class="btn btn-file dropdown-toggle form-control short-input" 
-
-                                         >
-                                <option value="0">-- Select a file --</option>
-                                @foreach (var item in fileList)
-                                    {
-                                    <option value=@item.Id>@item.NoteFileName</option>
-                                    }
-                            </InputSelect>
-                            <br />or
-                            <InputSelect @bind-Value="dummyFile.Id" id="nameselect" class="btn btn-title dropdown-toggle form-control short-input">
-                                <option value="0">-- Select a title --</option>
-                                @foreach (NoteFile item in nameList)
-                                    {
-                                    <option value=@item.Id.ToString()>@item.NoteFileTitle</option>
-                                    }
-                            </InputSelect>
+                    <EditForm Model="@dummyFile">
+                        <p>
+                            <label>
+                                <strong>Enter a NoteFile Name and press Enter:</strong>
+                                <InputText class="form-control short-input keep-center"
+                                           ValueChanged="@( (string val) => TextHasChanged(val) )"
+                                           Value="@dummyFile.NoteFileName"
+                                           ValueExpression="@( () => dummyFile.NoteFileName )"/>
+                            </label>
+                        </p>
+                        or
+                        <InputSelect id="fileselect" class="btn btn-file dropdown-toggle form-control short-input"
+                                     ValueChanged="@( (int val) => FileHasChanged(val) )"
+                                     Value="@dummyFile.Id"
+                                     ValueExpression="@( () => dummyFile.Id )">
+                            <option value="0">-- Select a file --</option>
+                            @foreach (var item in fileList)
+                            {
+                                <option value=@item.Id>@item.NoteFileName</option>
+                            }
+                        </InputSelect>
+                        <br />or
+                        <InputSelect id="nameselect" class="btn btn-title dropdown-toggle form-control short-input"
+                                     ValueChanged="@( (int val) => TitleHasChanged(val) )"
+                                     Value="@dummyFile.Id"
+                                     ValueExpression="@( () => dummyFile.Id )">
+                            <option value="0">-- Select a title --</option>
+                            @foreach (var item in nameList)
+                                {
+                                <option value=@item.Id.ToString()>@item.NoteFileTitle</option>
+                                }
+                         </InputSelect>
                     </EditForm>
                 </div>
             </div>
@@ -73,9 +78,9 @@ else
     private HomePageModel model;
     private Timer myTimer;
     private string myTime;
-    private List<NoteFile> fileList;
-    private List<NoteFile> nameList;
-    private NoteFile dummyFile = new NoteFile { Id = 0, NoteFileName = "", NoteFileTitle = "" };
+    private List<localFile> fileList = new List<localFile>();
+    private List<localFile> nameList = new List<localFile>();
+    private localFile dummyFile = new localFile { Id = 0, NoteFileName = " ", NoteFileTitle = " " };
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,15 +92,24 @@ else
             + " " + model1.TimeZone.Abbreviation + " - "
             + model1.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongDateString();
 
-        model = model1;
 
-        myTimer = new Timer(1000);
+        myTimer = new Timer(10000);
         myTimer.Elapsed += OnTimedEvent;
         myTimer.AutoReset = true;
         myTimer.Enabled = true;
 
-        fileList = model.NoteFiles.OrderBy(p => p.NoteFileName).ToList();
-        nameList = model.NoteFiles.OrderBy(p => p.NoteFileTitle).ToList();
+        model = model1;
+
+        List<NoteFile> fileList1 = model.NoteFiles.OrderBy(p => p.NoteFileName).ToList();
+        List<NoteFile> nameList1 = model.NoteFiles.OrderBy(p => p.NoteFileTitle).ToList();
+
+        for (int i = 0; i < fileList1.Count; i++)
+        {
+            localFile work = new localFile { Id = fileList1[i].Id, NoteFileName = fileList1[i].NoteFileName, NoteFileTitle = fileList1[i].NoteFileTitle };
+            localFile work2 = new localFile { Id = nameList1[i].Id, NoteFileName = nameList1[i].NoteFileName, NoteFileTitle = nameList1[i].NoteFileTitle };
+            fileList.Add(work);
+            nameList.Add(work2);
+        }
 
     }
 
@@ -108,12 +122,31 @@ else
         this.StateHasChanged();
     }
 
-    private void HandleValidSubmit()
-    {
-    }
-
     private void FileHasChanged(int value)
     {
+        myTime = value.ToString();
+    }
+
+    private void TitleHasChanged(int value)
+    {
+        myTime = value.ToString();
+    }
+
+    private void TextHasChanged(string value)
+    {
+        myTime = value;
+    }
+
+}
+
+@code { 
+
+    public class localFile
+    {
+        public int Id { get; set; }
+        public string NoteFileName { get; set; }
+        public string NoteFileTitle { get; set; }
 
     }
+
 }
