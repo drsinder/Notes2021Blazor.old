@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.AspNetCore.Identity;
 using System;
+using Blazored.Modal;
 
 namespace Notes2021Blazor.Client
 {
@@ -11,6 +12,7 @@ namespace Notes2021Blazor.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddBlazoredModal();
             services.AddBlazoredLocalStorage();
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
