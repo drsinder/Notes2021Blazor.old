@@ -1,0 +1,25 @@
+﻿@page "/notes/main"
+@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService _localStorage
+@inject NavigationManager NavigationManager
+
+<h1>Main Notes Index for ID = @fileId</h1>
+
+@code {
+
+    private int fileId { get; set; }
+    private int archiveID { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        fileId = await _localStorage.GetItemAsync<int>("FileId");
+        archiveID = await _localStorage.GetItemAsync<int>("ArchiveId");
+
+
+    }
+
+}

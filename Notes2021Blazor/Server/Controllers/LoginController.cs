@@ -38,7 +38,7 @@ namespace Notes2021Blazor.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
-            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
 
             if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
 

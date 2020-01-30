@@ -1,0 +1,32 @@
+﻿@page "/notes/enter/{fileId}"
+@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService _localStorage
+@inject NavigationManager NavigationManager
+
+<h3>Enter Id = @fileId - @Id</h3>
+
+@code {
+    [Parameter]
+    public string fileId { get; set; }
+
+    private int Id { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Id = int.Parse(fileId);
+
+        await _localStorage.SetItemAsync("FileId", Id);
+        await _localStorage.SetItemAsync("ArchiveId", 0);
+        await _localStorage.RemoveItemAsync("IsSearch");
+
+        NavigationManager.NavigateTo("/notes/main");
+
+        return;
+    }
+
+
+}

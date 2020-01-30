@@ -201,12 +201,20 @@ app {
     float: right;
 }
 
+.keep-left {
+    float: left;
+}
+
 .keep-center {
     text-align: center;
 }
 
 .short-input {
     width: 280px;
+}
+
+.checkbox {
+    width: 30px;
 }
 
 .long-input {

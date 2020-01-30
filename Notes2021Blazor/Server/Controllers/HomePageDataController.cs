@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Notes2021Blazor.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
-using Blazored.LocalStorage;
 
 namespace Notes2021Blazor.Server.Controllers
 {

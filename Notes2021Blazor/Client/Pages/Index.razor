@@ -3,10 +3,11 @@
 @using Notes2021Blazor.Shared
 @using Blazored.LocalStorage
 @using System.Timers
-@inject HttpClient Http
 @using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
+@inject NavigationManager NavigationManager
 
 <div>
     <h2 class="center">Welcome to Notes 2021 Blazor Edition <img src="/favicon.ico" width="32" /></h2>
@@ -37,7 +38,7 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-4 roundedgrayindexinput keep-center">
                         <EditForm Model="@dummyFile">
-                            <p>
+                            <p class="keep-center">
                                 <label>
                                     <strong>Enter a NoteFile Name and press Enter:</strong>
                                     <InputText class="form-control short-input keep-center"
@@ -51,7 +52,7 @@
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
                                          ValueExpression="@( () => dummyFile.NoteFileName )">
-                                <option value="InHereBeTigers" selected>-- Select a file --</option>
+                                @*<option value="InHereBeTigers" selected>-- Select a file --</option>*@
                                 @foreach (var item in fileList)
                                 {
                                     <option value=@item.NoteFileName>@item.NoteFileName</option>
@@ -62,7 +63,7 @@
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
                                          ValueExpression="@( () => dummyFile.NoteFileName )">
-                                <option value="InHereBeTigers" selected>-- Select a title --</option>
+                                @*<option value="InHereBeTigers" selected>-- Select a title --</option>*@
                                 @foreach (var item in nameList)
                                 {
                                     <option value=@item.NoteFileName>@item.NoteFileTitle</option>
@@ -70,6 +71,39 @@
                             </InputSelect>
                         </EditForm>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Important Files</h4>
+                        <ul>
+                            @foreach (localFile x in impfileList)
+                            {
+                                string val = x.NoteFileName + " - " + x.NoteFileTitle;
+                                <li>
+                                    <strong>
+                                        <a href="notes\enter\@x.Id">@val</a>
+                                    </strong>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>History Files</h4>
+                        <ul>
+                            @foreach (localFile x in histfileList)
+                            {
+                                string val = x.NoteFileName + " - " + x.NoteFileTitle;
+                                <li>
+                                    <strong>
+                                        <a href="notes/enter/@x.Id">@val</a>
+                                    </strong>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
                 </div>
             </Authorized>
             <NotAuthorized>
@@ -85,6 +119,8 @@
     [Parameter] public List<localFile> fileList { get; set; }
     [Parameter] public List<localFile> nameList { get; set; }
     [Parameter] public localFile dummyFile { get; set; }
+    [Parameter] public List<localFile> impfileList { get; set; }
+    [Parameter] public List<localFile> histfileList { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,9 +143,13 @@
         dummyFile = new localFile { Id = 0, NoteFileName = " ", NoteFileTitle = " " };
         fileList = new List<localFile>();
         nameList = new List<localFile>();
+        histfileList = new List<localFile>();
+        impfileList = new List<localFile>();
+
 
         List<NoteFile> fileList1 = model.NoteFiles.OrderBy(p => p.NoteFileName).ToList();
         List<NoteFile> nameList1 = model.NoteFiles.OrderBy(p => p.NoteFileTitle).ToList();
+
 
         for (int i = 0; i < fileList1.Count; i++)
         {
@@ -117,6 +157,13 @@
             localFile work2 = new localFile { Id = nameList1[i].Id, NoteFileName = nameList1[i].NoteFileName, NoteFileTitle = nameList1[i].NoteFileTitle };
             fileList.Add(work);
             nameList.Add(work2);
+
+            string fname = work.NoteFileName;
+            if (fname == "Opbnotes" || fname == "Gnotes")
+                histfileList.Add(work);
+
+            if (fname == "announce" || fname == "pbnotes" || fname == "noteshelp")
+                impfileList.Add(work);
         }
 
     }
@@ -140,10 +187,8 @@
             {
                 if (value == item.NoteFileName)
                 {
-                    myTime = value + " - " + item.NoteFileTitle + " - " + item.Id;
-
-
-                    return;  // goto notefile
+                    NavigationManager.NavigateTo("notes/enter/" + item.Id);
+                    return;
                 }
             }
         }
