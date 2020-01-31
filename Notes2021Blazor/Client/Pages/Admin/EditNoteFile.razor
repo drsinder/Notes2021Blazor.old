@@ -40,7 +40,7 @@ else
         <Authorized Context="Other">
             <div>
                 <div class="roundedgrayindexinput">
-                    <h3>Create Note File:</h3>
+                    <h3>Edit Note File:</h3>
 
                     <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
                         <DataAnnotationsValidator />
@@ -64,21 +64,40 @@ else
     public CreateFileModel dummyFile = new CreateFileModel();
 
     int FileId { get; set; }
+    string fileName { get; set; }
+    string fileTitle { get; set; }
+    string owner { get; set; }
+    DateTime lastEdited { get; set; }
+    int numArchives { get; set; }
 
     [CascadingParameter] ModalParameters Parameters { get; set; }
     protected override void OnInitialized()
     {
         FileId = Parameters.Get<int>("FileId");
+        fileName = Parameters.Get<string>("FileName");
+        fileTitle = Parameters.Get<string>("FileTitle");
+        lastEdited = Parameters.Get<DateTime>("LastEdited");
+        owner = Parameters.Get<string>("Owner");
+        numArchives = Parameters.Get<int>("NumberArchives");
+
+        dummyFile.NoteFileName = fileName;
+        dummyFile.NoteFileTitle = fileTitle;
     }
 
     private async Task HandleValidSubmit()
     {
+        NoteFile nf = new NoteFile
+        {
+            Id = FileId,
+            NumberArchives = numArchives,
+            OwnerId = owner,
+            NoteFileName = dummyFile.NoteFileName,
+            NoteFileTitle = dummyFile.NoteFileTitle,
+            LastEdited = lastEdited
+        };
 
-        CreateFileModel crm = new CreateFileModel { NoteFileName = dummyFile.NoteFileName, NoteFileTitle = dummyFile.NoteFileTitle };
-
-        await Http.PostJsonAsync("api/NoteFileAdmin", crm);
+        await Http.PutJsonAsync("api/NoteFileAdmin", nf);
 
         ModalService.Close(ModalResult.Ok($"Create was submitted successfully."));
     }
-
 }

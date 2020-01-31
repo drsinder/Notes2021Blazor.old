@@ -23,12 +23,17 @@
                 @myTime
             </span>
         </h5>
+
+        @if (model.Message != null && !string.IsNullOrEmpty(model.Message.Message))
+        {
+            <h5 class="keep-center">@model.Message.Message</h5>
+        }
     }
+
 
     @if (fileList == null || nameList == null)
     {
         <p class="center"><em>Loading...</em></p>
-
     }
     else
     {
@@ -38,7 +43,7 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-4 roundedgrayindexinput keep-center">
                         <EditForm Model="@dummyFile">
-                            <p class="keep-center">
+                            <p>
                                 <label>
                                     <strong>Enter a NoteFile Name and press Enter:</strong>
                                     <InputText class="form-control short-input keep-center"
@@ -194,11 +199,7 @@
         }
         catch
         { }
-
-
-
     }
-
 }
 
 @code {

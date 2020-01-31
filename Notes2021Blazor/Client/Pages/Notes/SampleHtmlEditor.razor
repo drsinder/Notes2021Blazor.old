@@ -1,0 +1,43 @@
+﻿@using Blazored.TextEditor
+<BlazoredTextEditor @ref="@QuillHtml">
+    <ToolbarContent>
+        <select class="ql-header">
+            <option selected=""></option>
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+            <option value="4"></option>
+            <option value="5"></option>
+        </select>
+        <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-link"></button>
+        </span>
+    </ToolbarContent>
+    <EditorContent>
+        <h4>This Toolbar works with HTML</h4>
+        <a href="http://BlazorHelpWebsite.com">
+            BlazorHelpWebsite.com
+        </a>
+    </EditorContent>
+</BlazoredTextEditor>
+@code {
+    BlazoredTextEditor QuillHtml;
+    string QuillHTMLContent;
+    string QuillContent;
+
+
+}

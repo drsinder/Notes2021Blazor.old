@@ -1,0 +1,72 @@
+﻿@*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2020, Dale Sinder
+    **
+    **  Name: NoteFileDetails.razor
+    **
+    **  Description:
+    **      Note File Details Dialog
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http: //www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------*@
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Net.Http
+@using Notes2021Blazor.Shared
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IModalService ModalService
+
+<AuthorizeView Roles="Admin">
+    <Authorized Context="Other">
+        <div>
+            <div class="roundedgray">
+                <h3>Note File Id: @FileId</h3>
+                <h4>File Name: @fileName</h4>
+                <h4>Title: @fileTitle</h4>
+                <h4>Archives: @numArchives</h4>
+                <h4>Last Edited: @lastEdited GMT</h4>
+                <h4>Owner: @owner</h4>
+             </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        Access denied.
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+    public CreateFileModel dummyFile = new CreateFileModel();
+
+    int FileId { get; set; }
+    string fileName { get; set; }
+    string fileTitle { get; set; }
+    string owner { get; set; }
+    DateTime lastEdited { get; set; }
+    int numArchives { get; set; }
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+    protected override void OnInitialized()
+    {
+        FileId = Parameters.Get<int>("FileId");
+        fileName = Parameters.Get<string>("FileName");
+        fileTitle = Parameters.Get<string>("FileTitle");
+        lastEdited = Parameters.Get<DateTime>("LastEdited");
+        owner = Parameters.Get<string>("Owner");
+        numArchives = Parameters.Get<int>("NumberArchives");
+    }
+}

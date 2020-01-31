@@ -2,10 +2,10 @@
     **
     **  Copyright (c) 2020, Dale Sinder
     **
-    **  Name: CreateNoteFile.razor
+    **  Name: DeleteNoteFile.razor
     **
     **  Description:
-    **      Note File Creation Dialog
+    **      Note File Deletion Dialog
     **
     **  This program is free software: you can redistribute it and/or modify
     **  it under the terms of the GNU General Public License version 3 as
@@ -29,56 +29,46 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IModalService ModalService
 
-
-@if (dummyFile == null)
-{
-    <p class="center"><em>Loading...</em></p>
-}
-else
-{
-    <AuthorizeView Roles="Admin">
-        <Authorized Context="Other">
-            <div>
-                <div class="roundedgrayindexinput">
-                    <h3>Create Note File:</h3>
-
-                    <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
-                        <strong>Enter a NoteFile Name:</strong>
-                        <InputText id="name" @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
-                        <strong>Enter a NoteFile Title:</strong>
-                        <InputText id="title" @bind-Value="dummyFile.NoteFileTitle" class="form-control short-input keep-center" />
-                        <button type="submit">Submit</button>
-                    </EditForm>
-                </div>
+<AuthorizeView Roles="Admin">
+    <Authorized Context="Other">
+        <div>
+            <div class="roundedgrayindexinput">
+                <h3>Delete Note File Id: @FileId</h3>
+                <h4>@fileName</h4>
+                <h4>@fileTitle</h4>
+                <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
+                    <button type="submit">Confirm</button>
+                </EditForm>
             </div>
-        </Authorized>
-        <NotAuthorized>
-            Access denied.
-        </NotAuthorized>
-    </AuthorizeView>
-}
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        Access denied.
+    </NotAuthorized>
+</AuthorizeView>
+
+
 @code {
 
     public CreateFileModel dummyFile = new CreateFileModel();
 
     int FileId { get; set; }
+    string fileName { get; set; }
+    string fileTitle { get; set; }
 
     [CascadingParameter] ModalParameters Parameters { get; set; }
     protected override void OnInitialized()
     {
         FileId = Parameters.Get<int>("FileId");
+        fileName = Parameters.Get<string>("FileName");
+        fileTitle = Parameters.Get<string>("FileTitle");
     }
 
     private async Task HandleValidSubmit()
     {
+        await Http.DeleteAsync("api/NoteFileAdmin/" + FileId);
 
-        CreateFileModel crm = new CreateFileModel { NoteFileName = dummyFile.NoteFileName, NoteFileTitle = dummyFile.NoteFileTitle };
-
-        await Http.PostJsonAsync("api/NoteFileAdmin", crm);
-
-        ModalService.Close(ModalResult.Ok($"Create was submitted successfully."));
+        ModalService.Close(ModalResult.Ok($"Delete was submitted successfully."));
     }
 
 }

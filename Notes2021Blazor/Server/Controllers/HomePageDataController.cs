@@ -34,7 +34,18 @@ namespace Notes2021Blazor.Server.Controllers
 
             model.TimeZone = _db.TZone.Single(p => p.Id == Globals.TimeZoneDefaultID);
             model.Message = _db.HomePageMessage.FirstOrDefault();
-            model.NoteFiles = _db.NoteFile.OrderBy(p => p.NoteFileName).ToList();
+            model.NoteFiles = _db.NoteFile                
+                .OrderBy(p => p.NoteFileName).ToList();
+
+            List<UserData> udl = _db.UserData.ToList();
+
+            foreach (NoteFile nf in model.NoteFiles)
+            {
+                UserData ud = udl.Find(p => p.UserId == nf.OwnerId);
+                ud.MyGuid = "";
+                ud.MyStyle = "";
+                nf.Owner = ud;
+            }
 
             try
             {

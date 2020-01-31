@@ -1,4 +1,28 @@
-﻿@page "/admin/notefiles"
+﻿@*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2020, Dale Sinder
+    **
+    **  Name: NoteFiles.razor
+    **
+    **  Description:
+    **      Admin list of notefiles
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http: //www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------*@
+
+@page "/admin/notefiles"
 
 @using Notes2021Blazor.Shared
 @using Blazored.LocalStorage
@@ -23,28 +47,28 @@ else
             @message
             @if (inDlg || true)
             {
-            <div class="modal-dialog-scrollable">
-                <BlazoredModal />
-            </div>
+                <div class="modal-dialog-scrollable">
+                    <BlazoredModal />
+                </div>
             }
             <p>
                 <button @onclick="@(() => CreateNoteFile(0))">Create Note File</button>
                 @*@if (todo.Contains("announce"))
-                {
-                    <button @onclick="CreateAnnounce" class="btn-file">Create Announce</button>
-                }
-                @if (todo.Contains("pbnotes"))
-                {
-                    <button @onclick="CreatePbnotes" class="btn-file">Create Pbnotes</button>
-                }
-                @if (todo.Contains("noteshelp"))
-                {
-                    <button @onclick="CreateNotesHelp" class="btn-file">Create Noteshelp</button>
-                }
-                @if (todo.Contains("pad"))
-                {
-                    <button @onclick="CreatePad" class="btn-file">Create Pad</button>
-                }*@
+                    {
+                        <button @onclick="CreateAnnounce" class="btn-file">Create Announce</button>
+                    }
+                    @if (todo.Contains("pbnotes"))
+                    {
+                        <button @onclick="CreatePbnotes" class="btn-file">Create Pbnotes</button>
+                    }
+                    @if (todo.Contains("noteshelp"))
+                    {
+                        <button @onclick="CreateNotesHelp" class="btn-file">Create Noteshelp</button>
+                    }
+                    @if (todo.Contains("pad"))
+                    {
+                        <button @onclick="CreatePad" class="btn-file">Create Pad</button>
+                    }*@
             </p>
             <table class="table">
                 <thead>
@@ -87,9 +111,9 @@ else
                                 @file.Id
                             </td>
                             <td>
-                                <a href="/admin/notefiles/edit/@file.Id">Edit</a> |
-                                <a href="/admin/notefiles/details/@file.Id">Details</a> |
-                                <a href="/admin/notefiles/delete/@file.Id">Delete</a>
+                                <button @onclick="@(() => EditNoteFile(file.Id))">Edit</button>
+                                <button @onclick="@(() => NoteFileDetails(file.Id))">Details</button>
+                                <button @onclick="@(() => DeleteNoteFile(file.Id))">Delete</button>
                             </td>
                         </tr>
                     }
@@ -143,7 +167,6 @@ else
         var parameters = new ModalParameters();
         parameters.Add("FileId", Id);
         Modal.OnClose += HideDialog;
-        //var options = new ModalOptions() { HideCloseButton = true };
         Modal.Show<CreateNoteFile>("", parameters);
     }
 
@@ -161,6 +184,61 @@ else
         message = modalResult.Data.ToString();
         this.StateHasChanged();
         NavigationManager.NavigateTo("/admin/notefiles2");
+    }
+
+    void HideDialog2(ModalResult modalResult)
+    {
+        inDlg = false;
+        Modal.OnClose -= HideDialog2;
+    }
+
+    void NoteFileDetails(int Id)
+    {
+
+        NoteFile file = files.Find(p => p.Id == Id);
+
+        inDlg = true;
+        var parameters = new ModalParameters();
+        parameters.Add("FileId", Id);
+        parameters.Add("FileName", file.NoteFileName);
+        parameters.Add("FileTitle", file.NoteFileTitle);
+        parameters.Add("LastEdited", file.LastEdited);
+        parameters.Add("NumberArchives", file.NumberArchives);
+        parameters.Add("Owner", file.Owner.DisplayName);
+        Modal.OnClose += HideDialog2;
+        Modal.Show<NoteFileDetails>("", parameters);
+    }
+
+    void EditNoteFile(int Id)
+    {
+
+        NoteFile file = files.Find(p => p.Id == Id);
+
+        inDlg = true;
+        var parameters = new ModalParameters();
+        parameters.Add("FileId", Id);
+        parameters.Add("FileName", file.NoteFileName);
+        parameters.Add("FileTitle", file.NoteFileTitle);
+        parameters.Add("LastEdited", file.LastEdited);
+        parameters.Add("NumberArchives", file.NumberArchives);
+        parameters.Add("Owner", file.OwnerId);
+        Modal.OnClose += HideDialog;
+        Modal.Show<EditNoteFile>("", parameters);
+    }
+
+    void DeleteNoteFile(int Id)
+    {
+
+        NoteFile file = files.Find(p => p.Id == Id);
+
+        inDlg = true;
+        this.StateHasChanged();
+        var parameters = new ModalParameters();
+        parameters.Add("FileId", Id);
+        parameters.Add("FileName", file.NoteFileName);
+        parameters.Add("FileTitle", file.NoteFileTitle);
+        Modal.OnClose += HideDialog;
+        Modal.Show<DeleteNoteFile>("", parameters);
     }
 
 
