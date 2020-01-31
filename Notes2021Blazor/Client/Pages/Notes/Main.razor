@@ -1,25 +1,230 @@
-﻿@page "/notes/main"
+﻿@page "/notes/main/{fileId}"
+@page "/notes/display/{fileId}"
 @using Notes2021Blazor.Shared
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
 @inject NavigationManager NavigationManager
 
-<h1>Main Notes Index for ID = @fileId</h1>
+@if (Model == null)
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <AuthorizeView Roles="User">
+        <Authorized>
+            @if (mode == 0)  // index mode
+            {
+                @if (!string.IsNullOrEmpty(message))
+                {
+                    <h3 class="text-center">@message</h3>
+                }
+                else
+                {
 
-@code {
+                    <h3 class="text-center">@Model.noteFile.NoteFileName - @Model.noteFile.NoteFileTitle </h3>
+                    <h5>
+                        Last Edited - @Model.tZone.Local(@Model.noteFile.LastEdited) @Model.tZone.Abbreviation <span class="keep-right">
+                            Base Notes - @basenoteCount&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span>
+                    </h5>
+                    <ListMenu Model="@Model" />
+                    <table class="table">
+                        <tr>
+                            <th>#</th>
+                            <th>Subject</th>
+                            <th>Writer</th>
+                            <th>Date/Time</th>
+                            <th>Responses</th>
+                            <th></th>
+                        </tr>
+                        @if (@Model.myAccess.ReadAccess)
+                        {
+                            string path = Model.rPath;
+                            foreach (var item in Model.Notes)
+                            {
+                                if (true || Model.ExpandOrdinal != item.NoteOrdinal)
+                                {
+                                    <tr class="noteindex">
+                                        <td><a href="/notes/display/@item.Id">@item.NoteOrdinal</a></td>
+                                        <td><a href="/notes/display/@item.Id">@item.NoteSubject</a></td>
+                                        <td><a href="/notes/display/@item.Id">@item.AuthorName</a></td>
+                                        <td><a href="/notes/display/@item.Id">@Model.tZone.Local(@item.CreateDate) @Model.tZone.Abbreviation</a></td>
 
-    private int fileId { get; set; }
+                                        @if (item.ResponseCount > 0)
+                                        {
+                                            <td><a href="/notes/display/@item.Id">@item.ResponseCount</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                        <td>
+                                            <a href="/notes/display/@item.Id">View</a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+                        }
+                    </table>
+                    <ListMenu Model="@Model" />
+                    <div class="arrow1">
+                        <div>
+                            <EditForm Model="@myInput" Context="EditBox">
+                                <InputText autofocus="@myInput.isAutoFocus"
+                                           ValueChanged="@( (string val) => TextHasChanged(val) )"
+                                           Value="@myInput.typedValue"
+                                           ValueExpression="@( () => myInput.typedValue )" />
+                            </EditForm>
+
+
+                            <input type="text" id="fileID" name="fileid" value=@Model.noteFile.Id hidden />
+                            @*<input type="text" @ref="maininput" id="typedInput" name="typedInput" autofocus autocomplete="off" style="width: 80px" tabindex="0" />*@
+                            <input type="submit" value="Navigate" class="btn btn-sm" /> b# | b#.r#
+                        </div>
+                    </div>
+                }
+            }
+            else // note display mode
+            {
+                <DisplayPopup Model="Model" currentHeader="currentHeader" Id="Id" />
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p>Access Denied!</p>
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@functions {
+
+    [Parameter]
+    public string fileId { get; set; }
+
+    public long headerId { get; set; }
+    private int Id { get; set; }
     private int archiveID { get; set; }
+    private NoteDisplayIndexModel Model { get; set; }
+    private long mode { get; set; }
+    private int basenoteCount { get; set; }
+    private string message;
+    private LocalInput myInput { get; set; }
+    private NoteHeader currentHeader { get; set; }
+    //private NoteContent currentContent { get; set; }
+    //private string respX { get; set; }
 
-    protected async override Task OnInitializedAsync()
+    protected async override Task OnParametersSetAsync()
     {
-        fileId = await _localStorage.GetItemAsync<int>("FileId");
-        archiveID = await _localStorage.GetItemAsync<int>("ArchiveId");
+        if (NavigationManager.Uri.Contains("display"))
+        {
+            headerId = long.Parse(fileId);
+            currentHeader = Model.Notes.Find(p => p.Id == headerId);
+
+            mode = currentHeader.Id;
+            this.StateHasChanged();
+        }
+        if (!NavigationManager.Uri.Contains("display"))
+        {
+            Id = int.Parse(fileId);
+            archiveID = await _localStorage.GetItemAsync<int>("ArchiveId");
+
+            mode = 0;  // index mode
+
+            myInput = new LocalInput();
+            myInput.isAutoFocus = true;
+
+            try
+            {
+                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + fileId);
+            }
+            catch (Exception ex)
+            {
+                Model = new NoteDisplayIndexModel { message = ex.Message };
+            }
+
+            if (Model == null)
+                message = "Model is null";
+
+            if (!string.IsNullOrEmpty(Model.message))
+                message = Model.message;
+
+            basenoteCount = Model.Notes.Count;
+        }
+    }
+
+    private void TextHasChanged(string typedInput)
+    {
+        typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "");
+
+        int fileId = Model.noteFile.Id;
+        int noteOrd = 1;
+        if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
+            return;
+
+        if (typedInput.Contains("."))
+        {
+            string[] splits = typedInput.Split(new[] { '.' });
+            if (splits.Length != 2)
+            {
+                return;
+            }
+            bool ax = !int.TryParse(splits[0], out noteOrd);
+            bool bx = !int.TryParse(splits[1], out var respOrd);
+            if (ax || bx)
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (!int.TryParse(typedInput, out noteOrd))
+            {
+                return;
+            }
+            if (noteOrd < 1 || noteOrd > Model.Notes.Count)
+            {
+                return;
+            }
+
+            currentHeader = Model.Notes[noteOrd - 1];
+            mode = currentHeader.Id;
+        }
+
+        this.StateHasChanged();
+    }
 
 
+    private void Done()
+    {
+        mode = 0;
+        NavigationManager.NavigateTo("/notes/main/" + Id);
+        this.StateHasChanged();
+    }
+
+    private void NoteClicked(MouseEventArgs x)
+    {
+        string z = x.Button.ToString();
+        message = "Clicked " + z;
+        this.StateHasChanged();
+    }
+
+
+    private void SetFocus()
+    {
+        message = "SetFocus";
+        this.StateHasChanged();
+    }
+
+    protected class LocalInput
+    {
+        [StringLength(10)]
+        public string typedValue { get; set; }
+        public bool isAutoFocus { get; set; }
     }
 
 }

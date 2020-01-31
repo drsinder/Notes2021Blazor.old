@@ -23,7 +23,7 @@
         await _localStorage.SetItemAsync("ArchiveId", 0);
         await _localStorage.RemoveItemAsync("IsSearch");
 
-        NavigationManager.NavigateTo("/notes/main");
+        NavigationManager.NavigateTo("/notes/main/" + fileId);
 
         return;
     }

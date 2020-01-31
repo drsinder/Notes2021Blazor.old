@@ -658,7 +658,7 @@ namespace Notes2021Blazor.Shared
 
         public static async Task<List<NoteHeader>> GetBaseNoteHeaders(NotesDbContext db, int id, int arcId)
         {
-            return await db.NoteHeader
+            return await db.NoteHeader 
                 .Where(p => p.NoteFileId == id && p.ArchiveId == arcId && p.ResponseOrdinal == 0)
                 .OrderBy(p => p.NoteOrdinal)
                 .ToListAsync();
@@ -837,9 +837,14 @@ namespace Notes2021Blazor.Shared
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
-            nf.NoteHeaders = await db.NoteHeader.Where(p => p.NoteFileId == id && p.ArchiveId == arcId).ToListAsync();
+            //nf.NoteHeaders = await db.NoteHeader.Where(p => p.NoteFileId == id && p.ArchiveId == arcId).ToListAsync();
 
             return nf;
+        }
+
+        public static async Task<List<NoteHeader>> GetAllHeaders(NotesDbContext db, int id, int arcId)
+        {
+            return await db.NoteHeader.Where(p => p.NoteFileId == id && p.ArchiveId == arcId).ToListAsync();
         }
 
         /// <summary>

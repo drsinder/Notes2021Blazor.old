@@ -1,0 +1,222 @@
+﻿@using Notes2021Blazor.Shared
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+@if (string.IsNullOrEmpty(curN))
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <h4 class="text-center">@Model.noteFile.NoteFileTitle</h4>
+    <hr id="premenu" />
+    <DisplayMenu Model="@Model" />
+    <div class="noteheader">
+        <p>
+            <span class="keep-right">Note: @currentHeader.NoteOrdinal @respX&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </p>
+
+        <h4>
+            Subject:@currentHeader.NoteSubject <br />
+            Author: @currentHeader.AuthorName &nbsp;&nbsp;&nbsp;@(Model.tZone.Local(currentHeader.LastEdited).ToLongDateString()) @(Model.tZone.Local(currentHeader.LastEdited).ToShortTimeString()) @Model.tZone.Abbreviation
+        </h4>
+    </div>
+    <div class="notebody">
+        @((MarkupString)currentContent.NoteBody)
+    </div>
+    <DisplayMenu Model="@Model" />
+    <button @onclick="Done">Done Reading</button>
+
+    <div class="arrow2">
+        <div>
+            <EditForm Model="@myInput" Context="EditBox">
+                <InputText autofocus="@myInput.isAutoFocus"
+                           ValueChanged="@( (string val) => TextHasChanged(val) )"
+                           Value="@myInput.typedValue"
+                           ValueExpression="@( () => myInput.typedValue )" /> #= <strong>@curN</strong>
+                    </EditForm>
+            
+            <br /><input type="submit" value="Navigate" class="btn btn-sm" /> b#.r#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-)b#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-).r#
+        </div>
+    </div>
+}
+
+@functions
+{
+    [Parameter] public NoteDisplayIndexModel Model { get; set; }
+    [Parameter] public NoteHeader currentHeader { get; set; }
+    [Parameter] public int Id { get; set; }
+
+    public string respX { get; set; }
+
+    public NoteContent currentContent { get; set; }
+
+    public List<Tags> tags;
+
+    string curN { get; set; }
+
+    LocalInput myInput { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        myInput = new LocalInput();
+        myInput.isAutoFocus = true;
+
+        currentContent = await Http.GetJsonAsync<NoteContent>("api/NoteContent/" + currentHeader.Id);
+
+        tags = await Http.GetJsonAsync<List<Tags>>("api/Tags/" + currentHeader.Id);
+
+        respX = "";
+        if (currentHeader.ResponseCount > 0)
+            respX = " - " + currentHeader.ResponseCount + " Responses ";
+
+        curN = "" + currentHeader.NoteOrdinal;
+        if (currentHeader.ResponseOrdinal > 0)
+        {
+            curN += "." + currentHeader.ResponseOrdinal;
+        }
+
+    }
+
+
+    private void Done()
+    {
+        NavigationManager.NavigateTo("/notes/main/" + Id);
+    }
+
+
+    private async Task TextHasChanged(string typedInput)
+    {
+        int fileId = Id;
+        int iOrd = currentHeader.NoteOrdinal;
+        int iResp = currentHeader.ResponseOrdinal;
+        long iNoteId = currentHeader.Id;
+        int noteOrd = 1;
+        NoteHeader nc;
+        NoteHeader bnh = Model.Notes.Find(p => p.Id == currentHeader.BaseNoteId);
+        bool ax = false;
+        bool plus = false;
+        bool minus = false;
+
+        if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
+        {
+            // next note
+            NoteHeader searcher = Model.AllNotes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal && p.ResponseOrdinal == currentHeader.ResponseOrdinal + 1);
+            if (searcher != null)  // found a response
+            {
+                nc = searcher;
+                bnh = Model.Notes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal);
+
+                goto beyond;
+            }
+            searcher = Model.Notes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal + 1);
+            if (searcher != null) // found a base
+            {
+                nc = bnh = searcher;
+                goto beyond;
+            }
+            Done();  // reached the end
+        }
+
+        if (typedInput.StartsWith("+"))
+            plus = true;
+        if (typedInput.StartsWith("-"))
+            minus = true;
+        typedInput = typedInput.Replace("+", "").Replace("-", "");
+
+        if (typedInput.Contains("."))
+        {
+            string[] splits = typedInput.Split(new[] { '.' });
+            if (splits.Length != 2)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(splits[0]) || string.IsNullOrWhiteSpace(splits[0]))
+                noteOrd = iOrd;
+            else
+                ax = !int.TryParse(splits[0], out noteOrd);
+            bool bx = !int.TryParse(splits[1], out var respOrd);
+            if (ax || bx)
+            {
+                return;
+            }
+
+            if (noteOrd == iOrd && (plus || minus))
+            {
+                if (plus)
+                    respOrd += iResp;
+                else
+                    respOrd = iResp - respOrd;
+
+                if (respOrd < 0)
+                    respOrd = 0;
+                bnh = Model.Notes.Find(p => p.NoteOrdinal == noteOrd);
+
+                if (respOrd > bnh.ResponseCount) respOrd = bnh.ResponseCount;
+            }
+
+            nc = Model.AllNotes.Find(p => p.NoteOrdinal == noteOrd && p.ResponseOrdinal == respOrd);
+        }
+        else
+        {
+            if (!int.TryParse(typedInput, out noteOrd))
+            {
+                return;
+            }
+
+            if (!plus && !minus && (noteOrd == 0))
+            {
+                Done();
+            }
+            if (plus)
+                noteOrd += iOrd;
+            else if (minus)
+                noteOrd = iOrd - noteOrd;
+
+            if (noteOrd < 1) noteOrd = 1;
+
+            long cnt = Model.AllNotes.LongCount();
+
+            if (noteOrd > cnt) noteOrd = (int)cnt;
+
+            nc = Model.Notes.Find(p => p.NoteOrdinal == noteOrd);
+            bnh = nc;
+        }
+
+        if (nc == null)
+        {
+            return;
+        }
+
+    beyond:
+
+        currentHeader = nc;
+
+        currentContent = await Http.GetJsonAsync<NoteContent>("api/NoteContent/" + currentHeader.Id);
+
+        tags = await Http.GetJsonAsync<List<Tags>>("api/Tags/" + currentHeader.Id);
+
+        respX = "";
+        if (currentHeader.ResponseOrdinal > 0)
+        {
+            respX = " - Response " + currentHeader.ResponseOrdinal + " of " + bnh.ResponseCount;
+        }
+        else if (bnh.ResponseCount > 0)
+            respX = " - " + bnh.ResponseCount + " Responses ";
+
+        curN = "" + bnh.NoteOrdinal;
+        if (currentHeader.ResponseOrdinal > 0)
+        {
+            curN += "." + currentHeader.ResponseOrdinal;
+        }
+
+        this.StateHasChanged();
+    }
+
+    protected class LocalInput
+    {
+        public string typedValue { get; set; }
+        public bool isAutoFocus { get; set; }
+    }
+
+}

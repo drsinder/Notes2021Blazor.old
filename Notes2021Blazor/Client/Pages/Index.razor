@@ -88,7 +88,7 @@
                                 string val = x.NoteFileName + " - " + x.NoteFileTitle;
                                 <li>
                                     <strong>
-                                        <a href="notes\enter\@x.Id">@val</a>
+                                        <a href="notes\main\@x.Id">@val</a>
                                     </strong>
                                 </li>
                             }
@@ -102,7 +102,7 @@
                                 string val = x.NoteFileName + " - " + x.NoteFileTitle;
                                 <li>
                                     <strong>
-                                        <a href="notes/enter/@x.Id">@val</a>
+                                        <a href="notes/main/@x.Id">@val</a>
                                     </strong>
                                 </li>
                             }
@@ -192,7 +192,7 @@
             {
                 if (value == item.NoteFileName)
                 {
-                    NavigationManager.NavigateTo("notes/enter/" + item.Id);
+                    NavigationManager.NavigateTo("notes/main/" + item.Id);
                     return;
                 }
             }

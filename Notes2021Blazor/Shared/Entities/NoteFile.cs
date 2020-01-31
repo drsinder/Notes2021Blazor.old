@@ -49,7 +49,7 @@ namespace Notes2021Blazor.Shared
         [PersonalData]
         public DateTime LastEdited { get; set; }
 
-        public List<NoteHeader> NoteHeaders { get; set; }
+        //public List<NoteHeader> NoteHeaders { get; set; }
 
     }
 }
