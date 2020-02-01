@@ -98,7 +98,7 @@ else
             }
             else // note display mode
             {
-                <DisplayPopup Model="Model" currentHeader="currentHeader" Id="Id" />
+                <DisplayPanel Model="Model" currentHeader="currentHeader" Id="Id" OnClick="ClickHandler"/>
             }
         </Authorized>
         <NotAuthorized>
@@ -123,6 +123,15 @@ else
     private NoteHeader currentHeader { get; set; }
     //private NoteContent currentContent { get; set; }
     //private string respX { get; set; }
+
+    void ClickHandler(string newMessage)
+    {
+        if (newMessage == "Done")
+        {
+            mode = 0;
+            this.StateHasChanged();
+        }
+    }
 
     protected async override Task OnParametersSetAsync()
     {
