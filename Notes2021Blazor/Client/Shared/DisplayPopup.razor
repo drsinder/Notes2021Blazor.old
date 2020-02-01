@@ -117,9 +117,10 @@ else
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
 
         if (typedInput == "Z")
-        {
             ShowHelp();
-        }
+
+        if (typedInput == "I")
+            NavigationManager.NavigateTo("/notes/main/" + fileId);
 
         if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
         {

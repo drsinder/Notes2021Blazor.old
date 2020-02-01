@@ -76,7 +76,9 @@ else
                             }
                         }
                     </table>
-                    <ListMenu Model="@Model" />
+                    <div class="lower-menu">
+                        <ListMenu Model="@Model" />
+                    </div>
                     <div class="arrow1">
                         <div>
                             <EditForm Model="@myInput" Context="EditBox">
@@ -167,6 +169,27 @@ else
 
         if (typedInput == "Z")
             ShowHelp();
+        if (typedInput == "N" && Model.myAccess.Write)
+            NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
+        if (typedInput == "X" && Model.myAccess.ReadAccess)
+            NavigationManager.NavigateTo("/notes/export/" + @Model.noteFile.Id);
+        if (typedInput == "H" && Model.myAccess.ReadAccess)
+            NavigationManager.NavigateTo("/notes/ashtml/" + @Model.noteFile.Id);
+        if (typedInput == "h" && Model.myAccess.ReadAccess)
+            NavigationManager.NavigateTo("/notes/ashtmlalt/" + @Model.noteFile.Id);
+        if (typedInput == "m" && Model.myAccess.ReadAccess)
+            NavigationManager.NavigateTo("/notes/mailfileashtml/" + @Model.noteFile.Id);
+        if (typedInput == "S" && Model.myAccess.ReadAccess)
+            NavigationManager.NavigateTo("/notes/searchfromindex/" + @Model.noteFile.Id);
+        if (typedInput == "M" && Model.myAccess.ReadAccess)
+            NavigationManager.NavigateTo("/notes/markmine/" + @Model.noteFile.Id);
+        if (typedInput == "O" && Model.isMarked && Model.myAccess.ReadAccess)
+            NavigationManager.NavigateTo("/notes/exportmarked/" + @Model.noteFile.Id);
+
+
+        if (typedInput == "A")
+            NavigationManager.NavigateTo("/notes/editaccess/" + @Model.noteFile.Id);
+
 
         int fileId = Model.noteFile.Id;
         int noteOrd = 1;
