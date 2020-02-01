@@ -1,6 +1,7 @@
 ﻿@using Notes2021Blazor.Shared
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@inject IModalService Modal
 
 @if (string.IsNullOrEmpty(curN))
 {
@@ -8,6 +9,9 @@
 }
 else
 {
+    <div class="modal-dialog-scrollable">
+        <BlazoredModal />
+    </div>
     <h4 class="text-center">@Model.noteFile.NoteFileTitle</h4>
     <hr id="premenu" />
     <DisplayMenu Model="@Model" />
@@ -35,11 +39,11 @@ else
                            Value="@myInput.typedValue"
                            ValueExpression="@( () => myInput.typedValue )" /> #= <strong>@curN</strong>
                     </EditForm>
-            
-            <br /><input type="submit" value="Navigate" class="btn btn-sm" /> b#.r#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-)b#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-).r#
-        </div>
-    </div>
-}
+
+                    <br /><input type="submit" value="Navigate" class="btn btn-sm" /> b#.r#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-)b#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-).r#
+                </div>
+            </div>
+        }
 
 @functions
 {
@@ -57,14 +61,18 @@ else
 
     LocalInput myInput { get; set; }
 
+    //ElementReference myTyper { get; set; }
+
     protected async override Task OnParametersSetAsync()
     {
         myInput = new LocalInput();
         myInput.isAutoFocus = true;
 
-        currentContent = await Http.GetJsonAsync<NoteContent>("api/NoteContent/" + currentHeader.Id);
+        DisplayModel dm = await Http.GetJsonAsync<DisplayModel>("api/NoteContent/" + currentHeader.Id);
 
-        tags = await Http.GetJsonAsync<List<Tags>>("api/Tags/" + currentHeader.Id);
+        currentContent = dm.content;
+        tags = dm.tags;
+
 
         respX = "";
         if (currentHeader.ResponseCount > 0)
@@ -77,6 +85,14 @@ else
         }
 
     }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        //await JSRuntime.InvokeVoidAsync("BlazorUniversity.setFocus", myTyper);
+    //    }
+    //}
 
 
     private void Done()
@@ -97,6 +113,13 @@ else
         bool ax = false;
         bool plus = false;
         bool minus = false;
+
+        typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
+
+        if (typedInput == "Z")
+        {
+            ShowHelp();
+        }
 
         if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
         {
@@ -192,9 +215,10 @@ else
 
         currentHeader = nc;
 
-        currentContent = await Http.GetJsonAsync<NoteContent>("api/NoteContent/" + currentHeader.Id);
+        DisplayModel dm = await Http.GetJsonAsync<DisplayModel>("api/NoteContent/" + currentHeader.Id);
 
-        tags = await Http.GetJsonAsync<List<Tags>>("api/Tags/" + currentHeader.Id);
+        currentContent = dm.content;
+        tags = dm.tags;
 
         respX = "";
         if (currentHeader.ResponseOrdinal > 0)
@@ -211,6 +235,18 @@ else
         }
 
         this.StateHasChanged();
+    }
+
+    private void ShowHelp()
+    {
+        var parameters = new ModalParameters();
+        Modal.OnClose += HideDialog;
+        Modal.Show<HelpDialog2>("", parameters);
+    }
+
+    void HideDialog(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialog;
     }
 
     protected class LocalInput

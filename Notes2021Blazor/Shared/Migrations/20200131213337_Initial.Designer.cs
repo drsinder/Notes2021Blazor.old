@@ -10,7 +10,7 @@ using Notes2021Blazor.Shared;
 namespace Notes2021Blazor.Shared.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    [Migration("20200129204739_Initial")]
+    [Migration("20200131213337_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace Notes2021Blazor.Shared.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2c8107c1-ea6a-42c3-9946-2b896e6658f1",
-                            ConcurrencyStamp = "8055858e-9e49-4647-89b9-4033857d1891",
+                            Id = "f48f34e7-64bf-4ffa-a417-47120e967e87",
+                            ConcurrencyStamp = "ab1385e8-18a5-4184-b937-73dc107f6f22",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "506a89d0-462c-4d4a-8dfe-9bdbd02c9917",
-                            ConcurrencyStamp = "55f51010-7386-4dfa-96df-2bc62b21dcc1",
+                            Id = "9598e6c0-6982-4c26-a5fe-4f5d21dc70ef",
+                            ConcurrencyStamp = "cde6b0ab-3fa5-4e90-ab6f-77f4aef0e44d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -2762,7 +2762,7 @@ namespace Notes2021Blazor.Shared.Migrations
             modelBuilder.Entity("Notes2021Blazor.Shared.NoteHeader", b =>
                 {
                     b.HasOne("Notes2021Blazor.Shared.NoteFile", "NoteFile")
-                        .WithMany("NoteHeaders")
+                        .WithMany()
                         .HasForeignKey("NoteFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

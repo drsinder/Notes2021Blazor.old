@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Notes2021Blazor.Shared;
 
 namespace Notes2021Blazor.Server.Controllers
@@ -23,12 +24,14 @@ namespace Notes2021Blazor.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<NoteContent> Get(string sid)
+        public async Task<DisplayModel> Get(string sid)
         {
             long id = long.Parse(sid);
 
             NoteContent c = _db.NoteContent.Single(p => p.NoteHeaderId == id);
-            return c;
+            List<Tags> tags = await _db.Tags.Where(p => p.NoteHeaderId == id).ToListAsync();
+
+            return new DisplayModel { content = c, tags = tags };
         }
 
     }

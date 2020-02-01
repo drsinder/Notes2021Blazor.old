@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
 @inject NavigationManager NavigationManager
+@inject IModalService Modal
 
 @if (Model == null)
 {
@@ -25,6 +26,9 @@ else
                 }
                 else
                 {
+                    <div class="modal-dialog-scrollable">
+                        <BlazoredModal />
+                    </div>
 
                     <h3 class="text-center">@Model.noteFile.NoteFileName - @Model.noteFile.NoteFileTitle </h3>
                     <h5>
@@ -159,7 +163,10 @@ else
 
     private void TextHasChanged(string typedInput)
     {
-        typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "");
+        typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
+
+        if (typedInput == "Z")
+            ShowHelp();
 
         int fileId = Model.noteFile.Id;
         int noteOrd = 1;
@@ -218,6 +225,18 @@ else
     {
         message = "SetFocus";
         this.StateHasChanged();
+    }
+
+    private void ShowHelp()
+    {
+        var parameters = new ModalParameters();
+        Modal.OnClose += HideDialog;
+        Modal.Show<HelpDialog>("", parameters);
+    }
+
+    void HideDialog(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialog;
     }
 
     protected class LocalInput

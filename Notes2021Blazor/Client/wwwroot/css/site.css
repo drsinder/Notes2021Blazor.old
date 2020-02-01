@@ -236,6 +236,17 @@ iframe.loginclock {
     filter: invert(1);
 }
 
+.dialog-float {
+    position: absolute;
+    left: 100px;
+    top: 200px;
+    z-index: 99;
+}
+
+.as-link-color {
+    color: white;
+}
+
 /*begin this user custom section */
 
 /* message box in main index*/
