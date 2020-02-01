@@ -1,4 +1,5 @@
-﻿<div class="modal-dialog modal-lg dialog-float">
+﻿@inject IModalService ModalService
+<div class="modal-dialog modal-lg dialog-float">
     <div class="modal-content">
         <div class="roundedgrayindexinput modal-body">
             <h3>Note Help</h3>
@@ -26,6 +27,15 @@
                 Type <b>+</b> or <b>-</b> then a number and press <b>RETURN/ENTER</b> to go forward or backward that many base notes.<br />
                 Type <b>+</b> or <b>-</b> then <b>.</b> then a number and press <b>RETURN/ENTER</b> to go forward or backward that many responses.
             </p>
+            <button type="button" @onclick="Cancel">Close</button>
         </div>
     </div>
 </div>
+
+@code{
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+}

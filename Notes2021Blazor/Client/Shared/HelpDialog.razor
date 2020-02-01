@@ -1,4 +1,7 @@
-﻿<div class="modal-dialog modal-lg dialog-float">
+﻿@inject IModalService ModalService
+
+
+<div class="modal-dialog modal-lg dialog-float">
     <div class="modal-content">
         <div class="roundedgrayindexinput modal-body">
             <h3>Note List Help</h3>
@@ -19,6 +22,15 @@
                 Type a number and press <b>RETURN/ENTER</b> to display that note number.<br />
                 You may go to a response by typing the <b>noteNumber.responseNumbe</b>r and pressing <b>RETURN/ENTER</b>.
             </p>
+            <button type="button" @onclick="Cancel">Close</button>
         </div>
     </div>
 </div>
+
+@code{
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+}

@@ -39,7 +39,8 @@
                 <h4>Archives: @numArchives</h4>
                 <h4>Last Edited: @lastEdited GMT</h4>
                 <h4>Owner: @owner</h4>
-             </div>
+            </div>
+            <button type="button" @onclick="Cancel">Cancel</button>
         </div>
     </Authorized>
     <NotAuthorized>
@@ -68,5 +69,10 @@
         lastEdited = Parameters.Get<DateTime>("LastEdited");
         owner = Parameters.Get<string>("Owner");
         numArchives = Parameters.Get<int>("NumberArchives");
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
     }
 }

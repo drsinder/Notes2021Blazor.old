@@ -49,7 +49,7 @@ else
                             <InputText id="name" @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
                             <strong>Enter a NoteFile Title:</strong>
                             <InputText id="title" @bind-Value="dummyFile.NoteFileTitle" class="form-control short-input keep-center" />
-                            <button type="submit">Submit</button>
+                            <button type="submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
                         </EditForm>
                     </div>
                 </div>
@@ -80,6 +80,11 @@ else
         await Http.PostJsonAsync("api/NoteFileAdmin", crm);
 
         ModalService.Close(ModalResult.Ok($"Create was submitted successfully."));
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
     }
 
 }

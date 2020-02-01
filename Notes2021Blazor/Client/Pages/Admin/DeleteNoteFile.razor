@@ -37,7 +37,7 @@
                 <h4>@fileName</h4>
                 <h4>@fileTitle</h4>
                 <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
-                    <button type="submit">Confirm</button>
+                    <button type="submit">Confirm</button> <button type="button" @onclick="Cancel">Cancel</button>
                 </EditForm>
             </div>
         </div>
@@ -71,4 +71,8 @@
         ModalService.Close(ModalResult.Ok($"Delete was submitted successfully."));
     }
 
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
 }
