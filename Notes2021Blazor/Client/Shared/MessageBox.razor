@@ -1,0 +1,28 @@
+﻿@inject IModalService ModalService
+<div class="modal-dialog modal-lg dialog-float">
+    <div class="modal-content">
+        <div class="roundedgrayindexinput modal-body">
+            <h3>Message</h3>
+            <p>
+                @Message
+            </p>
+            <button type="button" @onclick="Cancel">Close</button>
+        </div>
+    </div>
+</div>
+
+@functions{
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+    string Message { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Message = Parameters.Get<string>("Message");
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+}

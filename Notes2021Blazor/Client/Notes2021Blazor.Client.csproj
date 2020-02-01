@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Notes\Enter.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="2.1.1" />
     <PackageReference Include="Blazored.Modal" Version="3.1.0" />
     <PackageReference Include="Blazored.TextEditor" Version="1.0.3" />

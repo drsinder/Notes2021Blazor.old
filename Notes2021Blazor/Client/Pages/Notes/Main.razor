@@ -1,5 +1,6 @@
 ﻿@page "/notes/main/{fileId}"
 @page "/notes/display/{fileId}"
+@page "/notes/enterandshow/{fileId}"
 @using Notes2021Blazor.Shared
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Components.Authorization
@@ -12,7 +13,7 @@
 
 @if (Model == null)
 {
-    <p class="center"><em>Loading...</em></p>
+    <p class="center"><em>@message</em></p>
 }
 else
 {
@@ -29,14 +30,13 @@ else
                     <div class="modal-dialog-scrollable">
                         <BlazoredModal />
                     </div>
-
-                    <h3 class="text-center">@Model.noteFile.NoteFileName - @Model.noteFile.NoteFileTitle </h3>
+                     <h3 class="text-center">@Model.noteFile.NoteFileName - @Model.noteFile.NoteFileTitle </h3>
                     <h5>
                         Last Edited - @Model.tZone.Local(@Model.noteFile.LastEdited) @Model.tZone.Abbreviation <span class="keep-right">
                             Base Notes - @basenoteCount&nbsp;&nbsp;&nbsp;&nbsp;
                         </span>
                     </h5>
-                    <ListMenu Model="@Model" />
+                    <ListMenu Model="@Model" OnClick="ClickHandler" />
                     <table class="table">
                         <tr>
                             <th>#</th>
@@ -77,20 +77,18 @@ else
                         }
                     </table>
                     <div class="lower-menu">
-                        <ListMenu Model="@Model" />
+                        <ListMenu Model="@Model" OnClick="ClickHandler" />
                     </div>
                     <div class="arrow1">
                         <div>
                             <EditForm Model="@myInput" Context="EditBox">
-                                <InputText autofocus="@myInput.isAutoFocus"
-                                           ValueChanged="@( (string val) => TextHasChanged(val) )"
-                                           Value="@myInput.typedValue"
-                                           ValueExpression="@( () => myInput.typedValue )" />
+                                <div class="form-group">
+                                    <InputText autofocus="@myInput.isAutoFocus" style="width: 7em"
+                                               ValueChanged="@( (string val) => TextHasChanged(val) )"
+                                               Value="@myInput.typedValue"
+                                               ValueExpression="@( () => myInput.typedValue )" />
+                                </div>
                             </EditForm>
-
-
-                            <input type="text" id="fileID" name="fileid" value=@Model.noteFile.Id hidden />
-                            @*<input type="text" @ref="maininput" id="typedInput" name="typedInput" autofocus autocomplete="off" style="width: 80px" tabindex="0" />*@
                             <input type="submit" value="Navigate" class="btn btn-sm" /> b# | b#.r#
                         </div>
                     </div>
@@ -98,7 +96,7 @@ else
             }
             else // note display mode
             {
-                <DisplayPanel Model="Model" currentHeader="currentHeader" Id="Id" OnClick="ClickHandler"/>
+                <DisplayPanel Model="Model" currentHeader="currentHeader" Id="Id" OnClick="ClickHandler" />
             }
         </Authorized>
         <NotAuthorized>
@@ -118,11 +116,9 @@ else
     private NoteDisplayIndexModel Model { get; set; }
     private long mode { get; set; }
     private int basenoteCount { get; set; }
-    private string message;
+    private string message = "Loading...";
     private LocalInput myInput { get; set; }
     private NoteHeader currentHeader { get; set; }
-    //private NoteContent currentContent { get; set; }
-    //private string respX { get; set; }
 
     void ClickHandler(string newMessage)
     {
@@ -130,6 +126,18 @@ else
         {
             mode = 0;
             this.StateHasChanged();
+        }
+        else if (newMessage == "ListHelp")
+        {
+            ShowHelp();
+        }
+        else if (newMessage == "NewBaseNote")
+        {
+            NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
+        }
+        else
+        {
+            ShowMessage(newMessage + " Clicked");
         }
     }
 
@@ -143,7 +151,7 @@ else
             mode = currentHeader.Id;
             this.StateHasChanged();
         }
-        if (!NavigationManager.Uri.Contains("display"))
+        if (NavigationManager.Uri.Contains("main"))
         {
             Id = int.Parse(fileId);
             archiveID = await _localStorage.GetItemAsync<int>("ArchiveId");
@@ -163,16 +171,62 @@ else
             }
 
             if (Model == null)
+            {
                 message = "Model is null";
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(Model.message))
+                message = Model.message;
+
+            message = null;
+
+            basenoteCount = Model.Notes.Count;
+        }
+        if (NavigationManager.Uri.Contains("enterandshow"))
+        {
+            // fileId is really noteId so use it to get base note header
+
+            long myNoteId = long.Parse(fileId);
+
+            NoteHeader myHeader = await Http.GetJsonAsync<NoteHeader>("api/EnterAndDisplay/" + myNoteId);
+            Id = myHeader.NoteFileId;  // we now know the file.  So load it up
+
+            archiveID = await _localStorage.GetItemAsync<int>("ArchiveId");
+
+            myInput = new LocalInput();
+            myInput.isAutoFocus = true;
+
+            try
+            {
+                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id);
+            }
+            catch (Exception ex)
+            {
+                Model = new NoteDisplayIndexModel { message = ex.Message };
+                message = ex.Message;
+                return;
+            }
+
+            if (Model == null)
+            {
+                message = "Model is null";
+                return;
+            }
 
             if (!string.IsNullOrEmpty(Model.message))
                 message = Model.message;
 
             basenoteCount = Model.Notes.Count;
+
+            currentHeader = myHeader;
+
+            message = null;
+            mode = myNoteId;
         }
     }
 
-    private void TextHasChanged(string typedInput)
+     private void TextHasChanged(string typedInput)
     {
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
 
@@ -269,6 +323,14 @@ else
     void HideDialog(ModalResult modalResult)
     {
         Modal.OnClose -= HideDialog;
+    }
+
+    private void ShowMessage(string message)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("Message", message);
+        Modal.OnClose += HideDialog;
+        Modal.Show<MessageBox>("", parameters);
     }
 
     protected class LocalInput

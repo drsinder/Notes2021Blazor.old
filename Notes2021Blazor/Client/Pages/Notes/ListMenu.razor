@@ -1,0 +1,96 @@
+﻿@using Notes2021Blazor.Shared
+
+<p class="notesmenu">
+    <button type="button" class="link" @onclick="ListNoteFiles">List Note Files</button>
+    @if (@Model.myAccess.Write)
+    {
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="NewNote">New Base Note</button>
+    }
+    @if (@Model.myAccess.ReadAccess)
+    {
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="eXport">eXport</button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="Html">Html</button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="html">html</button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="mail">mail</button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="SearchFromIndex">Search</button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="MarkMine">Mark Mine</button>
+    }
+    @if (@Model.isMarked)
+    {
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="OutputMarked">Output Marked</button>
+    }
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="link" @onclick="ListHelp"><strong>Z for HELP.</strong></button>
+    @if (@Model.myAccess.EditAccess)
+    {
+        <span class="keep-right">&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="link" @onclick="AccessControls">Access Controls</button></span>
+    }
+</p>
+
+@code {
+    [Parameter] public NoteDisplayIndexModel Model { get; set; }
+    [Parameter] public EventCallback<string> OnClick { get; set; }
+
+    private void Test()
+    {
+        OnClick.InvokeAsync("Test Me!");
+    }
+
+    private void NewNote()
+    {
+        OnClick.InvokeAsync("NewBaseNote");
+
+    }
+
+    private void ListNoteFiles()
+    {
+        OnClick.InvokeAsync("ListNoteFiles");
+
+    }
+
+    private void ListHelp()
+    {
+        OnClick.InvokeAsync("ListHelp");
+
+    }
+
+    private void AccessControls()
+    {
+        OnClick.InvokeAsync("AccessControls");
+    }
+
+    private void OutputMarked()
+    {
+        OnClick.InvokeAsync("OutputMarked");
+    }
+
+    private void eXport()
+    {
+        OnClick.InvokeAsync("eXport");
+    }
+
+    private void Html()
+    {
+        OnClick.InvokeAsync("HtmlFromIndex");
+    }
+
+    private void html()
+    {
+        OnClick.InvokeAsync("htmlFromIndex");
+    }
+
+    private void mail()
+    {
+        OnClick.InvokeAsync("mailFromIndex");
+    }
+
+    private void SearchFromIndex()
+    {
+        OnClick.InvokeAsync("SearchFromIndex");
+    }
+
+    private void MarkMine()
+    {
+        OnClick.InvokeAsync("MarkMine");
+    }
+
+}
