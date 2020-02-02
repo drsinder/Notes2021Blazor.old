@@ -33,7 +33,8 @@ namespace Notes2021Blazor.Shared
         [Display(Name = "Director Message")]
         public string DirectorMessage { get; set; }
 
-        //public NoteFile noteFile { get; set; }
+        public NoteHeader NoteHeader { get; set; }
+
     }
 
 }

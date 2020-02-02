@@ -9,7 +9,11 @@
 }
 else if (newnoteFlag)
 {
-    <NewNotePanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId />
+    <NewNotePanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId OnClick="ClickHandler" />
+}
+else if (editing)
+{
+    <NewNotePanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId EditHeader="@currentHeader" NoteContent="@currentContent" OnClick="ClickHandler" />
 }
 else
 {
@@ -39,7 +43,7 @@ else
                     tl += tag.Tag + " ";
                 <br /><span>@tl</span>
             }
-            </h4>
+        </h4>
     </div>
     <div class="notebody">
         @((MarkupString)currentContent.NoteBody)
@@ -68,6 +72,7 @@ else
     [Parameter] public int Id { get; set; }
 
     protected bool newnoteFlag { get; set; }
+    protected bool editing { get; set; }
 
     public string respX { get; set; }
 
@@ -87,6 +92,7 @@ else
         myInput.isAutoFocus = true;
 
         newnoteFlag = false;
+        editing = false;
 
         DisplayModel dm = await Http.GetJsonAsync<DisplayModel>("api/NoteContent/" + currentHeader.Id);
 
@@ -112,7 +118,7 @@ else
         {
             ShowHelp();
         }
-        else if ( newMessage == "NextBaseNote")
+        else if (newMessage == "NextBaseNote")
         {
             await NextBaseNote();
         }
@@ -131,6 +137,12 @@ else
         else if (newMessage == "NewResponse")
         {
             newnoteFlag = true;
+            this.StateHasChanged();
+        }
+        else if (newMessage == "Edit")
+        {
+
+            editing = true;
             this.StateHasChanged();
         }
         else  // pass on to list parent
@@ -191,7 +203,7 @@ else
             await PreviousBaseNote();
             return;
         }
-        NoteHeader newbase = Model.AllNotes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal && p.ResponseOrdinal == currentHeader.ResponseOrdinal -1);
+        NoteHeader newbase = Model.AllNotes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal && p.ResponseOrdinal == currentHeader.ResponseOrdinal - 1);
         if (newbase == null)
             return;
 

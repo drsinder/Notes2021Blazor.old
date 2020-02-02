@@ -21,7 +21,7 @@ else
         <Authorized>
             @if (newnoteFlag)
             {
-                <NewNotePanel Model="@Model" BaseNoteId=0 />
+                <NewNotePanel Model="@Model" BaseNoteId=0 OnClick="ClickHandler"  />
             }
             else if (mode == 0)  // index mode
             {
@@ -105,8 +105,11 @@ else
         {
             newnoteFlag = true;
             this.StateHasChanged();
-
-            //NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
+        }
+        else if (newMessage == "CancelEdit")
+        {
+            newnoteFlag = false;
+            this.StateHasChanged();
         }
         else if (newMessage == "AccessControls")
         {
