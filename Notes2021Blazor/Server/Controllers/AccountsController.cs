@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Notes2021Blazor.Shared;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021Blazor.Server.Controllers
 {
@@ -40,8 +37,12 @@ namespace Notes2021Blazor.Server.Controllers
             }
 
             IdentityUser me = await _userManager.FindByEmailAsync(model.Email);
-            UserData userData = new UserData { UserId = me.Id, DisplayName = model.DisplayName,
-                TimeZoneID = Globals.TimeZoneDefaultID, MyGuid = Guid.NewGuid().ToString()
+            UserData userData = new UserData
+            {
+                UserId = me.Id,
+                DisplayName = model.DisplayName,
+                TimeZoneID = Globals.TimeZoneDefaultID,
+                MyGuid = Guid.NewGuid().ToString()
             };
             _db.UserData.Add(userData);
 

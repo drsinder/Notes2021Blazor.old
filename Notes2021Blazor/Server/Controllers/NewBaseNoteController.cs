@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Notes2021Blazor.Shared;
-using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021Blazor.Server.Controllers
 {
@@ -35,7 +30,7 @@ namespace Notes2021Blazor.Server.Controllers
         {
             int Id = int.Parse(fileId);
 
-            NoteFile nf  = _db.NoteFile.Single(p => p.Id == Id);
+            NoteFile nf = _db.NoteFile.Single(p => p.Id == Id);
 
             return nf;
         }

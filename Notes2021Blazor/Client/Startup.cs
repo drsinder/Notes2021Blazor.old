@@ -1,10 +1,8 @@
 ﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Components.Builder;
-using Microsoft.AspNetCore.Identity;
-using System;
 using Blazored.Modal;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Notes2021Blazor.Client
 {

@@ -1,0 +1,145 @@
+﻿@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using Blazored.TextEditor
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using Newtonsoft.Json
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService _localStorage
+@inject NavigationManager NavigationManager
+@inject IModalService Modal
+
+<AuthorizeView Roles="User">
+    <Authorized Context="Top">
+        @if (noteFile == null)
+        {
+            <p class="center"><em>Loading...</em></p>
+        }
+        else
+        {
+            <h2>
+                Note Editor - @noteFile.NoteFileName <span>-</span> @noteFile.NoteFileTitle
+            </h2>
+
+            <EditForm id="createform" Model="@tvm" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <strong>Subject</strong>
+                <InputText id="name" @bind-Value="tvm.MySubject" class="form-control long-input" />
+                <strong>Tags</strong>
+                <InputText id="title" @bind-Value="tvm.TagLine" class="form-control long-input" />
+                <strong>Director Message</strong>
+                <InputText id="title" @bind-Value="tvm.DirectorMessage" class="form-control long-input" />
+                <strong>Note Body</strong>
+                <BlazoredTextEditor @ref="@QuillHtml">
+                    <ToolbarContent>
+                        <select class="ql-header">
+                            <option selected=""></option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                            <option value="3"></option>
+                            <option value="4"></option>
+                            <option value="5"></option>
+                        </select>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                        </span>
+                    </ToolbarContent>
+                    <EditorContent>
+                        @((MarkupString)@tvm.MyNote)
+                    </EditorContent>
+                </BlazoredTextEditor>
+                <br /><button type="submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
+            </EditForm>
+        }
+    </Authorized>
+    <NotAuthorized>
+        Access Denied!
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    BlazoredTextEditor QuillHtml;
+
+    string QuillHTMLContent;
+    string QuillContent;
+
+    [Parameter] public NoteDisplayIndexModel Model { get; set; }
+    [Parameter] public long BaseNoteId { get; set; }
+    [Parameter] public TextViewModel oldNote { get; set; }
+    [Parameter] public EventCallback<string> OnClick { get; set; }
+
+    private int Id { get; set; }
+
+    private NoteFile noteFile { get; set; }
+
+    private TextViewModel tvm { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (oldNote == null)
+        {
+            tvm = new TextViewModel();
+            tvm.MyNote = "";
+
+            noteFile = Model.noteFile;
+
+            tvm.BaseNoteHeaderID = BaseNoteId;
+            tvm.NoteFileID = Id = noteFile.Id;
+        }
+        else
+        {
+            tvm = oldNote;
+            noteFile = Model.noteFile;
+        }
+    }
+
+    protected async Task HandleValidSubmit()
+    {
+        tvm.MyNote = QuillHTMLContent = await this.QuillHtml.GetHTML();
+        //StateHasChanged();
+
+
+        NoteHeader nh;
+
+        if (oldNote == null)
+        {
+            //tvm.NoteHeader = new NoteHeader();
+            var stringContent = new StringContent(JsonConvert.SerializeObject(tvm), Encoding.UTF8, "application/json");
+            await Http.PostAsync("api/NewBaseNote/", stringContent);
+            nh = await Http.GetJsonAsync<NoteHeader>("api/NewBaseNote2/");
+        }
+        else
+        {
+            var stringContent = new StringContent(JsonConvert.SerializeObject(tvm), Encoding.UTF8, "application/json");
+            await Http.PutAsync("api/NewBaseNote/", stringContent);
+            nh = new NoteHeader { Id = tvm.NoteID };
+        }
+
+        NavigationManager.NavigateTo("/notes/enterandshow/" + nh.Id);
+        //StateHasChanged();
+    }
+
+    protected void Cancel()
+    {
+        OnClick.InvokeAsync("CancelEdit");
+    }
+
+}

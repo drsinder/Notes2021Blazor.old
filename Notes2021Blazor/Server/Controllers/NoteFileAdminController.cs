@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Notes2021Blazor.Shared;
+using System;
+using System.Threading.Tasks;
 
 namespace Notes2021Blazor.Server.Controllers
 {

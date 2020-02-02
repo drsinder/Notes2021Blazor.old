@@ -39,7 +39,7 @@ namespace Notes2021Blazor.Server
             }
             catch
             {
-                    // ignored
+                // ignored
             }
             if (tzid < 1)
                 tzid = Globals.TimeZoneDefaultID;
