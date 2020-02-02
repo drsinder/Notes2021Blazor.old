@@ -23,8 +23,19 @@ else
         <h4>
             Subject:@currentHeader.NoteSubject <br />
             Author: @currentHeader.AuthorName &nbsp;&nbsp;&nbsp;
-              @(Model.tZone.Local(currentHeader.LastEdited).ToLongDateString()) @(Model.tZone.Local(currentHeader.LastEdited).ToShortTimeString()) @Model.tZone.Abbreviation
-        </h4>
+            @(Model.tZone.Local(currentHeader.LastEdited).ToLongDateString()) @(Model.tZone.Local(currentHeader.LastEdited).ToShortTimeString()) @Model.tZone.Abbreviation
+            @if (!string.IsNullOrEmpty(currentContent.DirectorMessage))
+            {
+                <br /><span>Director Message: @currentContent.DirectorMessage</span>
+            }
+            @if (tags != null && tags.Count > 0)
+            {
+                string tl = "Tags: ";
+                foreach (Tags tag in tags)
+                    tl += tag.Tag + " ";
+                <br /><span>@tl</span>
+            }
+            </h4>
     </div>
     <div class="notebody">
         @((MarkupString)currentContent.NoteBody)
@@ -122,6 +133,7 @@ else
         currentContent = dm.content;
         tags = dm.tags;
 
+        respX = "";
         if (currentHeader.ResponseOrdinal > 0)
         {
             NoteHeader bnh = Model.Notes.Find(p => p.Id == currentHeader.BaseNoteId);
