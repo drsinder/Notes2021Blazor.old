@@ -2,11 +2,28 @@
 
     <p class="notesmenu">
         <button type="button" class="link" @onclick="Done">Listing</button>
-        <button type="button" class="link" @onclick="NextBaseNote">&nbsp;&nbsp;&nbsp;&nbsp;Next Base</button>
-        <button type="button" class="link" @onclick="PreviousBaseNote">&nbsp;&nbsp;&nbsp;&nbsp;Previous Base</button>
-        <button type="button" class="link" @onclick="NextNote">&nbsp;&nbsp;&nbsp;&nbsp;Next</button>
-        <button type="button" class="link" @onclick="PreviousNote">&nbsp;&nbsp;&nbsp;&nbsp;Previous</button>
-        <span class="keep-right"><button type="button" class="link" @onclick="ShowHelp">Z for HELP&nbsp;&nbsp;&nbsp;</button></span>
+        <button type="button" class="link" @onclick="NextBaseNote">&nbsp;&nbsp;&nbsp;Next Base</button>
+        <button type="button" class="link" @onclick="PreviousBaseNote">&nbsp;&nbsp;&nbsp;Previous Base</button>
+        <button type="button" class="link" @onclick="NextNote">&nbsp;&nbsp;&nbsp;Next</button>
+        <button type="button" class="link" @onclick="PreviousNote">&nbsp;&nbsp;&nbsp;Previous</button>
+
+        <button type="button" class="link" @onclick="Forward">&nbsp;&nbsp;&nbsp;Forward</button>
+        <button type="button" class="link" @onclick="Copy">&nbsp;&nbsp;&nbsp;Copy</button>
+        <button type="button" class="link" @onclick="mail">&nbsp;&nbsp;&nbsp;mail</button>
+        <button type="button" class="link" @onclick="Mark">&nbsp;&nbsp;&nbsp;Mark</button>
+        <button type="button" class="link" @onclick="Html">&nbsp;&nbsp;&nbsp;Html</button>
+        <button type="button" class="link" @onclick="html">&nbsp;&nbsp;&nbsp;html</button>
+        @if (@Model.myAccess.Write)
+        {
+            <button type="button" class="link" @onclick="NewResponse">&nbsp;&nbsp;&nbsp;New Response</button>
+        }
+        @if (@Model.myAccess.DeleteEdit)
+        {
+            <button type="button" class="link" @onclick="Edit">&nbsp;&nbsp;&nbsp;Edit</button>
+            <button type="button" class="link" @onclick="Delete">&nbsp;&nbsp;&nbsp;Delete</button>
+        }
+        <button type="button" class="link" @onclick="Search">&nbsp;&nbsp;&nbsp;Search</button>
+         <span>&nbsp;&nbsp;&nbsp;<button type="button" class="link" @onclick="ShowHelp">Z for HELP</button></span>
     </p>
 
 @code {
@@ -43,5 +60,53 @@
         OnClick.InvokeAsync("PreviousNote");
     }
 
+    protected void Forward()
+    {
+        OnClick.InvokeAsync("Forward");
+    }
 
+    protected void Copy()
+    {
+        OnClick.InvokeAsync("Copy");
+    }
+
+    protected void mail()
+    {
+        OnClick.InvokeAsync("mail");
+    }
+
+    protected void Mark()
+    {
+        OnClick.InvokeAsync("Mark");
+    }
+
+    protected void Html()
+    {
+        OnClick.InvokeAsync("Html");
+    }
+
+    protected void html()
+    {
+        OnClick.InvokeAsync("html");
+    }
+
+    protected void NewResponse()
+    {
+        OnClick.InvokeAsync("NewResponse");
+    }
+
+    protected void Edit()
+    {
+        OnClick.InvokeAsync("Edit");
+    }
+
+    protected void Delete()
+    {
+        OnClick.InvokeAsync("Delete");
+    }
+
+    protected void Search()
+    {
+        OnClick.InvokeAsync("Search");
+    }
 }

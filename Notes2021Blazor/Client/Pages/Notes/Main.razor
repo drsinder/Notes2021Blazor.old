@@ -19,7 +19,11 @@ else
 {
     <AuthorizeView Roles="User">
         <Authorized>
-            @if (mode == 0)  // index mode
+            @if (newnoteFlag)
+            {
+                <NewNotePanel Model="@Model" BaseNoteId=0 />
+            }
+            else if (mode == 0)  // index mode
             {
                 @if (!string.IsNullOrEmpty(message))
                 {
@@ -65,6 +69,7 @@ else
     [Parameter]
     public string fileId { get; set; }
 
+    private bool newnoteFlag { get; set; }
     public long headerId { get; set; }
     private int Id { get; set; }
     private int archiveID { get; set; }
@@ -98,7 +103,10 @@ else
         }
         else if (newMessage == "NewBaseNote")
         {
-            NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
+            newnoteFlag = true;
+            this.StateHasChanged();
+
+            //NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
         }
         else if (newMessage == "AccessControls")
         {
@@ -191,6 +199,7 @@ else
             currentHeader = myHeader;
 
             message = null;
+            newnoteFlag = false;
             mode = myNoteId;
         }
     }
@@ -264,7 +273,8 @@ else
     private void Done()
     {
         mode = 0;
-        NavigationManager.NavigateTo("/notes/main/" + Id);
+        newnoteFlag = false;
+        //NavigationManager.NavigateTo("/notes/main/" + Id);
         this.StateHasChanged();
     }
 

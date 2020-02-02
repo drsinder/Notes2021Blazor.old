@@ -7,6 +7,10 @@
 {
     <p class="center"><em>Loading...</em></p>
 }
+else if (newnoteFlag)
+{
+    <NewNotePanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId />
+}
 else
 {
     <div class="modal-dialog-scrollable">
@@ -21,7 +25,7 @@ else
         </p>
 
         <h4>
-            Subject:@currentHeader.NoteSubject <br />
+            Subject: @currentHeader.NoteSubject <br />
             Author: @currentHeader.AuthorName &nbsp;&nbsp;&nbsp;
             @(Model.tZone.Local(currentHeader.LastEdited).ToLongDateString()) @(Model.tZone.Local(currentHeader.LastEdited).ToShortTimeString()) @Model.tZone.Abbreviation
             @if (!string.IsNullOrEmpty(currentContent.DirectorMessage))
@@ -63,6 +67,8 @@ else
     [Parameter] public NoteHeader currentHeader { get; set; }
     [Parameter] public int Id { get; set; }
 
+    protected bool newnoteFlag { get; set; }
+
     public string respX { get; set; }
 
     public NoteContent currentContent { get; set; }
@@ -79,6 +85,8 @@ else
     {
         myInput = new LocalInput();
         myInput.isAutoFocus = true;
+
+        newnoteFlag = false;
 
         DisplayModel dm = await Http.GetJsonAsync<DisplayModel>("api/NoteContent/" + currentHeader.Id);
 
@@ -119,6 +127,11 @@ else
         else if (newMessage == "PreviousNote")
         {
             await PreviousNote();
+        }
+        else if (newMessage == "NewResponse")
+        {
+            newnoteFlag = true;
+            this.StateHasChanged();
         }
         else  // pass on to list parent
         {

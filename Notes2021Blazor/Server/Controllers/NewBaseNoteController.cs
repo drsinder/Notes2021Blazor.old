@@ -62,7 +62,17 @@ namespace Notes2021Blazor.Server.Controllers
                 ResponseCount = 0
             };
 
-            NoteHeader created = await NoteDataManager.CreateNote(_db, _userManager, nheader, tvm.MyNote, tvm.TagLine, tvm.DirectorMessage, true, false);
+            NoteHeader created;
+
+            if (tvm.BaseNoteHeaderID == 0)
+            {
+                created = await NoteDataManager.CreateNote(_db, _userManager, nheader, tvm.MyNote, tvm.TagLine, tvm.DirectorMessage, true, false);
+            }
+            else
+            {
+                nheader.BaseNoteId = tvm.BaseNoteHeaderID;
+                created = await NoteDataManager.CreateResponse(_db, _userManager, nheader, tvm.MyNote, tvm.TagLine, tvm.DirectorMessage, true, false);
+            }
 
             return created;
         }
