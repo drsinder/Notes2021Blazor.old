@@ -115,13 +115,26 @@
     {
         tvm.MyNote = QuillHTMLContent = await this.QuillHtml.GetHTML();
 
-        var stringContent = new StringContent(JsonConvert.SerializeObject(tvm), Encoding.UTF8, "application/json");
+        if (NoteContent == null || EditHeader == null)  // new note
+        {
+            var stringContent = new StringContent(JsonConvert.SerializeObject(tvm), Encoding.UTF8, "application/json");
 
-        HttpResponseMessage result = await Http.PostAsync("api/NewBaseNote/", stringContent);
+            HttpResponseMessage result = await Http.PostAsync("api/NewBaseNote/", stringContent);
 
-        NoteHeader nh = await Http.GetJsonAsync<NoteHeader>("api/NewBaseNote2/");
+            NoteHeader nh = await Http.GetJsonAsync<NoteHeader>("api/NewBaseNote2/");
 
-        NavigationManager.NavigateTo("/notes/enterandshow/" + nh.Id);
+            NavigationManager.NavigateTo("/notes/enterandshow/" + nh.Id);
+            return;
+        }
+        else  // edited note
+        {
+            tvm.NoteHeader = EditHeader;
+            var stringContent = new StringContent(JsonConvert.SerializeObject(tvm), Encoding.UTF8, "application/json");
+            HttpResponseMessage result = await Http.PutAsync("api/NewBaseNote/", stringContent);
+
+            NavigationManager.NavigateTo("/notes/enterandshow/" + tvm.NoteHeader.Id);
+            return;
+        }
     }
 
     protected void CancelEdit()

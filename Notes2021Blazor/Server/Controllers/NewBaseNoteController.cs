@@ -71,5 +71,30 @@ namespace Notes2021Blazor.Server.Controllers
 
             return created;
         }
+
+
+        [HttpPut]
+        public async Task Put(TextViewModel tvm)
+        {
+            if (tvm.MyNote == null)
+                return;
+
+            UserData me = NoteDataManager.GetUserData(_userManager, User, _db);
+
+            DateTime now = DateTime.Now.ToUniversalTime();
+
+            tvm.NoteHeader.NoteSubject = tvm.MySubject;
+            tvm.NoteHeader.LastEdited = now;
+            tvm.NoteHeader.ThreadLastEdited = now;
+
+            NoteContent nc = new NoteContent();
+            nc.NoteHeaderId = tvm.NoteHeader.Id;
+            nc.NoteBody = tvm.MyNote;
+            nc.DirectorMessage = tvm.DirectorMessage;
+
+            await NoteDataManager.EditNote(_db, _userManager, tvm.NoteHeader, nc, tvm.TagLine); 
+
+            return;
+        }
     }
 }
