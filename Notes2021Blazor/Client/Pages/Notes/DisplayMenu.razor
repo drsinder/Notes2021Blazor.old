@@ -1,13 +1,47 @@
 ﻿@using Notes2021Blazor.Shared
 
     <p class="notesmenu">
-        <a href="/notes/main/@Model.noteFile.Id">Listing</a>
-        @*&nbsp;&nbsp;&nbsp;&nbsp;<a href="/notes/nextbase/@Model.noteFile.Id">Next Base</a>*@
-
-        <span class="keep-right as-link-color">Z for HELP&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" class="link" @onclick="Done">Listing</button>
+        <button type="button" class="link" @onclick="NextBaseNote">&nbsp;&nbsp;&nbsp;&nbsp;Next Base</button>
+        <button type="button" class="link" @onclick="PreviousBaseNote">&nbsp;&nbsp;&nbsp;&nbsp;Previous Base</button>
+        <button type="button" class="link" @onclick="NextNote">&nbsp;&nbsp;&nbsp;&nbsp;Next</button>
+        <button type="button" class="link" @onclick="PreviousNote">&nbsp;&nbsp;&nbsp;&nbsp;Previous</button>
+        <span class="keep-right"><button type="button" class="link" @onclick="ShowHelp">Z for HELP&nbsp;&nbsp;&nbsp;</button></span>
     </p>
 
 @code {
     [Parameter] public NoteDisplayIndexModel Model { get; set; }
     [Parameter] public EventCallback<string> OnClick { get; set; }
+
+    protected void ShowHelp()
+    {
+        OnClick.InvokeAsync("ShowHelp");
+    }
+
+    protected void Done()
+    {
+        OnClick.InvokeAsync("Done");
+    }
+
+    protected void NextBaseNote()
+    {
+        OnClick.InvokeAsync("NextBaseNote");
+    }
+
+    protected void PreviousBaseNote()
+    {
+        OnClick.InvokeAsync("PreviousBaseNote");
+    }
+
+    protected void NextNote()
+    {
+        OnClick.InvokeAsync("NextNote");
+    }
+
+    protected void PreviousNote()
+    {
+        OnClick.InvokeAsync("PreviousNote");
+    }
+
+
 }

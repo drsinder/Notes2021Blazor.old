@@ -14,7 +14,7 @@ else
     </div>
     <h4 class="text-center">@Model.noteFile.NoteFileTitle</h4>
     <hr id="premenu" />
-    <DisplayMenu Model="@Model" />
+    <DisplayMenu Model="@Model" OnClick="ClickHandler" />
     <div class="noteheader">
         <p>
             <span class="keep-right">Note: @currentHeader.NoteOrdinal @respX&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -29,7 +29,7 @@ else
     <div class="notebody">
         @((MarkupString)currentContent.NoteBody)
     </div>
-    <DisplayMenu Model="@Model" />
+    <DisplayMenu Model="@Model" OnClick="ClickHandler" />
     <button @onclick="Done">Done Reading</button>
 
     <div class="arrow2">
@@ -85,6 +85,93 @@ else
             curN += "." + currentHeader.ResponseOrdinal;
         }
 
+    }
+
+    public async Task ClickHandler(string newMessage)
+    {
+        if (newMessage == "ShowHelp")
+        {
+            ShowHelp();
+        }
+        else if ( newMessage == "NextBaseNote")
+        {
+            await NextBaseNote();
+        }
+        else if (newMessage == "PreviousBaseNote")
+        {
+            await PreviousBaseNote();
+        }
+        else if (newMessage == "NextNote")
+        {
+            await TextHasChanged("");
+        }
+        else if (newMessage == "PreviousNote")
+        {
+            await PreviousNote();
+        }
+        else  // pass on to list parent
+        {
+            await OnClick.InvokeAsync(newMessage);
+        }
+    }
+
+    protected async Task SetNote()
+    {
+        DisplayModel dm = await Http.GetJsonAsync<DisplayModel>("api/NoteContent/" + currentHeader.Id);
+
+        currentContent = dm.content;
+        tags = dm.tags;
+
+        if (currentHeader.ResponseOrdinal > 0)
+        {
+            NoteHeader bnh = Model.Notes.Find(p => p.Id == currentHeader.BaseNoteId);
+            respX = " - Response " + currentHeader.ResponseOrdinal + " of " + bnh.ResponseCount;
+        }
+        else if (currentHeader.ResponseCount > 0)
+            respX = " - " + currentHeader.ResponseCount + " Responses ";
+
+
+        curN = "" + currentHeader.NoteOrdinal;
+        if (currentHeader.ResponseOrdinal > 0)
+        {
+            curN += "." + currentHeader.ResponseOrdinal;
+        }
+
+        this.StateHasChanged();
+    }
+
+    protected async Task PreviousBaseNote()
+    {
+        if (currentHeader.NoteOrdinal == 1)
+            return;
+        currentHeader = Model.Notes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal - 1 && p.ResponseOrdinal == 0);
+        if (currentHeader == null)
+            return;
+        await SetNote();
+    }
+
+    protected async Task NextBaseNote()
+    {
+        NoteHeader newbase = Model.Notes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal + 1 && p.ResponseOrdinal == 0);
+        if (newbase == null)
+            return;
+        currentHeader = newbase;
+        await SetNote();
+    }
+
+    protected async Task PreviousNote()
+    {
+        if (currentHeader.ResponseOrdinal == 0)
+        {
+            await PreviousBaseNote();
+            return;
+        }
+        NoteHeader newbase = Model.AllNotes.Find(p => p.NoteOrdinal == currentHeader.NoteOrdinal && p.ResponseOrdinal == currentHeader.ResponseOrdinal -1);
+        if (newbase == null)
+            return;
+
+        currentHeader = newbase;
+        await SetNote();
     }
 
     private void Done()
