@@ -521,8 +521,6 @@ namespace Notes2021Blazor.Shared
             try
             {
                 IdentityUser me = userManager.FindByNameAsync(user.Identity.Name).GetAwaiter().GetResult();
-
-                //string userid = userManager.GetUserId(user);
                 aux = db.UserData.SingleOrDefault(p => p.UserId == me.Id);
             }
             catch

@@ -277,6 +277,11 @@ iframe.loginclock {
     z-index: 99;
 }
 
+.dialog-float-higher {
+    position: absolute;
+    z-index: 100;
+}
+
 .as-link-color {
     color: white;
 }

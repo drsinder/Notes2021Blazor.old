@@ -135,6 +135,10 @@ else
         {
             NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
         }
+        else if (newMessage == "AccessControls")
+        {
+            EditAccess();
+        }
         else
         {
             ShowMessage(newMessage + " Clicked");
@@ -226,7 +230,7 @@ else
         }
     }
 
-     private void TextHasChanged(string typedInput)
+    private void TextHasChanged(string typedInput)
     {
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
 
@@ -332,6 +336,15 @@ else
         Modal.OnClose += HideDialog;
         Modal.Show<MessageBox>("", parameters);
     }
+
+    private void EditAccess()
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("FileId", Id);
+        Modal.OnClose += HideDialog;
+        Modal.Show<AccessList>("", parameters);
+    }
+
 
     protected class LocalInput
     {

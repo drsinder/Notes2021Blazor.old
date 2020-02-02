@@ -1,0 +1,142 @@
+﻿@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IModalService ModalService
+
+@if (myList == null)
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <div class="modal-dialog modal-xl dialog-float">
+        <div class="modal-content">
+            <div class="roundedgrayindexinput modal-body">
+                <h3>Access Editor</h3>
+                @if (myAccess.ViewAccess || myAccess.EditAccess)
+                {
+                    <table class="table">
+                        <tr>
+                            <th>UserName</th>
+                            <th>
+                                Read
+                            </th>
+                            <th>
+                                Respond
+                            </th>
+                            <th>
+                                Write
+                            </th>
+                            <th>
+                                Set Tag
+                            </th>
+                            <th>
+                                Delete/Edit
+                            </th>
+                            <th>
+                                View Access
+                            </th>
+                            <th>
+                                Edit Access
+                            </th>
+                        </tr>
+                        @{
+                            foreach (NoteAccess item in myList)
+                            {
+                                string userName = item.UserID;
+                                if (userName != "Other")
+                                {
+                                    UserData temp = userList.Find(p => p.UserId == userName);
+                                    if (temp != null)
+                                    {
+                                        userName = temp.DisplayName;
+                                    }
+                                }
+                                AccessItem read = new AccessItem { isChecked = item.ReadAccess, which = AccessX.ReadAccess, Item = item, canEdit = myAccess.EditAccess };
+                                AccessItem write = new AccessItem { isChecked = item.Write, which = AccessX.Write, Item = item, canEdit = myAccess.EditAccess };
+                                AccessItem respond = new AccessItem { isChecked = item.Respond, which = AccessX.Respond, Item = item, canEdit = myAccess.EditAccess };
+                                AccessItem settag = new AccessItem { isChecked = item.SetTag, which = AccessX.SetTag, Item = item, canEdit = myAccess.EditAccess };
+                                AccessItem edit = new AccessItem { isChecked = item.DeleteEdit, which = AccessX.DeleteEdit, Item = item, canEdit = myAccess.EditAccess };
+                                AccessItem view = new AccessItem { isChecked = item.ViewAccess, which = AccessX.ViewAccess, Item = item, canEdit = myAccess.EditAccess };
+                                AccessItem edaccess = new AccessItem { isChecked = item.EditAccess, which = AccessX.EditAccess, Item = item, canEdit = myAccess.EditAccess };
+                                <tr>
+                                    <td>
+                                        @userName
+                                    </td>
+                                    <td>
+                                        <AccessCheckBox Model="@read" />
+                                    </td>
+                                    <td>
+                                        <AccessCheckBox Model="@respond" />
+                                    </td>
+                                    <td>
+                                        <AccessCheckBox Model="@write" />
+                                    </td>
+                                    <td>
+                                        <AccessCheckBox Model="@settag" />
+                                    </td>
+                                    <td>
+                                        <AccessCheckBox Model="@edit" />
+                                    </td>
+                                    <td>
+                                        <AccessCheckBox Model="@view" />
+                                    </td>
+                                    <td>
+                                        <AccessCheckBox Model="@edaccess" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                            }
+                            else
+                            {
+                               <p>Not permitted!</p> 
+                            }
+                <button type="button" @onclick="Cancel">Close</button>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@code{
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+
+    [Parameter]
+
+    public int fileId { get; set; }
+    private List<NoteAccess> myList { get; set; }
+    private List<UserData> userList { get; set; }
+    private NoteAccess myAccess { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        fileId = Parameters.Get<int>("FileId");
+
+        myList = await Http.GetJsonAsync<List<NoteAccess>>("api/AccessList/" + fileId);
+
+        userList = await Http.GetJsonAsync<List<UserData>>("api/Users/");
+
+        myAccess = await Http.GetJsonAsync<NoteAccess>("api/MyAccess/" + fileId);
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+
+    private async Task EditClicked()
+    {
+
+    }
+
+}
+
+
