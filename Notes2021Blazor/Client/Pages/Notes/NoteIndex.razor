@@ -1,0 +1,44 @@
+﻿@using Notes2021Blazor.Shared
+
+<table class="table">
+    <tr>
+        <th>#</th>
+        <th>Subject</th>
+        <th>Writer</th>
+        <th>Date/Time</th>
+        <th>Responses</th>
+        <th></th>
+    </tr>
+    @if (@Model.myAccess.ReadAccess)
+    {
+        foreach (var item in Model.Notes)
+        {
+            string when = Model.tZone.Local(item.CreateDate) + " " + Model.tZone.Abbreviation;
+            <tr class="noteindex">
+                <td><IndexButton text="@item.NoteOrdinal.ToString()" noteId="@item.Id" OnClick="Display"/></td>
+                <td><IndexButton text="@item.NoteSubject" noteId="@item.Id" OnClick="Display"/></td>
+                <td><IndexButton text="@item.AuthorName" noteId="@item.Id" OnClick="Display"/></td>
+                <td><IndexButton text="@when" noteId="@item.Id" OnClick="Display"/></td>
+                @if (item.ResponseCount > 0)
+                {
+                    <td><IndexButton text="@item.ResponseCount.ToString()" noteId="@item.Id" OnClick="Display" /></td>
+                }
+                else
+                {
+                    <td></td>
+                }
+                <td><IndexButton text="View" noteId="@item.Id" OnClick="Display" /></td>
+            </tr>
+        }
+    }
+</table>
+
+@code{
+    [Parameter] public NoteDisplayIndexModel Model { get; set; }
+    [Parameter] public EventCallback<string> OnClick { get; set; }
+
+    protected void Display(string newMessage)
+    {
+        OnClick.InvokeAsync(newMessage);
+    }
+}

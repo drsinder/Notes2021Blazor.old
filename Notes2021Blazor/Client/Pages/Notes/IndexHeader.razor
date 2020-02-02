@@ -1,0 +1,14 @@
+﻿@using Notes2021Blazor.Shared                     
+
+<h3 class="text-center">@Model.noteFile.NoteFileName - @Model.noteFile.NoteFileTitle </h3>
+<h5>
+    Last Edited - @Model.tZone.Local(@Model.noteFile.LastEdited) @Model.tZone.Abbreviation
+    <span class="keep-right">Base Notes - @BasenoteCount&nbsp;&nbsp;&nbsp;&nbsp;</span>
+</h5>
+
+
+
+@code{
+        [Parameter] public NoteDisplayIndexModel Model { get; set; }
+        [Parameter] public int BasenoteCount { get; set;}
+}

@@ -1,0 +1,16 @@
+﻿@using Notes2021Blazor.Shared
+
+    <button type="button" class="linkblue" @onclick="Display">@text</button>
+
+@code {
+    [Parameter] public long noteId { get; set; }
+    [Parameter] public string text { get; set; }
+    [Parameter] public EventCallback<string> OnClick { get; set; }
+
+    protected void Display()
+    {
+        OnClick.InvokeAsync("Note:" + noteId);
+    }
+
+}
+

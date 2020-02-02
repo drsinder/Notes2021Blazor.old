@@ -30,55 +30,10 @@ else
                     <div class="modal-dialog-scrollable">
                         <BlazoredModal />
                     </div>
-                     <h3 class="text-center">@Model.noteFile.NoteFileName - @Model.noteFile.NoteFileTitle </h3>
-                    <h5>
-                        Last Edited - @Model.tZone.Local(@Model.noteFile.LastEdited) @Model.tZone.Abbreviation <span class="keep-right">
-                            Base Notes - @basenoteCount&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>
-                    </h5>
+                    <IndexHeader Model="@Model" BasenoteCount="@basenoteCount"/>
                     <ListMenu Model="@Model" OnClick="ClickHandler" />
-                    <table class="table">
-                        <tr>
-                            <th>#</th>
-                            <th>Subject</th>
-                            <th>Writer</th>
-                            <th>Date/Time</th>
-                            <th>Responses</th>
-                            <th></th>
-                        </tr>
-                        @if (@Model.myAccess.ReadAccess)
-                        {
-                            string path = Model.rPath;
-                            foreach (var item in Model.Notes)
-                            {
-                                if (true || Model.ExpandOrdinal != item.NoteOrdinal)
-                                {
-                                    <tr class="noteindex">
-                                        <td><a href="/notes/display/@item.Id">@item.NoteOrdinal</a></td>
-                                        <td><a href="/notes/display/@item.Id">@item.NoteSubject</a></td>
-                                        <td><a href="/notes/display/@item.Id">@item.AuthorName</a></td>
-                                        <td><a href="/notes/display/@item.Id">@Model.tZone.Local(@item.CreateDate) @Model.tZone.Abbreviation</a></td>
-
-                                        @if (item.ResponseCount > 0)
-                                        {
-                                            <td><a href="/notes/display/@item.Id">@item.ResponseCount</a></td>
-                                        }
-                                        else
-                                        {
-                                            <td></td>
-                                        }
-                                        <td>
-                                            <a href="/notes/display/@item.Id">View</a>
-                                        </td>
-                                    </tr>
-                                }
-
-                            }
-                        }
-                    </table>
-                    <div class="lower-menu">
-                        <ListMenu Model="@Model" OnClick="ClickHandler" />
-                    </div>
+                    <NoteIndex Model="@Model" OnClick="ClickHandler" />
+                    <ListMenu Model="@Model" OnClick="ClickHandler" />
                     <div class="arrow1">
                         <div>
                             <EditForm Model="@myInput" Context="EditBox">
@@ -125,6 +80,16 @@ else
         if (newMessage == "Done")
         {
             mode = 0;
+            this.StateHasChanged();
+        }
+        else if( newMessage.StartsWith("Note:"))
+        {
+            string notenum = newMessage.Substring(5, newMessage.Length - 5);
+            long newmode = long.Parse(notenum);
+
+            currentHeader = Model.AllNotes.Find(p => p.Id == newmode);
+
+            mode = newmode;
             this.StateHasChanged();
         }
         else if (newMessage == "ListHelp")

@@ -22,7 +22,8 @@ else
 
         <h4>
             Subject:@currentHeader.NoteSubject <br />
-            Author: @currentHeader.AuthorName &nbsp;&nbsp;&nbsp;@(Model.tZone.Local(currentHeader.LastEdited).ToLongDateString()) @(Model.tZone.Local(currentHeader.LastEdited).ToShortTimeString()) @Model.tZone.Abbreviation
+            Author: @currentHeader.AuthorName &nbsp;&nbsp;&nbsp;
+              @(Model.tZone.Local(currentHeader.LastEdited).ToLongDateString()) @(Model.tZone.Local(currentHeader.LastEdited).ToShortTimeString()) @Model.tZone.Abbreviation
         </h4>
     </div>
     <div class="notebody">
