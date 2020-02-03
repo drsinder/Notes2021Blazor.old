@@ -12,14 +12,14 @@ else if (newnoteFlag)
     <NoteEditPanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId OnClick="ClickHandler" />
 }
 else if (editing)
-{  
+{
     <NoteEditPanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId EditHeader="@currentHeader" NoteContent="@currentContent" OnClick="ClickHandler" />
 }
 else
 {
     @*<div class="modal-dialog-scrollable">
-        <BlazoredModal />
-    </div>*@
+            <BlazoredModal />
+        </div>*@
     <h4 class="text-center">@Model.noteFile.NoteFileTitle</h4>
     <hr id="premenu" />
     <DisplayMenu Model="@Model" OnClick="ClickHandler" />
@@ -48,6 +48,7 @@ else
     <div class="notebody">
         @((MarkupString)currentContent.NoteBody)
     </div>
+
     <DisplayMenu Model="@Model" OnClick="ClickHandler" />
     <button @onclick="Done">Done Reading</button>
 
@@ -111,7 +112,7 @@ else
             curN += "." + currentHeader.ResponseOrdinal;
         }
 
-    }
+     }
 
     public async Task ClickHandler(string newMessage)
     {
