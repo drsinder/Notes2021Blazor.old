@@ -38,23 +38,19 @@ else
 {
     <AuthorizeView Roles="Admin">
         <Authorized Context="Other">
-            <div class="modal-dialog modal-lg dialog-float">
-                <div class="modal-content">
-                    <div class="roundedgrayindexinput modal-body">
-                        <h3>Create Note File:</h3>
-                        <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
-                            <DataAnnotationsValidator />
-                            <ValidationSummary />
-                            <strong>Enter a NoteFile Name:</strong>
-                            <InputText id="name" @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
-                            <strong>Enter a NoteFile Title:</strong>
-                            <InputText id="title" @bind-Value="dummyFile.NoteFileTitle" class="form-control short-input keep-center" />
-                            <button type="submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
-                        </EditForm>
-                    </div>
-                </div>
-                </div>
-</Authorized>
+            <div class="roundedgrayindexinput modal-body">
+                <h3>Create Note File:</h3>
+                <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <strong>Enter a NoteFile Name:</strong>
+                    <InputText id="name" @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
+                    <strong>Enter a NoteFile Title:</strong>
+                    <InputText id="title" @bind-Value="dummyFile.NoteFileTitle" class="form-control short-input keep-center" />
+                    <button type="submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
+                </EditForm>
+            </div>
+        </Authorized>
         <NotAuthorized>
             Access denied.
         </NotAuthorized>

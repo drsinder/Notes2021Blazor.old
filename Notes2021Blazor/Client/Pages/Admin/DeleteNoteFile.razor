@@ -31,15 +31,13 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized Context="Other">
-        <div class="dialog-float">
-            <div class="roundedgrayindexinput">
-                <h3>Delete Note File Id: @FileId</h3>
-                <h4>@fileName</h4>
-                <h4>@fileTitle</h4>
-                <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
-                    <button type="submit">Confirm</button> <button type="button" @onclick="Cancel">Cancel</button>
-                </EditForm>
-            </div>
+        <div class="roundedgrayindexinput">
+            <h3>Delete Note File Id: @FileId</h3>
+            <h4>@fileName</h4>
+            <h4>@fileTitle</h4>
+            <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
+                <button type="submit">Confirm</button> <button type="button" @onclick="Cancel">Cancel</button>
+            </EditForm>
         </div>
     </Authorized>
     <NotAuthorized>

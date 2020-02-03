@@ -12,14 +12,14 @@ else if (newnoteFlag)
     <NewNotePanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId OnClick="ClickHandler" />
 }
 else if (editing)
-{
+{  
     <NewNotePanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId EditHeader="@currentHeader" NoteContent="@currentContent" OnClick="ClickHandler" />
 }
 else
 {
-    <div class="modal-dialog-scrollable">
+    @*<div class="modal-dialog-scrollable">
         <BlazoredModal />
-    </div>
+    </div>*@
     <h4 class="text-center">@Model.noteFile.NoteFileTitle</h4>
     <hr id="premenu" />
     <DisplayMenu Model="@Model" OnClick="ClickHandler" />
@@ -357,7 +357,8 @@ else
     {
         var parameters = new ModalParameters();
         Modal.OnClose += HideDialog;
-        Modal.Show<HelpDialog2>("", parameters);
+        var options = new ModalOptions() { HideCloseButton = false };
+        Modal.Show<HelpDialog2>("", parameters, options);
     }
 
     void HideDialog(ModalResult modalResult)

@@ -45,12 +45,6 @@ else
         <Authorized>
 
             @message
-            @if (inDlg || true)
-            {
-                <div class="modal-dialog-scrollable">
-                    <BlazoredModal />
-                </div>
-            }
             <p>
                 <button @onclick="@(() => CreateNoteFile(0))">Create Note File</button>
                 @*@if (todo.Contains("announce"))

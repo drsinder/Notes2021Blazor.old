@@ -38,20 +38,18 @@ else
 {
     <AuthorizeView Roles="Admin">
         <Authorized Context="Other">
-            <div class="dialog-float">
-                <div class="roundedgrayindexinput">
-                    <h3>Edit Note File:</h3>
+            <div class="roundedgrayindexinput">
+                <h3>Edit Note File:</h3>
 
-                    <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
-                        <strong>Enter a NoteFile Name:</strong>
-                        <InputText id="name" @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
-                        <strong>Enter a NoteFile Title:</strong>
-                        <InputText id="title" @bind-Value="dummyFile.NoteFileTitle" class="form-control short-input keep-center" />
-                        <button type="submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
-                    </EditForm>
-                </div>
+                <EditForm id="createform" Model="@dummyFile" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <strong>Enter a NoteFile Name:</strong>
+                    <InputText id="name" @bind-Value="dummyFile.NoteFileName" class="form-control short-input keep-center" />
+                    <strong>Enter a NoteFile Title:</strong>
+                    <InputText id="title" @bind-Value="dummyFile.NoteFileTitle" class="form-control short-input keep-center" />
+                    <button type="submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
+                </EditForm>
             </div>
         </Authorized>
         <NotAuthorized>

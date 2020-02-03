@@ -31,15 +31,13 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized Context="Other">
-        <div class="dialog-float">
-            <div class="roundedgray">
-                <h3>Note File Id: @FileId</h3>
-                <h4>File Name: @fileName</h4>
-                <h4>Title: @fileTitle</h4>
-                <h4>Archives: @numArchives</h4>
-                <h4>Last Edited: @lastEdited GMT</h4>
-                <h4>Owner: @owner</h4>
-            </div>
+        <div class="roundedgrayindexinput">
+            <h3>Note File Id: @FileId</h3>
+            <h4>File Name: @fileName</h4>
+            <h4>Title: @fileTitle</h4>
+            <h4>Archives: @numArchives</h4>
+            <h4>Last Edited: @lastEdited GMT</h4>
+            <h4>Owner: @owner</h4>
             <button type="button" @onclick="Cancel">Cancel</button>
         </div>
     </Authorized>

@@ -1,38 +1,38 @@
 ﻿@inject IModalService ModalService
-<div class="modal-dialog modal-lg dialog-float">
-    <div class="modal-content">
-        <div class="roundedgrayindexinput modal-body">
-            <h3>Note Help</h3>
-            <p>
-                <b>I</b> - returns you to the index of the NoteFile which lists the base notes.<br />
-                <b>SHIFT-RETURN/ENTER</b> - takes you to the next base note in the current NoteFile.<br />
-                <b>SHIFT-F8</b> - takes you to the previous base note in the current NoteFile.<br />
-                <b>/</b> - takes you to the next response, if any, or base note in the current NoteFile.<br />
-                <b>F8</b> - takes you to the previous response if any or base note base note in the current NoteFile.<br />
-                <b>F</b> - Forward a note by email.<br />
-                <b>C</b> - Copy to another file.<br />
-                <b>m</b> - mail note string.<br />
-                <b>M</b>- Mark a note for later output.<br />
-                <b>H</b> - Show note string as expandable Html.<br />
-                <b>h</b> - Show note string as Html.<br />
-                <b>S</b> - Start a Search<br />
-                <b>N</b> - write a response. This option may not appear if you do not have permission to write notes.<br />
-                <b>E</b> - Edit the note/response (if permitted)<br />
-                <b>D</b> - Delete the note/response (if permitted)<br />
-                <b>SPACE-BAR</b> - continue sequencing.<br />
-                <b>SHIFT-SPACE-BAR</b> - continue searching.<br /><br />
-                In the green input box:<br />
-                <b>Type a number and press RETURN/ENTER</b> to display that note number.<br />
-                You may go to a response by typing the <b>noteNumber.responseNumber</b> and pressing <b>RETURN/ENTER</b>.<br />
-                Type <b>+</b> or <b>-</b> then a number and press <b>RETURN/ENTER</b> to go forward or backward that many base notes.<br />
-                Type <b>+</b> or <b>-</b> then <b>.</b> then a number and press <b>RETURN/ENTER</b> to go forward or backward that many responses.
-            </p>
-            <button type="button" @onclick="Cancel">Close</button>
-        </div>
-    </div>
+
+<div class="roundedgrayindexinput">
+    <h3>Note Help</h3>
+    <p>
+        <b>I</b> - returns you to the index of the NoteFile which lists the base notes.<br />
+        <b>SHIFT-RETURN/ENTER</b> - takes you to the next base note in the current NoteFile.<br />
+        <b>SHIFT-F8</b> - takes you to the previous base note in the current NoteFile.<br />
+        <b>/</b> - takes you to the next response, if any, or base note in the current NoteFile.<br />
+        <b>F8</b> - takes you to the previous response if any or base note base note in the current NoteFile.<br />
+        <b>F</b> - Forward a note by email.<br />
+        <b>C</b> - Copy to another file.<br />
+        <b>m</b> - mail note string.<br />
+        <b>M</b>- Mark a note for later output.<br />
+        <b>H</b> - Show note string as expandable Html.<br />
+        <b>h</b> - Show note string as Html.<br />
+        <b>S</b> - Start a Search<br />
+        <b>N</b> - write a response. This option may not appear if you do not have permission to write notes.<br />
+        <b>E</b> - Edit the note/response (if permitted)<br />
+        <b>D</b> - Delete the note/response (if permitted)<br />
+        <b>SPACE-BAR</b> - continue sequencing.<br />
+        <b>SHIFT-SPACE-BAR</b> - continue searching.<br /><br />
+        In the green input box:<br />
+        <b>Type a number and press RETURN/ENTER</b> to display that note number.<br />
+        You may go to a response by typing the <b>noteNumber.responseNumber</b> and pressing <b>RETURN/ENTER</b>.<br />
+        Type <b>+</b> or <b>-</b> then a number and press <b>RETURN/ENTER</b> to go forward or backward that many base notes.<br />
+        Type <b>+</b> or <b>-</b> then <b>.</b> then a number and press <b>RETURN/ENTER</b> to go forward or backward that many responses.
+    </p>
+    <button type="button" @onclick="Cancel">Close</button>
 </div>
 
+
 @code{
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+
 
     private void Cancel()
     {
