@@ -10,7 +10,7 @@ using Notes2021Blazor.Shared;
 namespace Notes2021Blazor.Shared.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    [Migration("20200131213337_Initial")]
+    [Migration("20200203192946_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace Notes2021Blazor.Shared.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f48f34e7-64bf-4ffa-a417-47120e967e87",
-                            ConcurrencyStamp = "ab1385e8-18a5-4184-b937-73dc107f6f22",
+                            Id = "2a007f07-f281-483f-9f0b-1bb972e9c20d",
+                            ConcurrencyStamp = "5d7f1018-95b4-437a-b568-b74e1b826744",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "9598e6c0-6982-4c26-a5fe-4f5d21dc70ef",
-                            ConcurrencyStamp = "cde6b0ab-3fa5-4e90-ab6f-77f4aef0e44d",
+                            Id = "68c951e1-d25a-45cc-beeb-479e5ba18c0c",
+                            ConcurrencyStamp = "ef32e54b-d546-47fd-b5d1-a167e19023ac",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -270,6 +270,49 @@ namespace Notes2021Blazor.Shared.Migrations
                     b.HasKey("AuditID");
 
                     b.ToTable("Audit");
+                });
+
+            modelBuilder.Entity("Notes2021Blazor.Shared.ExternalNote", b =>
+                {
+                    b.Property<string>("NoteGuid")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("ArchiveId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("BaseNoteId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DirectorMessage")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<long>("EditNoteId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("FileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Heading")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("NoteBody")
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100000);
+
+                    b.Property<string>("NoteSubject")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("NoteGuid");
+
+                    b.ToTable("ExternalNote");
                 });
 
             modelBuilder.Entity("Notes2021Blazor.Shared.HomePageMessage", b =>

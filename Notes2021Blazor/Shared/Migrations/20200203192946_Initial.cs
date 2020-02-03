@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Notes2021Blazor.Shared.Migrations
 {
@@ -61,6 +61,26 @@ namespace Notes2021Blazor.Shared.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Audit", x => x.AuditID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExternalNote",
+                columns: table => new
+                {
+                    NoteGuid = table.Column<string>(maxLength: 100, nullable: false),
+                    FileId = table.Column<int>(nullable: false),
+                    ArchiveId = table.Column<int>(nullable: false),
+                    BaseNoteId = table.Column<long>(nullable: false),
+                    EditNoteId = table.Column<long>(nullable: false),
+                    Heading = table.Column<string>(maxLength: 200, nullable: true),
+                    NoteSubject = table.Column<string>(maxLength: 200, nullable: true),
+                    DirectorMessage = table.Column<string>(maxLength: 200, nullable: true),
+                    Tags = table.Column<string>(maxLength: 200, nullable: true),
+                    NoteBody = table.Column<string>(maxLength: 100000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExternalNote", x => x.NoteGuid);
                 });
 
             migrationBuilder.CreateTable(
@@ -528,8 +548,8 @@ namespace Notes2021Blazor.Shared.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "f48f34e7-64bf-4ffa-a417-47120e967e87", "ab1385e8-18a5-4184-b937-73dc107f6f22", "User", "USER" },
-                    { "9598e6c0-6982-4c26-a5fe-4f5d21dc70ef", "cde6b0ab-3fa5-4e90-ab6f-77f4aef0e44d", "Admin", "ADMIN" }
+                    { "2a007f07-f281-483f-9f0b-1bb972e9c20d", "5d7f1018-95b4-437a-b568-b74e1b826744", "User", "USER" },
+                    { "68c951e1-d25a-45cc-beeb-479e5ba18c0c", "ef32e54b-d546-47fd-b5d1-a167e19023ac", "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -867,6 +887,9 @@ namespace Notes2021Blazor.Shared.Migrations
 
             migrationBuilder.DropTable(
                 name: "Audit");
+
+            migrationBuilder.DropTable(
+                name: "ExternalNote");
 
             migrationBuilder.DropTable(
                 name: "HomePageMessage");

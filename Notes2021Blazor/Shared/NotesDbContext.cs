@@ -7,7 +7,6 @@ namespace Notes2021Blazor.Shared
 {
     public partial class NotesDbContext : IdentityDbContext
     {
-
         public DbSet<UserData> UserData { get; set; }
 
         public DbSet<TZone> TZone { get; set; }
@@ -27,6 +26,8 @@ namespace Notes2021Blazor.Shared
 
         public DbSet<SQLFile> SQLFile { get; set; }
         public DbSet<SQLFileContent> SQLFileContent { get; set; }
+
+        public DbSet<ExternalNote> ExternalNote { get; set; }
 
         public void AddJsonFile(string v, bool optional)
         {
