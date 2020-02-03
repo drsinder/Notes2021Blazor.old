@@ -88,6 +88,7 @@ else
 
     protected async override Task OnParametersSetAsync()
     {
+        Model.myHeader = currentHeader;
         myInput = new LocalInput();
         myInput.isAutoFocus = true;
 
@@ -173,7 +174,7 @@ else
         {
             curN += "." + currentHeader.ResponseOrdinal;
         }
-
+        Model.myHeader = currentHeader;
         this.StateHasChanged();
     }
 
@@ -349,7 +350,7 @@ else
         {
             curN += "." + currentHeader.ResponseOrdinal;
         }
-
+        Model.myHeader = currentHeader;
         this.StateHasChanged();
     }
 

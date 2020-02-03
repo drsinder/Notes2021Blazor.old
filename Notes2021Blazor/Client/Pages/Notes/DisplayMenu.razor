@@ -17,7 +17,7 @@
         {
             <button type="button" class="link" @onclick="NewResponse">&nbsp;&nbsp;&nbsp;New Response</button>
         }
-        @if (@Model.myAccess.DeleteEdit)
+        @if (@Model.myAccess.DeleteEdit || Model.myHeader.AuthorID == Model.myAccess.UserID)
         {
             <button type="button" class="link" @onclick="Edit">&nbsp;&nbsp;&nbsp;Edit</button>
             <button type="button" class="link" @onclick="Delete">&nbsp;&nbsp;&nbsp;Delete</button>
