@@ -36,6 +36,19 @@
                 <strong>Note Body</strong>
                 <BlazoredTextEditor @ref="@QuillHtml">
                     <ToolbarContent>
+                        @*<span class="ql-formats">
+                            <select class="ql-font">
+                                <option selected=""></option>
+                                <option value="serif"></option>
+                                <option value="monospace"></option>
+                            </select>
+                            <select class="ql-size">
+                                <option value="small"></option>
+                                <option selected=""></option>
+                                <option value="large"></option>
+                                <option value="huge"></option>
+                            </select>
+                        </span>*@
                         <select class="ql-header">
                             <option selected=""></option>
                             <option value="1"></option>
@@ -77,6 +90,7 @@
 
 @code {
     BlazoredTextEditor QuillHtml;
+    BlazoredTextEditor QuillNative;
 
     string QuillHTMLContent;
     string QuillContent;
