@@ -21,7 +21,7 @@ else
         <Authorized>
             @if (newnoteFlag)
             {
-                <NewNotePanel Model="@Model" BaseNoteId=0 OnClick="ClickHandler"  />
+                <NoteEditPanel Model="@Model" BaseNoteId=0 OnClick="ClickHandler"  />
             }
             else if (mode == 0)  // index mode
             {
