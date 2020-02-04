@@ -90,6 +90,8 @@ else
             this.StateHasChanged();
             int nord = int.Parse(newMessage.Substring(5, newMessage.Length - 5));
 
+            if (nord > 1)
+                nord--;
             scroller = "Base" + nord;
         }
         else if (newMessage.StartsWith("Note:"))
