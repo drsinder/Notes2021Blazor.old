@@ -78,15 +78,19 @@ else
     private string message = "Loading...";
     private LocalInput myInput { get; set; }
     private NoteHeader currentHeader { get; set; }
+    private string scroller { get; set; }
 
     private Timer timer { get; set; }
 
     void ClickHandler(string newMessage)
     {
-        if (newMessage == "Done")
+        if (newMessage.StartsWith("Done:"))
         {
             mode = 0;
             this.StateHasChanged();
+            int nord = int.Parse(newMessage.Substring(5, newMessage.Length - 5));
+
+            scroller = "Base" + nord;
         }
         else if (newMessage.StartsWith("Note:"))
         {
@@ -125,6 +129,7 @@ else
 
     protected async override Task OnParametersSetAsync()
     {
+        scroller = string.Empty;
         if (NavigationManager.Uri.Contains("/display/"))  // display a note from the main index
         {
             headerId = long.Parse(fileId);
@@ -224,6 +229,11 @@ else
     protected void TimerTick(Object source, ElapsedEventArgs e)
     {
         jsRuntime.InvokeAsync<object>("setfocus", "arrow1");
+        if (!string.IsNullOrEmpty(scroller))
+        {
+            jsRuntime.InvokeAsync<object>("setlocation", scroller);
+            scroller = string.Empty;
+        }
     }
 
     protected void KeyPressed(KeyboardEventArgs eventArgs)

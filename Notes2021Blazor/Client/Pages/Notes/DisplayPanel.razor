@@ -292,7 +292,7 @@ else
 
     private void Done()
     {
-        OnClick.InvokeAsync("Done");
+        OnClick.InvokeAsync("Done:" + currentHeader.NoteOrdinal);
     }
 
     private async Task TextHasChanged(string typedInput)
