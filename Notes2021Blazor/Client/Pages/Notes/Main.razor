@@ -258,24 +258,24 @@ else
     {
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
 
-        if (typedInput == "Z")
-            ShowHelp();
-        if (typedInput == "N" && Model.myAccess.Write)
-            NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
-        if (typedInput == "X" && Model.myAccess.ReadAccess)
-            NavigationManager.NavigateTo("/notes/export/" + @Model.noteFile.Id);
-        if (typedInput == "H" && Model.myAccess.ReadAccess)
-            NavigationManager.NavigateTo("/notes/ashtml/" + @Model.noteFile.Id);
-        if (typedInput == "h" && Model.myAccess.ReadAccess)
-            NavigationManager.NavigateTo("/notes/ashtmlalt/" + @Model.noteFile.Id);
-        if (typedInput == "m" && Model.myAccess.ReadAccess)
-            NavigationManager.NavigateTo("/notes/mailfileashtml/" + @Model.noteFile.Id);
-        if (typedInput == "S" && Model.myAccess.ReadAccess)
-            NavigationManager.NavigateTo("/notes/searchfromindex/" + @Model.noteFile.Id);
-        if (typedInput == "M" && Model.myAccess.ReadAccess)
-            NavigationManager.NavigateTo("/notes/markmine/" + @Model.noteFile.Id);
-        if (typedInput == "O" && Model.isMarked && Model.myAccess.ReadAccess)
-            NavigationManager.NavigateTo("/notes/exportmarked/" + @Model.noteFile.Id);
+        //if (typedInput == "Z")
+        //    ShowHelp();
+        //if (typedInput == "N" && Model.myAccess.Write)
+        //    NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
+        //if (typedInput == "X" && Model.myAccess.ReadAccess)
+        //    NavigationManager.NavigateTo("/notes/export/" + @Model.noteFile.Id);
+        //if (typedInput == "H" && Model.myAccess.ReadAccess)
+        //    NavigationManager.NavigateTo("/notes/ashtml/" + @Model.noteFile.Id);
+        //if (typedInput == "h" && Model.myAccess.ReadAccess)
+        //    NavigationManager.NavigateTo("/notes/ashtmlalt/" + @Model.noteFile.Id);
+        //if (typedInput == "m" && Model.myAccess.ReadAccess)
+        //    NavigationManager.NavigateTo("/notes/mailfileashtml/" + @Model.noteFile.Id);
+        //if (typedInput == "S" && Model.myAccess.ReadAccess)
+        //    NavigationManager.NavigateTo("/notes/searchfromindex/" + @Model.noteFile.Id);
+        //if (typedInput == "M" && Model.myAccess.ReadAccess)
+        //    NavigationManager.NavigateTo("/notes/markmine/" + @Model.noteFile.Id);
+        //if (typedInput == "O" && Model.isMarked && Model.myAccess.ReadAccess)
+        //    NavigationManager.NavigateTo("/notes/exportmarked/" + @Model.noteFile.Id);
 
 
         //if (typedInput == "A")
@@ -284,8 +284,8 @@ else
 
         int fileId = Model.noteFile.Id;
         int noteOrd = 1;
-        if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
-            return;
+        //if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
+        //    return;
 
         if (typedInput.Contains("."))
         {
@@ -300,6 +300,10 @@ else
             {
                 return;
             }
+            currentHeader = Model.AllNotes.Where(p => p.NoteOrdinal == noteOrd && p.ResponseOrdinal == respOrd).SingleOrDefault();
+            if (currentHeader == null)
+                return;
+            mode = currentHeader.Id;
         }
         else
         {
