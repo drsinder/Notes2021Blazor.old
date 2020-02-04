@@ -148,10 +148,16 @@ else
         }
         else if (newMessage == "Delete")
         {
+            var parameters = new ModalParameters();
+            parameters.Add("NoteId", currentHeader.Id);
+            parameters.Add("FileId", Model.noteFile.Id);
+            var options = new ModalOptions() { HideCloseButton = false };
+            Modal.OnClose += HideDialog;
+            Modal.Show<DeleteNote>("", parameters, options);
 
 
-            await Http.DeleteAsync("api/newbasenote/" + currentHeader.Id);
-            NavigationManager.NavigateTo("/notes/main/" + Model.noteFile.Id, true);
+            //await Http.DeleteAsync("api/newbasenote/" + currentHeader.Id);
+            //NavigationManager.NavigateTo("/notes/main/" + Model.noteFile.Id, true);
         }
         else  // pass on to list parent
         {
