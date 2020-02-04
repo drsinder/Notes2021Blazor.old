@@ -33,7 +33,7 @@ else
                 }
                 else
                 {
-                    <IndexHeader Model="@Model" BasenoteCount="@basenoteCount" />
+                    <IndexHeader Model="@Model" BasenoteCount="@basenoteCount" arcId="@archiveID" />
                     <ListMenu Model="@Model" OnClick="ClickHandler" />
                     <NoteIndex Model="@Model" OnClick="ClickHandler" />
                     <ListMenu Model="@Model" OnClick="ClickHandler" />
@@ -125,7 +125,7 @@ else
 
     protected async override Task OnParametersSetAsync()
     {
-        if (NavigationManager.Uri.Contains("display"))  // display a note from the main index
+        if (NavigationManager.Uri.Contains("/display/"))  // display a note from the main index
         {
             headerId = long.Parse(fileId);
             currentHeader = Model.Notes.Find(p => p.Id == headerId);
@@ -133,7 +133,7 @@ else
             mode = currentHeader.Id;
             this.StateHasChanged();
         }
-        if (NavigationManager.Uri.Contains("main"))     // show the main index
+        if (NavigationManager.Uri.Contains("/main/"))     // show the main index
         {
             Id = int.Parse(fileId);
             archiveID = await _localStorage.GetItemAsync<int>("ArchiveId");
@@ -145,7 +145,7 @@ else
 
             try
             {
-                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + fileId);
+                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + fileId + "." + archiveID);
             }
             catch (Exception ex)
             {
@@ -165,7 +165,7 @@ else
 
             basenoteCount = Model.Notes.Count;
         }
-        if (NavigationManager.Uri.Contains("enterandshow")) // load the index data and then display a note
+        if (NavigationManager.Uri.Contains("/enterandshow/")) // load the index data and then display a note
         {
             // fileId is really noteId so use it to get base note header
 
@@ -181,7 +181,7 @@ else
 
             try
             {
-                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id);
+                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id + "." + archiveID);
             }
             catch (Exception ex)
             {
@@ -239,9 +239,11 @@ else
             case "A":
                 if (Model.myAccess.EditAccess)
                 {
-                    //timer.Enabled = false;
                     EditAccess();
                 }
+                break;
+            case "a":
+                ShowArchive();
                 break;
             default:
                 //var parameters = new ModalParameters();
@@ -258,34 +260,13 @@ else
     {
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
 
-        //if (typedInput == "Z")
-        //    ShowHelp();
-        //if (typedInput == "N" && Model.myAccess.Write)
-        //    NavigationManager.NavigateTo("/notes/newbasenote/" + @Model.noteFile.Id);
-        //if (typedInput == "X" && Model.myAccess.ReadAccess)
-        //    NavigationManager.NavigateTo("/notes/export/" + @Model.noteFile.Id);
-        //if (typedInput == "H" && Model.myAccess.ReadAccess)
-        //    NavigationManager.NavigateTo("/notes/ashtml/" + @Model.noteFile.Id);
-        //if (typedInput == "h" && Model.myAccess.ReadAccess)
-        //    NavigationManager.NavigateTo("/notes/ashtmlalt/" + @Model.noteFile.Id);
-        //if (typedInput == "m" && Model.myAccess.ReadAccess)
-        //    NavigationManager.NavigateTo("/notes/mailfileashtml/" + @Model.noteFile.Id);
-        //if (typedInput == "S" && Model.myAccess.ReadAccess)
-        //    NavigationManager.NavigateTo("/notes/searchfromindex/" + @Model.noteFile.Id);
-        //if (typedInput == "M" && Model.myAccess.ReadAccess)
-        //    NavigationManager.NavigateTo("/notes/markmine/" + @Model.noteFile.Id);
         //if (typedInput == "O" && Model.isMarked && Model.myAccess.ReadAccess)
         //    NavigationManager.NavigateTo("/notes/exportmarked/" + @Model.noteFile.Id);
 
-
-        //if (typedInput == "A")
-        //    NavigationManager.NavigateTo("/notes/editaccess/" + @Model.noteFile.Id);
-
-
         int fileId = Model.noteFile.Id;
         int noteOrd = 1;
-        //if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
-        //    return;
+        if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
+            return;
 
         if (typedInput.Contains("."))
         {
@@ -357,6 +338,24 @@ else
     {
         Modal.OnClose -= HideDialog;
     }
+
+    void ShowArchive()
+    {
+        if (Model.noteFile.NumberArchives == 0)
+            return;
+        var parameters = new ModalParameters();
+        parameters.Add("NoteFile", Model.noteFile);
+        Modal.OnClose += HideDialogArchive;
+        timer.Stop();
+        Modal.Show<Archives>("", parameters);
+    }
+
+    void HideDialogArchive(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialogArchive;
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
+
 
     private void ShowMessage(string message)
     {

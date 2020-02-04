@@ -1,0 +1,62 @@
+﻿@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@inject IModalService ModalService
+@inject ILocalStorageService _localStorage
+
+    <div class="roundedgrayindexinput modal-body">
+        <h3>Archives for:</h3>
+        <h3>@noteFile.NoteFileName - @noteFile.NoteFileTitle</h3>
+        <p>0 is the active file.  <br/>1 is the oldest archive. <br />@noteFile.NumberArchives is the most recent archive</p>
+        <p>Type the number of the one you want to view and press Enter:</p>
+        @*<div>*@
+            <EditForm Model="@locals" Context="EditBox">
+                <div class="form-group">
+                    <InputText ValueChanged="@( (string val) => TextHasChanged(val) )"
+                               Value="@locals.myInput"
+                               ValueExpression="@( () => locals.myInput )" />
+                </div>
+            </EditForm>
+            <button type="button" @onclick="Cancel">Cancel</button>
+        @*</div>*@
+    </div>
+
+@code{
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+
+
+    public NoteFile noteFile { get; set; }
+    protected int myId;
+    public LocalInput locals { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        locals = new LocalInput();
+        noteFile = Parameters.Get<NoteFile>("NoteFile");
+    }
+
+
+    private void TextHasChanged(string typedInput)
+    {
+        if (!int.TryParse(typedInput, out myId))
+            return;
+
+        if (myId < 0 || myId > noteFile.NumberArchives)
+            return;
+
+        _localStorage.SetItemAsync("ArchiveId", 1);
+
+        ModalService.Close(ModalResult.Ok<string>("Ok"));
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+
+    public class LocalInput
+    {
+        public string myInput { get; set; }
+    }
+
+}

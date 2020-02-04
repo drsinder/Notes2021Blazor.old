@@ -1,14 +1,21 @@
-﻿@using Notes2021Blazor.Shared                     
+﻿@using Notes2021Blazor.Shared
+@inject ILocalStorageService _localStorage
 
 <h3 class="text-center">@Model.noteFile.NoteFileName - @Model.noteFile.NoteFileTitle </h3>
 <h5>
     Last Edited - @Model.tZone.Local(@Model.noteFile.LastEdited) @Model.tZone.Abbreviation
-    <span class="keep-right">Base Notes - @BasenoteCount&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <span class="keep-right">
+        @if (Model.noteFile.NumberArchives > 0)
+        {
+            <span>archive @arcId of @Model.noteFile.NumberArchives &nbsp;&nbsp;&nbsp;</span>
+        }
+        Base Notes - @BasenoteCount&nbsp;&nbsp;&nbsp;&nbsp;
+    </span>
 </h5>
 
 
-
 @code{
-        [Parameter] public NoteDisplayIndexModel Model { get; set; }
-        [Parameter] public int BasenoteCount { get; set;}
+    [Parameter] public NoteDisplayIndexModel Model { get; set; }
+    [Parameter] public int BasenoteCount { get; set; }
+    [Parameter] public int arcId { get; set; }
 }

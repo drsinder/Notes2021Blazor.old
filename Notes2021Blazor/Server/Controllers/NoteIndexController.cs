@@ -30,13 +30,20 @@ namespace Notes2021Blazor.Server.Controllers
         [HttpGet]
         public async Task<NoteDisplayIndexModel> Get(string sid)
         {
-            int id = int.Parse(sid);
+            NoteDisplayIndexModel idxModel = new NoteDisplayIndexModel();
+            if (!sid.Contains("."))
+            {
+                idxModel.message = "string passed to server must be in form fileId.ArciveID";
+                return idxModel;
+            }
+            
+            string[] stuff = sid.Split(".");
+            
+            int id = int.Parse(stuff[0]);
 
-            int arcId = 0;  //TODO
+            int arcId = int.Parse(stuff[1]);
 
             bool isAdmin = User.IsInRole("Admin");
-
-            NoteDisplayIndexModel idxModel = new NoteDisplayIndexModel();
 
             idxModel.linkedText = string.Empty;
 
