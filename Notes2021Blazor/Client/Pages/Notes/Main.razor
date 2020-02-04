@@ -1,6 +1,7 @@
 ﻿@page "/notes/main/{fileId}"
 @page "/notes/display/{fileId}"
 @page "/notes/enterandshow/{fileId}"
+@page "/notes/sequence/"
 @using Notes2021Blazor.Shared
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Components.Authorization
@@ -54,7 +55,7 @@ else
             }
             else // note display mode
             {
-                <DisplayPanel Model="Model" currentHeader="currentHeader" Id="Id" OnClick="ClickHandler" />
+                <DisplayPanel Model="Model" currentHeader="currentHeader" Id="Id" SeqBases="seqBases" trackers="trackers" seqIndx="seqIndex" OnClick="ClickHandler" />
             }
         </Authorized>
         <NotAuthorized>
@@ -81,6 +82,11 @@ else
     private string scroller { get; set; }
 
     private Timer timer { get; set; }
+
+    private List<Sequencer> trackers { get; set; }
+    private int seqIndex { get; set; }
+
+    private List<NoteHeader> seqBases { get; set; }
 
     void ClickHandler(string newMessage)
     {
@@ -127,6 +133,17 @@ else
         {
             ListFiles();
         }
+        else if (newMessage == "SeqFileDone")
+        {
+            seqIndex++;
+            if (seqIndex >= trackers.Count)
+            {
+                message = null;
+                NavigationManager.NavigateTo("/");
+                return;
+            }
+            StartFileSequence().GetAwaiter().GetResult();
+        }
         else
         {
             ShowMessage(newMessage + " Clicked");
@@ -136,6 +153,7 @@ else
     protected async override Task OnParametersSetAsync()
     {
         scroller = string.Empty;
+        seqIndex = -1;
         if (NavigationManager.Uri.Contains("/display/"))  // display a note from the main index
         {
             headerId = long.Parse(fileId);
@@ -156,7 +174,7 @@ else
 
             try
             {
-                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + fileId + "." + archiveID);
+                Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id + "." + archiveID);
                 Model.Notes = Model.AllNotes.Where(p => p.ResponseOrdinal == 0).OrderBy(p => p.NoteOrdinal).ToList();
             }
             catch (Exception ex)
@@ -220,6 +238,21 @@ else
             newnoteFlag = false;
             mode = myNoteId;
         }
+        if (NavigationManager.Uri.Contains("/sequence"))
+        {
+            trackers = await Http.GetJsonAsync<List<Sequencer>>("api/sequencer");
+            if (trackers == null || trackers.Count < 1)
+            {
+                message = null;
+                NavigationManager.NavigateTo("/");
+                return;
+            }
+
+            trackers = trackers.OrderBy(p => p.Ordinal).ThenBy(p => p.LastTime).ToList();
+
+            seqIndex = 0;
+            await StartFileSequence();
+        }
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -240,6 +273,74 @@ else
             jsRuntime.InvokeAsync<object>("setlocation", scroller);
             scroller = string.Empty;
         }
+    }
+
+    protected async Task StartFileSequence()
+    {
+        await LoadSeqFile();
+        seqBases = SearchForTrackedBaseNotes(trackers[seqIndex]);
+        while (seqBases == null || seqBases.Count == 0)
+        {
+            seqIndex++;
+            if (seqIndex >= trackers.Count)
+            {
+                break;
+            }
+
+            await LoadSeqFile();
+            seqBases = SearchForTrackedBaseNotes(trackers[seqIndex]);
+        }
+        if (seqBases == null || seqBases.Count == 0)
+        {
+            message = null;
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+        currentHeader = seqBases[0];
+        mode = currentHeader.Id;
+        StateHasChanged();
+    }
+
+    protected async Task LoadSeqFile()
+    {
+        Sequencer tr = trackers[seqIndex];
+        Id = tr.NoteFileId;
+
+        archiveID = 0;
+
+        mode = 0;  // index mode
+
+        myInput = new LocalInput();
+        myInput.isAutoFocus = true;
+
+        try
+        {
+            Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id + "." + archiveID);
+            Model.Notes = Model.AllNotes.Where(p => p.ResponseOrdinal == 0).OrderBy(p => p.NoteOrdinal).ToList();
+        }
+        catch (Exception ex)
+        {
+            Model = new NoteDisplayIndexModel { message = ex.Message };
+        }
+
+        if (Model == null)
+        {
+            message = "Model is null";
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(Model.message))
+            message = Model.message;
+
+        message = null;
+
+        basenoteCount = Model.Notes.Count;
+    }
+
+    protected List<NoteHeader> SearchForTrackedBaseNotes(Sequencer tr)
+    {
+        List<NoteHeader> bnh = Model.Notes.Where(p => p.ThreadLastEdited > tr.LastTime).OrderBy(p => p.NoteOrdinal).ToList();
+        return bnh;
     }
 
     protected void ListFiles()

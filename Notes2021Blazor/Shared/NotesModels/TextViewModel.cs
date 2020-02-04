@@ -37,4 +37,11 @@ namespace Notes2021Blazor.Shared
 
     }
 
+    public class SCheckModel
+    {
+        public bool isChecked { get; set; }
+        public int fileId { get; set; }
+    }
 }
+
+

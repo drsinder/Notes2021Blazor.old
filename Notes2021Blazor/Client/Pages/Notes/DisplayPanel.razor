@@ -66,13 +66,16 @@ else
                     <br /><input type="submit" value="Navigate" class="btn btn-sm" /> b#.r#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-)b#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-).r#
                 </div>
             </div>
-        }
+}
 
 @functions
 {
     [Parameter] public NoteDisplayIndexModel Model { get; set; }
     [Parameter] public NoteHeader currentHeader { get; set; }
     [Parameter] public int Id { get; set; }
+    [Parameter] public List<NoteHeader> SeqBases { get; set; }
+    [Parameter] public List<Sequencer> trackers { get; set; }
+    [Parameter] public int seqIndx { get; set; }
 
     protected bool newnoteFlag { get; set; }
     protected bool editing { get; set; }

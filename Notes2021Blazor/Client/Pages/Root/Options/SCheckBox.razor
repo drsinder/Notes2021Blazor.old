@@ -1,0 +1,44 @@
+﻿@using Notes2021Blazor.Shared
+@using Newtonsoft.Json
+@using System.Text
+
+@inject HttpClient Http
+
+<input type="checkbox" @bind="@Model.isChecked" @onclick="OnClick">
+
+@code {
+
+    [Parameter] public int fileId { get; set; }
+    [Parameter] public bool isChecked { get; set; }
+
+    public SCheckModel Model { get; set; }
+
+    protected Sequencer tracker { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Model = new SCheckModel
+        {
+            isChecked = isChecked,
+            fileId = fileId
+        };
+
+    }
+
+    public async Task OnClick()
+    {
+        Model.isChecked = !Model.isChecked;
+
+        if (Model.isChecked) // create item
+        {
+            var stringContent = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
+            await Http.PostAsync("api/sequencer", stringContent);
+        }
+        else // delete it
+        {
+            await Http.DeleteAsync("api/sequencer/" + Model.fileId);
+        }
+    }
+
+
+}
