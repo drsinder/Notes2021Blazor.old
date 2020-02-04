@@ -39,7 +39,7 @@ else
                         <div>
                             <EditForm Model="@myInput" Context="EditBox">
                                 <div class="form-group">
-                                    <InputText autofocus="@myInput.isAutoFocus" style="width: 7em"
+                                    <InputText id="arrow1" autofocus="@myInput.isAutoFocus" style="width: 7em"
                                                ValueChanged="@( (string val) => TextHasChanged(val) )"
                                                Value="@myInput.typedValue"
                                                ValueExpression="@( () => myInput.typedValue )" />
