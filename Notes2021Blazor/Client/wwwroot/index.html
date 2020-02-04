@@ -71,6 +71,10 @@
             return stuff;
         }
 
+        function tinyfocus(s) {
+            tinyMCE.activeEditor.focus();
+        }
+
         function setfocus(elm) {
             var arrow = document.getElementById(elm);
             arrow.focus();

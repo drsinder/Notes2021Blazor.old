@@ -310,12 +310,6 @@ else
 
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
 
-        if (typedInput == "Z")
-            ShowHelp();
-
-        if (typedInput == "I")
-            Done();
-
         if (string.IsNullOrEmpty(typedInput) || string.IsNullOrWhiteSpace(typedInput))
         {
             // next note

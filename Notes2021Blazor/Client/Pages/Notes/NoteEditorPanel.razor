@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Text
 @using Newtonsoft.Json
+@using System.Timers
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
@@ -55,6 +56,8 @@
 
     private TextViewModel tvm { get; set; }
 
+    private Timer timer { get; set; }
+
     protected override void OnParametersSet()
     {
         tvm = new TextViewModel();
@@ -77,6 +80,19 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await jsRuntime.InvokeAsync<object>("inittinymce", "");
+
+        if (firstRender)
+        {
+            timer = new Timer(1000);
+            timer.Elapsed += TimerTick;
+            timer.Enabled = true;
+        }
+    }
+
+    protected void TimerTick(Object source, ElapsedEventArgs e)
+    {
+        timer.Enabled = false;
+        jsRuntime.InvokeAsync<object>("tinyfocus", "mynote");
     }
 
     //protected async Task ShowEditor()
