@@ -146,6 +146,7 @@ else
             try
             {
                 Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + fileId + "." + archiveID);
+                Model.Notes = Model.AllNotes.Where(p => p.ResponseOrdinal == 0).OrderBy(p => p.NoteOrdinal).ToList();
             }
             catch (Exception ex)
             {
@@ -182,6 +183,7 @@ else
             try
             {
                 Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id + "." + archiveID);
+                Model.Notes = Model.AllNotes.Where(p => p.ResponseOrdinal == 0).OrderBy(p => p.NoteOrdinal).ToList();
             }
             catch (Exception ex)
             {

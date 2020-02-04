@@ -64,11 +64,10 @@ namespace Notes2021Blazor.Server.Controllers
             if (linklist != null && linklist.Count > 0)
                 idxModel.linkedText = " (Linked)";
 
-            // Get the Base Notes Objects
-            idxModel.Notes = await NoteDataManager.GetBaseNoteHeaders(_db, id, arcId);
-
             idxModel.AllNotes = await NoteDataManager.GetAllHeaders(_db, id, arcId);
 
+            // Extract the Base Notes Objects on the client side from AllNotes
+                
             //idxModel.ExpandOrdinal = 0;
 
             idxModel.tZone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _db);
