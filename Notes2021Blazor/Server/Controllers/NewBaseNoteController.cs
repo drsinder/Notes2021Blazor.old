@@ -96,5 +96,17 @@ namespace Notes2021Blazor.Server.Controllers
 
             return;
         }
+
+        [HttpDelete] 
+        public async Task Delete(string fileId)
+        {
+            long noteId = long.Parse(fileId);
+
+            NoteHeader nh = _db.NoteHeader.SingleOrDefault(p => p.Id == noteId);
+            if (nh == null)
+                return;
+
+            await NoteDataManager.DeleteNote(_db, nh);
+        }
     }
 }

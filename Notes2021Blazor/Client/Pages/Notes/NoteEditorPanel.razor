@@ -33,7 +33,7 @@
                 <InputText id="title" @bind-Value="tvm.DirectorMessage" class="form-control long-input" />
                 <strong>Note Body</strong>
                 <InputTextArea id="mynote" @bind-Value="tvm.MyNote" class="form-control"></InputTextArea>
-                <br /><button type="submit">Submit</button> <button type="button" @onclick="CancelEdit">Cancel</button> @*<button type="button" @onclick="ShowEditor">Show Editor</button>*@
+                <br /><button type="submit">Submit</button> <button type="button" @onclick="CancelEdit">Cancel</button>
             </EditForm>
         }
     </Authorized>
@@ -55,7 +55,7 @@
 
     private TextViewModel tvm { get; set; }
 
-    protected async override Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
         tvm = new TextViewModel();
         tvm.MyNote = "";
@@ -70,6 +70,7 @@
             tvm.MyNote = NoteContent.NoteBody;
             tvm.DirectorMessage = NoteContent.DirectorMessage;
             tvm.MySubject = EditHeader.NoteSubject;
+            tvm.NoteHeader = EditHeader;
         }
     }
 
@@ -78,11 +79,11 @@
         await jsRuntime.InvokeAsync<object>("inittinymce", "");
     }
 
-    protected async Task ShowEditor()
-    {
-        await jsRuntime.InvokeAsync<object>("inittinymce", "");
-        StateHasChanged();
-    }
+    //protected async Task ShowEditor()
+    //{
+    //    await jsRuntime.InvokeAsync<object>("inittinymce", "");
+    //    StateHasChanged();
+    //}
 
     protected async Task HandleValidSubmit()
     {
@@ -96,7 +97,7 @@
 
             NoteHeader nh = await Http.GetJsonAsync<NoteHeader>("api/NewBaseNote2/");
 
-            NavigationManager.NavigateTo("/notes/enterandshow/" + nh.Id);
+            NavigationManager.NavigateTo("/notes/enterandshow/" + nh.Id, true);
             return;
         }
         else  // edited note
@@ -105,7 +106,7 @@
             var stringContent = new StringContent(JsonConvert.SerializeObject(tvm), Encoding.UTF8, "application/json");
             HttpResponseMessage result = await Http.PutAsync("api/NewBaseNote/", stringContent);
 
-            NavigationManager.NavigateTo("/notes/enterandshow/" + tvm.NoteHeader.Id);
+            NavigationManager.NavigateTo("/notes/enterandshow/" + tvm.NoteHeader.Id, true);
             return;
         }
     }
@@ -121,7 +122,7 @@
         }
         else  // editing
         {
-            NavigationManager.NavigateTo("/notes/enterandshow/" + tvm.BaseNoteHeaderID, true);
+            NavigationManager.NavigateTo("/notes/enterandshow/" + EditHeader.Id, true);
         }
         //OnClick.InvokeAsync("CancelEdit");
     }
