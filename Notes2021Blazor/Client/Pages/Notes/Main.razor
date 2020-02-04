@@ -107,6 +107,7 @@ else
         {
             newnoteFlag = false;
             this.StateHasChanged();
+            NavigationManager.NavigateTo((NavigationManager.Uri), true);
         }
         else if (newMessage == "AccessControls")
         {

@@ -55,14 +55,10 @@
 
     private TextViewModel tvm { get; set; }
 
-    private bool hasRendered { get; set; }
-
     protected async override Task OnParametersSetAsync()
     {
         tvm = new TextViewModel();
         tvm.MyNote = "";
-
-        hasRendered = false;
 
         noteFile = Model.noteFile;
 
@@ -116,7 +112,18 @@
 
     protected void CancelEdit()
     {
-        OnClick.InvokeAsync("CancelEdit");
+        if (NoteContent == null || EditHeader == null)  // new note
+        {
+            if (tvm.BaseNoteHeaderID != 0)
+                NavigationManager.NavigateTo("/notes/enterandshow/" + tvm.BaseNoteHeaderID, true);
+            else
+                NavigationManager.NavigateTo("/notes/main/" + tvm.NoteFileID, true);
+        }
+        else  // editing
+        {
+            NavigationManager.NavigateTo("/notes/enterandshow/" + tvm.BaseNoteHeaderID, true);
+        }
+        //OnClick.InvokeAsync("CancelEdit");
     }
-} 
+}
 
