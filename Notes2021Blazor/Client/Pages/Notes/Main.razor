@@ -5,11 +5,13 @@
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.ComponentModel.DataAnnotations
+@using System.Timers
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
 @inject NavigationManager NavigationManager
 @inject IModalService Modal
+@inject IJSRuntime jsRuntime
 
 @if (Model == null)
 {
@@ -21,7 +23,7 @@ else
         <Authorized>
             @if (newnoteFlag)
             {
-                <NoteEditorPanel Model="@Model" BaseNoteId=0 OnClick="ClickHandler"  />
+                <NoteEditorPanel Model="@Model" BaseNoteId=0 OnClick="ClickHandler" />
             }
             else if (mode == 0)  // index mode
             {
@@ -31,7 +33,7 @@ else
                 }
                 else
                 {
-                    <IndexHeader Model="@Model" BasenoteCount="@basenoteCount"/>
+                    <IndexHeader Model="@Model" BasenoteCount="@basenoteCount" />
                     <ListMenu Model="@Model" OnClick="ClickHandler" />
                     <NoteIndex Model="@Model" OnClick="ClickHandler" />
                     <ListMenu Model="@Model" OnClick="ClickHandler" />
@@ -39,7 +41,7 @@ else
                         <div>
                             <EditForm Model="@myInput" Context="EditBox">
                                 <div class="form-group">
-                                    <InputText id="arrow1" autofocus="@myInput.isAutoFocus" style="width: 7em"
+                                    <InputText id="arrow1" autofocus="@myInput.isAutoFocus" style="width: 7em" @onkeypress="KeyPressed"
                                                ValueChanged="@( (string val) => TextHasChanged(val) )"
                                                Value="@myInput.typedValue"
                                                ValueExpression="@( () => myInput.typedValue )" />
@@ -77,6 +79,8 @@ else
     private LocalInput myInput { get; set; }
     private NoteHeader currentHeader { get; set; }
 
+    private Timer timer { get; set; }
+
     void ClickHandler(string newMessage)
     {
         if (newMessage == "Done")
@@ -84,7 +88,7 @@ else
             mode = 0;
             this.StateHasChanged();
         }
-        else if( newMessage.StartsWith("Note:"))
+        else if (newMessage.StartsWith("Note:"))
         {
             string notenum = newMessage.Substring(5, newMessage.Length - 5);
             long newmode = long.Parse(notenum);
@@ -205,6 +209,51 @@ else
         }
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            timer = new Timer(1000);
+            timer.Elapsed += TimerTick;
+            timer.Enabled = true;
+        }
+    }
+
+    protected void TimerTick(Object source, ElapsedEventArgs e)
+    {
+        jsRuntime.InvokeAsync<object>("setfocus", "arrow1");
+    }
+
+    protected async Task KeyPressed(KeyboardEventArgs eventArgs)
+    {
+        switch (eventArgs.Key)
+        {
+            case "Z": ShowHelp(); break;
+            case "N":
+                if (Model.myAccess.Write)
+                {
+                    newnoteFlag = true;
+                    this.StateHasChanged();
+                }
+                break;
+            case "A":
+                if (Model.myAccess.EditAccess)
+                {
+                    //timer.Enabled = false;
+                    EditAccess();
+                }
+                break;
+            default:
+                //var parameters = new ModalParameters();
+                //parameters.Add("Message", eventArgs.Key);
+                //var options = new ModalOptions() { HideCloseButton = false };
+                //Modal.OnClose += HideDialog;
+                //Modal.Show<MessageBox>("", parameters, options);
+                break;
+        }
+
+    }
+
     private void TextHasChanged(string typedInput)
     {
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
@@ -229,8 +278,8 @@ else
             NavigationManager.NavigateTo("/notes/exportmarked/" + @Model.noteFile.Id);
 
 
-        if (typedInput == "A")
-            NavigationManager.NavigateTo("/notes/editaccess/" + @Model.noteFile.Id);
+        //if (typedInput == "A")
+        //    NavigationManager.NavigateTo("/notes/editaccess/" + @Model.noteFile.Id);
 
 
         int fileId = Model.noteFile.Id;

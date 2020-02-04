@@ -191,11 +191,13 @@ else
         {
             case "Z": ShowHelp(); break;
             case "E":
-                editing = true;
+                if (@Model.myAccess.DeleteEdit || Model.myHeader.AuthorID == Model.myAccess.UserID)
+                    editing = true;
                 StateHasChanged();
                 break;
             case "D":
-                DeleteNote();
+                if (@Model.myAccess.DeleteEdit || Model.myHeader.AuthorID == Model.myAccess.UserID)
+                    DeleteNote();
                 break;
             case "Enter":
                 if (!eventArgs.ShiftKey)
@@ -208,6 +210,14 @@ else
                 break;
             case "B":
                 await PreviousBaseNote();
+                break;
+            case "N":
+                newnoteFlag = true;
+                this.StateHasChanged();
+                break;
+            case "L":
+            case "I":
+                Done();
                 break;
             default:
                 //var parameters = new ModalParameters();
