@@ -123,6 +123,10 @@ else
         {
             EditAccess();
         }
+        else if (newMessage == "ListNoteFiles")
+        {
+            ListFiles();
+        }
         else
         {
             ShowMessage(newMessage + " Clicked");
@@ -238,6 +242,11 @@ else
         }
     }
 
+    protected void ListFiles()
+    {
+        NavigationManager.NavigateTo("/notes/notesfiles");
+    }
+
     protected void KeyPressed(KeyboardEventArgs eventArgs)
     {
         switch (eventArgs.Key)
@@ -258,6 +267,9 @@ else
                 break;
             case "a":
                 ShowArchive();
+                break;
+            case "L":
+                ListFiles();
                 break;
             default:
                 //var parameters = new ModalParameters();
