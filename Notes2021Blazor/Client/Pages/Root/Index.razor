@@ -57,7 +57,6 @@
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
                                          ValueExpression="@( () => dummyFile.NoteFileName )">
-                                @*<option value="InHereBeTigers" selected>-- Select a file --</option>*@
                                 @foreach (var item in fileList)
                                 {
                                     <option value=@item.NoteFileName>@item.NoteFileName</option>
@@ -68,14 +67,13 @@
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
                                          ValueExpression="@( () => dummyFile.NoteFileName )">
-                                @*<option value="InHereBeTigers" selected>-- Select a title --</option>*@
                                 @foreach (var item in nameList)
                                 {
                                     <option value=@item.NoteFileName>@item.NoteFileTitle</option>
                                 }
                             </InputSelect>
                         </EditForm>
-                        <a href="/notes/notesfiles" class=" keep-center">See All Files</a>
+                        <h4><a href="/notes/notesfiles" class=" keep-center">See All Files</a></h4>
                     </div>
                 </div>
                 <div class="row">
