@@ -8,21 +8,12 @@
     <base href="/" />
 
     <!-- Quill stylesheet -->
-    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+    <!--<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">-->
 
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
-
-    <script src="https://cdn.tiny.cloud/1/n97ng9w4sp2rsep61zzm4da6vdqg046ehfavha1mnoelwwz5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
-        initTinyMce: function (tinyMceID) {
-            tinymce.init({
-                selector: '#tinytextarea'
-            });
-            return "";
-    </script>
 </head>
 
 <body>
@@ -36,9 +27,51 @@
     <script src="_framework/blazor.webassembly.js"></script>
 
     <!-- Quill library -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!--<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="_content/Blazored.TextEditor/quill-blot-formatter.min.js"></script>
-    <script src="_content/Blazored.TextEditor/Blazored-BlazorQuill.js"></script>
+    <script src="_content/Blazored.TextEditor/Blazored-BlazorQuill.js"></script>-->
+
+    <script src="https://cdn.tiny.cloud/1/n97ng9w4sp2rsep61zzm4da6vdqg046ehfavha1mnoelwwz5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        function inittinymce(s) {
+            tinymce.init({
+                selector: "textarea",
+                theme: "silver",
+                browser_spellcheck: true,
+
+                width: 950,
+                height: 300,
+                max_width: 950,
+                max_height: 500,
+                resize: 'both',
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker fullscreen",
+                    "searchreplace wordcount visualblocks visualchars code codesample insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons paste textcolor tabfocus"
+                ],
+                relative_urls: false,
+                convert_urls: false,
+                contextmenu: "link image inserttable | cell row column deletetable",
+                toolbar: "insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media codesample | print preview | nonbreaking forecolor backcolor emoticons insertdatetime fullscreen",
+                style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                ]
+            });
+            //window.alert("TinyMCE Init");
+        }
+
+        function gettinymcecontent(s) {
+            stuff = tinymce.activeEditor.getContent();
+            return stuff;
+        }
+    </script>
+
 </body>
 
 </html>

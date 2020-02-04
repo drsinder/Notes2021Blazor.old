@@ -1,9 +1,7 @@
 ﻿@using Notes2021Blazor.Shared
 @using Blazored.LocalStorage
-@using Blazored.TextEditor
 @using System.Net.Http
 @using Microsoft.AspNetCore.Components.Authorization
-@using System.ComponentModel.DataAnnotations
 @using System.Text
 @using Newtonsoft.Json
 @inject HttpClient Http
@@ -11,6 +9,7 @@
 @inject ILocalStorageService _localStorage
 @inject NavigationManager NavigationManager
 @inject IModalService Modal
+@inject IJSRuntime jsRuntime
 
 <AuthorizeView Roles="User">
     <Authorized Context="Top">
@@ -23,7 +22,6 @@
             <h2>
                 Note Editor - @noteFile.NoteFileName <span>-</span> @noteFile.NoteFileTitle
             </h2>
-
             <EditForm id="createform" Model="@tvm" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
@@ -34,39 +32,8 @@
                 <strong>Director Message</strong>
                 <InputText id="title" @bind-Value="tvm.DirectorMessage" class="form-control long-input" />
                 <strong>Note Body</strong>
-                <BlazoredTextEditor @ref="@QuillHtml">
-                    <ToolbarContent>
-                        <select class="ql-header">
-                            <option selected=""></option>
-                            <option value="1"></option>
-                            <option value="2"></option>
-                            <option value="3"></option>
-                            <option value="4"></option>
-                            <option value="5"></option>
-                        </select>
-                        <span class="ql-formats">
-                            <button class="ql-bold"></button>
-                            <button class="ql-italic"></button>
-                            <button class="ql-underline"></button>
-                            <button class="ql-strike"></button>
-                        </span>
-                        <span class="ql-formats">
-                            <select class="ql-color"></select>
-                            <select class="ql-background"></select>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-list" value="ordered"></button>
-                            <button class="ql-list" value="bullet"></button>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-link"></button>
-                        </span>
-                    </ToolbarContent>
-                    <EditorContent>
-                        @((MarkupString)tvm.MyNote)
-                    </EditorContent>
-                </BlazoredTextEditor>
-                <br /><button type="submit">Submit</button> <button type="button" @onclick="CancelEdit">Cancel</button>
+                <InputTextArea id="mynote" @bind-Value="tvm.MyNote" class="form-control"></InputTextArea>
+                <br /><button type="submit">Submit</button> <button type="button" @onclick="CancelEdit">Cancel</button> @*<button type="button" @onclick="ShowEditor">Show Editor</button>*@
             </EditForm>
         }
     </Authorized>
@@ -76,12 +43,6 @@
 </AuthorizeView>
 
 @code {
-    BlazoredTextEditor QuillHtml;
-    BlazoredTextEditor QuillNative;
-
-    string QuillHTMLContent;
-    string QuillContent;
-
     [Parameter] public NoteDisplayIndexModel Model { get; set; }
     [Parameter] public long BaseNoteId { get; set; }
     [Parameter] public NoteHeader EditHeader { get; set; }
@@ -94,12 +55,16 @@
 
     private TextViewModel tvm { get; set; }
 
+    private bool hasRendered { get; set; }
+
     protected async override Task OnParametersSetAsync()
     {
         tvm = new TextViewModel();
         tvm.MyNote = "";
 
-        noteFile =  Model.noteFile;
+        hasRendered = false;
+
+        noteFile = Model.noteFile;
 
         tvm.BaseNoteHeaderID = BaseNoteId;
         tvm.NoteFileID = Id = noteFile.Id;
@@ -112,9 +77,20 @@
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await jsRuntime.InvokeAsync<object>("inittinymce", "");
+    }
+
+    protected async Task ShowEditor()
+    {
+        await jsRuntime.InvokeAsync<object>("inittinymce", "");
+        StateHasChanged();
+    }
+
     protected async Task HandleValidSubmit()
     {
-        tvm.MyNote = QuillHTMLContent = await this.QuillHtml.GetHTML();
+        tvm.MyNote = await jsRuntime.InvokeAsync<string>("gettinymcecontent", "");
 
         if (NoteContent == null || EditHeader == null)  // new note
         {
@@ -142,4 +118,5 @@
     {
         OnClick.InvokeAsync("CancelEdit");
     }
-}
+} 
+

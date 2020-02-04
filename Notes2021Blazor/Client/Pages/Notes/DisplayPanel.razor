@@ -9,11 +9,11 @@
 }
 else if (newnoteFlag)
 {
-    <NoteEditPanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId OnClick="ClickHandler" />
+    <NoteEditorPanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId OnClick="ClickHandler" />
 }
 else if (editing)
 {
-    <NoteEditPanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId EditHeader="@currentHeader" NoteContent="@currentContent" OnClick="ClickHandler" />
+    <NoteEditorPanel Model="@Model" BaseNoteId=@currentHeader.BaseNoteId EditHeader="@currentHeader" NoteContent="@currentContent" OnClick="ClickHandler" />
 }
 else
 {
