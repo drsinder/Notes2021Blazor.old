@@ -124,8 +124,6 @@ else
 
 @code {
 
-    private bool inDlg = false;
-
     private List<string> todo { get; set; }
 
     private List<NoteFile> files { get; set; }
@@ -156,7 +154,6 @@ else
 
     void CreateNoteFile(int Id)
     {
-        inDlg = true;
         this.StateHasChanged();
         var parameters = new ModalParameters();
         parameters.Add("FileId", Id);
@@ -166,7 +163,6 @@ else
 
     void HideDialog(ModalResult modalResult)
     {
-        inDlg = false;
         Modal.OnClose -= HideDialog;
         this.StateHasChanged();
 
@@ -182,7 +178,6 @@ else
 
     void HideDialog2(ModalResult modalResult)
     {
-        inDlg = false;
         Modal.OnClose -= HideDialog2;
     }
 
@@ -191,7 +186,6 @@ else
 
         NoteFile file = files.Find(p => p.Id == Id);
 
-        inDlg = true;
         var parameters = new ModalParameters();
         parameters.Add("FileId", Id);
         parameters.Add("FileName", file.NoteFileName);
@@ -208,7 +202,6 @@ else
 
         NoteFile file = files.Find(p => p.Id == Id);
 
-        inDlg = true;
         var parameters = new ModalParameters();
         parameters.Add("FileId", Id);
         parameters.Add("FileName", file.NoteFileName);
@@ -225,7 +218,6 @@ else
 
         NoteFile file = files.Find(p => p.Id == Id);
 
-        inDlg = true;
         this.StateHasChanged();
         var parameters = new ModalParameters();
         parameters.Add("FileId", Id);

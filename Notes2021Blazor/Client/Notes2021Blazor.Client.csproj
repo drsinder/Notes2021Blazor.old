@@ -9,6 +9,7 @@
     <Content Remove="Pages\Notes\Enter.razor" />
     <Content Remove="Pages\Notes\NewBaseNote.razor" />
     <Content Remove="Pages\Notes\NoteEditPanel.razor" />
+    <Content Remove="Pages\Notes\SampleHtmlEditor.razor" />
   </ItemGroup>
 
   <ItemGroup>

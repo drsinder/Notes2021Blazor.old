@@ -79,7 +79,7 @@ namespace Notes2021Blazor.Server.Controllers
             if (tvm.MyNote == null)
                 return;
 
-            UserData me = NoteDataManager.GetUserData(_userManager, User, _db);
+            //UserData me = NoteDataManager.GetUserData(_userManager, User, _db);
 
             DateTime now = DateTime.Now.ToUniversalTime();
 
@@ -87,17 +87,19 @@ namespace Notes2021Blazor.Server.Controllers
             tvm.NoteHeader.LastEdited = now;
             tvm.NoteHeader.ThreadLastEdited = now;
 
-            NoteContent nc = new NoteContent();
-            nc.NoteHeaderId = tvm.NoteHeader.Id;
-            nc.NoteBody = tvm.MyNote;
-            nc.DirectorMessage = tvm.DirectorMessage;
+            NoteContent nc = new NoteContent
+            {
+                NoteHeaderId = tvm.NoteHeader.Id,
+                NoteBody = tvm.MyNote,
+                DirectorMessage = tvm.DirectorMessage
+            };
 
-            await NoteDataManager.EditNote(_db, _userManager, tvm.NoteHeader, nc, tvm.TagLine); 
+            await NoteDataManager.EditNote(_db, _userManager, tvm.NoteHeader, nc, tvm.TagLine);
 
             return;
         }
 
-        [HttpDelete] 
+        [HttpDelete]
         public async Task Delete(string fileId)
         {
             long noteId = long.Parse(fileId);
