@@ -21,7 +21,7 @@ app {
 }
 
 .top-row {
-    height: 3.5rem;
+    height: 3rem;
     display: flex;
     align-items: center;
 }
@@ -156,7 +156,7 @@ app {
     }
 
     .sidebar {
-        width: 250px;
+        width: 210px;
         height: 100vh;
         position: sticky;
         top: 0;

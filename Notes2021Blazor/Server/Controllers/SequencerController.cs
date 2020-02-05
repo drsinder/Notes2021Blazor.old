@@ -33,7 +33,7 @@ namespace Notes2021Blazor.Server.Controllers
         {
             IdentityUser me = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            List<Sequencer> mine = await _db.Sequencer.Where(p => p.UserId == me.Id).OrderBy(p => p.Ordinal)/*.ThenBy(p => p.LastTime)*/.ToListAsync();
+            List<Sequencer> mine = await _db.Sequencer.Where(p => p.UserId == me.Id).OrderBy(p => p.Ordinal).ThenBy(p => p.LastTime).ToListAsync();
 
             if (mine == null)
                 mine = new List<Sequencer>();
