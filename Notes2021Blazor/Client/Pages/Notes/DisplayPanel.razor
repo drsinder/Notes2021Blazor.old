@@ -76,6 +76,8 @@ else
     [Parameter] public List<NoteHeader> SeqBases { get; set; }
     [Parameter] public List<Sequencer> trackers { get; set; }
     [Parameter] public int seqIndx { get; set; }
+    [Parameter] public EventCallback<string> OnClick { get; set; }
+
 
     protected bool newnoteFlag { get; set; }
     protected bool editing { get; set; }
@@ -88,17 +90,21 @@ else
 
     public List<Tags> tags;
 
-    string curN { get; set; }
+    private string curN { get; set; }
 
-    LocalInput myInput { get; set; }
+    private LocalInput myInput { get; set; }
 
-    [Parameter] public EventCallback<string> OnClick { get; set; }
+    private int seqBaseIndx { get; set; }
+    private int seqRespOrd { get; set; }
+
 
     protected async override Task OnParametersSetAsync()
     {
         Model.myHeader = currentHeader;
         myInput = new LocalInput();
         myInput.isAutoFocus = true;
+        seqBaseIndx = 0;
+        seqRespOrd = 0;
 
         newnoteFlag = false;
         editing = false;
@@ -222,15 +228,58 @@ else
             case "I":
                 Done();
                 break;
+            case " ":
+                if (eventArgs.ShiftKey)
+                {
+                    await OnClick.InvokeAsync("ContinueSearch");
+                }
+                else
+                {
+                    if (seqIndx == -1)
+                        break;
+
+                    await ContinueSeq();
+                }
+                break;
+
             default:
+
                 //var parameters = new ModalParameters();
                 //parameters.Add("Message", eventArgs.Key);
                 //var options = new ModalOptions() { HideCloseButton = false };
                 //Modal.OnClose += HideDialog;
                 //Modal.Show<MessageBox>("", parameters, options);
+
                 break;
         }
+    }
 
+    protected async Task ContinueSeq()
+    {
+        // first check for responses
+        NoteHeader x = Model.AllNotes.Where(p => p.NoteOrdinal == currentHeader.NoteOrdinal
+                && p.ResponseOrdinal > currentHeader.ResponseOrdinal
+                && p.LastEdited > trackers[seqIndx].LastTime)
+                .OrderBy(p => p.ResponseOrdinal).FirstOrDefault();
+
+        if (x != null) // found a response
+        {
+            currentHeader = x;
+            await SetNote();
+            return;
+        }
+
+        // else goto next base
+
+        seqBaseIndx++;
+        if ( seqBaseIndx >= SeqBases.Count)  // finished with this file
+        {
+            await OnClick.InvokeAsync("SeqFileDone");
+            return;
+        }
+
+        currentHeader = SeqBases[seqBaseIndx];
+        await SetNote();
     }
 
     protected async Task SetNote()

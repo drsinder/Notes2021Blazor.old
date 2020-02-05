@@ -33,7 +33,7 @@ namespace Notes2021Blazor.Server.Controllers
         {
             IdentityUser me = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            List<Sequencer> mine = await _db.Sequencer.Where(p => p.UserId == me.Id).ToListAsync();
+            List<Sequencer> mine = await _db.Sequencer.Where(p => p.UserId == me.Id).OrderBy(p => p.Ordinal).ThenBy(p => p.LastTime).ToListAsync();
 
             if (mine == null)
                 mine = new List<Sequencer>();
@@ -68,6 +68,15 @@ namespace Notes2021Blazor.Server.Controllers
                 return;
 
             _db.Sequencer.Remove(mine);
+            await _db.SaveChangesAsync();
+        }
+
+        [HttpPut]
+        public async Task Put(Sequencer seq)
+        {
+            Sequencer modified = await _db.Sequencer.SingleAsync(p => p.UserId == seq.UserId && p.NoteFileId == seq.NoteFileId);
+            _db.Entry(modified).State = EntityState.Modified;
+            modified.LastTime = DateTime.Now.ToUniversalTime();
             await _db.SaveChangesAsync();
         }
 

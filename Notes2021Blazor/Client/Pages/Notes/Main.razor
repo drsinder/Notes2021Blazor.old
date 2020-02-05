@@ -7,6 +7,8 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.ComponentModel.DataAnnotations
 @using System.Timers
+@using System.Text
+@using Newtonsoft.Json
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
@@ -88,7 +90,7 @@ else
 
     private List<NoteHeader> seqBases { get; set; }
 
-    void ClickHandler(string newMessage)
+    protected async Task ClickHandler(string newMessage)
     {
         if (newMessage.StartsWith("Done:"))
         {
@@ -135,14 +137,12 @@ else
         }
         else if (newMessage == "SeqFileDone")
         {
-            seqIndex++;
-            if (seqIndex >= trackers.Count)
-            {
-                message = null;
-                NavigationManager.NavigateTo("/");
-                return;
-            }
-            StartFileSequence().GetAwaiter().GetResult();
+            trackers[seqIndex].LastTime = DateTime.Now.ToUniversalTime();
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(trackers[seqIndex]), Encoding.UTF8, "application/json");
+            HttpResponseMessage result = await Http.PutAsync("api/Sequencer/", stringContent);
+
+            NavigationManager.NavigateTo("/notes/sequence", true);
         }
         else
         {
@@ -244,13 +244,10 @@ else
             if (trackers == null || trackers.Count < 1)
             {
                 message = null;
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/", true);
                 return;
             }
 
-            trackers = trackers.OrderBy(p => p.Ordinal).ThenBy(p => p.LastTime).ToList();
-
-            seqIndex = 0;
             await StartFileSequence();
         }
     }
@@ -277,25 +274,20 @@ else
 
     protected async Task StartFileSequence()
     {
-        await LoadSeqFile();
-        seqBases = SearchForTrackedBaseNotes(trackers[seqIndex]);
-        while (seqBases == null || seqBases.Count == 0)
+        seqBases = null;
+        while ((++seqIndex < trackers.Count) && (seqBases == null || seqBases.Count == 0))
         {
-            seqIndex++;
-            if (seqIndex >= trackers.Count)
-            {
-                break;
-            }
-
             await LoadSeqFile();
+            if (Model.noteFile.LastEdited < trackers[seqIndex].LastTime)
+                continue;
             seqBases = SearchForTrackedBaseNotes(trackers[seqIndex]);
         }
-        if (seqBases == null || seqBases.Count == 0)
+        if ((seqIndex >= trackers.Count) || (seqBases == null || seqBases.Count == 0))
         {
-            message = null;
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/", true);
             return;
         }
+        message = null;
         currentHeader = seqBases[0];
         mode = currentHeader.Id;
         StateHasChanged();
