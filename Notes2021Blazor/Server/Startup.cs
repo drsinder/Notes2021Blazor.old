@@ -12,6 +12,7 @@ using Notes2021Blazor.Shared;
 using System;
 using System.Linq;
 using System.Text;
+using Hangfire;
 
 namespace Notes2021Blazor.Server
 {
@@ -36,9 +37,10 @@ namespace Notes2021Blazor.Server
                     new[] { "application/octet-stream" });
             });
 
-
             services.AddDbContext<NotesDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
@@ -134,6 +136,8 @@ namespace Notes2021Blazor.Server
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseHangfireServer();
 
             app.UseEndpoints(endpoints =>
             {
