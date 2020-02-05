@@ -28,7 +28,6 @@ namespace Notes2021Blazor.Server.Controllers
         {
             HomePageModel model = new HomePageModel();
 
-            model.TimeZone = _db.TZone.Single(p => p.Id == Globals.TimeZoneDefaultID);
             model.Message = _db.HomePageMessage.FirstOrDefault();
             model.NoteFiles = _db.NoteFile
                 .OrderBy(p => p.NoteFileName).ToList();
@@ -60,6 +59,8 @@ namespace Notes2021Blazor.Server.Controllers
             {
                 model.UserData = new UserData { TimeZoneID = Globals.TimeZoneDefaultID };
             }
+
+            model.TimeZone = _db.TZone.Single(p => p.Id == model.UserData.TimeZoneID);
 
             return model;
         }

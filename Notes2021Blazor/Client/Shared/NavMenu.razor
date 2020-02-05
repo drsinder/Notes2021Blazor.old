@@ -15,31 +15,30 @@
                 <span class="oi oi-question-mark" aria-hidden="true"></span> Help
             </NavLink>
         </li>
-        @*<li class="nav-item px-3">
-            <NavLink class="nav-link" href="options/index">
-                <span class="oi oi-chevron-right" aria-hidden="true"></span> Options
-            </NavLink>
-        </li>*@
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="options/tracker">
-                <span class="oi oi-wrench" aria-hidden="true"></span> Manage Recent
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="notes/sequence">
-                <span class="oi oi-arrow-right" aria-hidden="true"></span> Recent Notes
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="options/timezone">
-                <span class="oi oi-clock" aria-hidden="true"></span> Time Zone
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="options/subscribe">
-                <span class="oi oi-envelope-closed" aria-hidden="true"></span> Subscriptions
-            </NavLink>
-        </li>
+        <AuthorizeView Roles="User">
+            <Authorized>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="options/tracker">
+                        <span class="oi oi-wrench" aria-hidden="true"></span> Manage Recent
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="notes/sequence">
+                        <span class="oi oi-arrow-right" aria-hidden="true"></span> Recent Notes
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="options/timezone">
+                        <span class="oi oi-clock" aria-hidden="true"></span> Time Zone
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="options/subscribe">
+                        <span class="oi oi-envelope-closed" aria-hidden="true"></span> Subscriptions
+                    </NavLink>
+                </li>
+            </Authorized>
+        </AuthorizeView>
         <AuthorizeView Roles="Admin">
             <Authorized>
                 <li class="nav-item px-3">

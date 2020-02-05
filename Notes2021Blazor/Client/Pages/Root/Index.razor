@@ -132,6 +132,7 @@
         await _localStorage.RemoveItemAsync("IsSearch");
 
         HomePageModel model1 = await Http.GetJsonAsync<HomePageModel>("api/HomePageData");
+        
         myTime = model1.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongTimeString()
             + " " + model1.TimeZone.Abbreviation + " - "
             + model1.TimeZone.Local(DateTime.Now.ToUniversalTime()).ToLongDateString();

@@ -7,22 +7,21 @@ using System.Threading.Tasks;
 
 namespace Notes2021Blazor.Server.Controllers
 {
-    [Authorize(Roles = "User")]
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class TimeZonesController : ControllerBase
     {
         private readonly NotesDbContext _db;
 
-        public UsersController(NotesDbContext db)
+        public TimeZonesController(NotesDbContext db)
         {
             _db = db;
         }
 
         [HttpGet]
-        public async Task<List<UserData>> Get()
+        public async Task<List<TZone>> Get()
         {
-            List<UserData> list = await _db.UserData.ToListAsync();
+            List<TZone> list = await _db.TZone.ToListAsync();
 
             return list;
         }
