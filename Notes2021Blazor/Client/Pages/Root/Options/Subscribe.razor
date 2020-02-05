@@ -1,0 +1,115 @@
+﻿@*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2020, Dale Sinder
+    **
+    **  Name: NoteFiles.razor
+    **
+    **  Description:
+    **      User list of notefiles
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http: //www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------*@
+
+@page "/options/subscribe"
+
+@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService _localStorage
+@inject NavigationManager NavigationManager
+
+
+<h3>Subscribed Notes Files List</h3>
+
+@if (files == null)
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <AuthorizeView Roles="User">
+        <Authorized>
+
+            @message
+             <table class="table">
+                <thead>
+                    <tr>
+                        <th>Check to Subscribe</th>
+                        <th>
+                            NoteFile Name
+                        </th>
+                        <th>
+                            NoteFile Title
+                        </th>
+                        <th>
+                            Last Edited
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (NoteFile file in files)
+                    {
+                        bool current = subscriptions.SingleOrDefault(p => p.NoteFileId == file.Id) != null;
+                    <tr>
+                        <td>
+                            <SubCheckBox fileId="@file.Id" isChecked="@current" />
+                        </td>
+                        <td>
+                            @file.NoteFileName
+                        </td>
+                        <td>
+                            @file.NoteFileTitle
+                        </td>
+                        <td>
+                            @timeZone.Local(file.LastEdited).ToShortTimeString() @timeZone.Local(file.LastEdited).ToShortDateString()
+                        </td>
+
+                    </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </Authorized>
+        <NotAuthorized>
+            Access denied!
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@code {
+
+    private List<string> todo { get; set; }
+
+    private List<NoteFile> files { get; set; }
+    private TZone timeZone { get; set; }
+    private string message;
+    private List<Subscription> subscriptions { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        subscriptions = await Http.GetJsonAsync<List<Subscription>>("api/subscription");
+
+        HomePageModel model = await Http.GetJsonAsync<HomePageModel>("api/HomePageData");
+        timeZone = model.TimeZone;
+
+        files = model.NoteFiles;
+    }
+
+
+}
+
