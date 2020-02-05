@@ -1,0 +1,21 @@
+﻿@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@inject IModalService ModalService
+@inject ILocalStorageService _localStorage
+@inject NavigationManager NavigationManager
+
+<div class="roundedgrayindexinput modal-body">
+    <h3>Completed!</h3>
+
+    <br/>
+    <button type="button" @onclick="Ok">Ok</button>
+</div>
+
+@code{
+
+    private void Ok()
+    {
+        ModalService.Close(ModalResult.Ok<string>("Ok"));
+        NavigationManager.NavigateTo("/", true);
+    }
+}

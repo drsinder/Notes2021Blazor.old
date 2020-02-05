@@ -28,6 +28,10 @@ else
             {
                 <NoteEditorPanel Model="@Model" BaseNoteId=0 OnClick="ClickHandler" />
             }
+            else if (mode == -1)
+            {
+
+            }
             else if (mode == 0)  // index mode
             {
                 @if (!string.IsNullOrEmpty(message))
@@ -137,8 +141,6 @@ else
         }
         else if (newMessage == "SeqFileDone")
         {
-            //trackers[seqIndex].LastTime = DateTime.Now.ToUniversalTime();
-
             var stringContent = new StringContent(JsonConvert.SerializeObject(trackers[seqIndex]), Encoding.UTF8, "application/json");
             HttpResponseMessage result = await Http.PutAsync("api/Sequencer/", stringContent);
 
@@ -286,7 +288,11 @@ else
         }
         if ((seqIndex >= trackers.Count) || (seqBases == null || seqBases.Count == 0))
         {
-            NavigationManager.NavigateTo("/", true);
+            var parameters = new ModalParameters();
+            Modal.OnClose += HideDialog;
+            mode = -1;
+            Modal.Show<Completed>("", parameters);
+
             return;
         }
         message = null;

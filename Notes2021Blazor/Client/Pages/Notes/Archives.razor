@@ -44,7 +44,7 @@
         if (myId < 0 || myId > noteFile.NumberArchives)
             return;
 
-        _localStorage.SetItemAsync("ArchiveId", 1);
+        _localStorage.SetItemAsync("ArchiveId", myId);
 
         ModalService.Close(ModalResult.Ok<string>("Ok"));
     }

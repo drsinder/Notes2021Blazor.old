@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entities\ExternalNote.cs" />
     <Compile Remove="Migrations\20200129115954_Initial.cs" />
     <Compile Remove="Migrations\20200129115954_Initial.Designer.cs" />
     <Compile Remove="Migrations\20200129204411_Roles.cs" />
@@ -17,6 +18,8 @@
     <Compile Remove="Migrations\20200131213337_Initial.Designer.cs" />
     <Compile Remove="Migrations\20200203192724_ExternalNote.cs" />
     <Compile Remove="Migrations\20200203192724_ExternalNote.Designer.cs" />
+    <Compile Remove="Migrations\20200203192946_Initial.cs" />
+    <Compile Remove="Migrations\20200203192946_Initial.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -277,6 +277,11 @@ button {
     width: 1000px;
 }
 
+.medium-input {
+    width: 500px;
+}
+
+
 .expanded {
     font-weight: bolder;
 }

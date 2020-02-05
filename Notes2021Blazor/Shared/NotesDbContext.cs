@@ -27,8 +27,6 @@ namespace Notes2021Blazor.Shared
         public DbSet<SQLFile> SQLFile { get; set; }
         public DbSet<SQLFileContent> SQLFileContent { get; set; }
 
-        public DbSet<ExternalNote> ExternalNote { get; set; }
-
         public void AddJsonFile(string v, bool optional)
         {
             throw new NotImplementedException();
