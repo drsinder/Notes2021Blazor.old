@@ -137,7 +137,7 @@ else
         }
         else if (newMessage == "SeqFileDone")
         {
-            trackers[seqIndex].LastTime = DateTime.Now.ToUniversalTime();
+            //trackers[seqIndex].LastTime = DateTime.Now.ToUniversalTime();
 
             var stringContent = new StringContent(JsonConvert.SerializeObject(trackers[seqIndex]), Encoding.UTF8, "application/json");
             HttpResponseMessage result = await Http.PutAsync("api/Sequencer/", stringContent);
@@ -281,6 +281,8 @@ else
             if (Model.noteFile.LastEdited < trackers[seqIndex].LastTime)
                 continue;
             seqBases = SearchForTrackedBaseNotes(trackers[seqIndex]);
+            if (seqBases != null && seqBases.Count > 0)
+                break;
         }
         if ((seqIndex >= trackers.Count) || (seqBases == null || seqBases.Count == 0))
         {
