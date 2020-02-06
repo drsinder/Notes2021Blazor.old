@@ -15,7 +15,8 @@ namespace Notes2021Blazor.Shared
 
         public int NoteOrdinal { get; set; }
 
-        //public TZone tzone { get; set; }
+        public string Email { get; set; }
+
     }
 
 }

@@ -458,12 +458,12 @@ else
         this.StateHasChanged();
     }
 
-    private void NoteClicked(MouseEventArgs x)
-    {
-        string z = x.Button.ToString();
-        message = "Clicked " + z;
-        this.StateHasChanged();
-    }
+    //private void NoteClicked(MouseEventArgs x)
+    //{
+    //    string z = x.Button.ToString();
+    //    message = "Clicked " + z;
+    //    this.StateHasChanged();
+    //}
 
 
     private void SetFocus()
@@ -518,7 +518,7 @@ else
         Modal.Show<AccessList>("", parameters);
     }
 
-    private void DoExport(bool isHtml, bool isCollapsible, bool isEmail = false)
+    private void DoExport(bool isHtml, bool isCollapsible, bool isEmail = false, string emailaddr = null)
     {
         var parameters = new ModalParameters();
 
@@ -529,6 +529,7 @@ else
         vm.isHtml = isHtml;
         vm.NoteFile = Model.noteFile;
         vm.NoteOrdinal = 0;
+        vm.Email = emailaddr;
 
         parameters.Add("ExportViewModel", vm);
         parameters.Add("FileName", Model.noteFile.NoteFileName + (isHtml ? ".html" : ".txt"));
@@ -554,7 +555,21 @@ else
 
     private void mail()
     {
-        DoExport(true, true, true);
+        timer.Stop();
+        var parameters = new ModalParameters();
+        Modal.OnClose += HideDialogMail;
+        Modal.Show<Email>("", parameters);
+
+
+        //DoExport(true, true, true, "sinder@illinois.edu");
+    }
+
+    void HideDialogMail(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialogMail;
+
+        if (!modalResult.Cancelled)
+            DoExport(true, true, true, modalResult.Data.ToString());
     }
 
     protected class LocalInput

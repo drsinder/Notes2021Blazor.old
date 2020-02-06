@@ -1,16 +1,10 @@
 ﻿@using System
 @using System.Collections.Generic
-@using System.Linq
 @using System.Threading.Tasks
 @using Notes2021Blazor.Shared
 @using System.IO
 @using System.Text
-@using System.Net
-@using Blazored.LocalStorage
-@using Microsoft.AspNetCore.Components.Authorization
-@using System.ComponentModel.DataAnnotations
-@using System.Timers
-@using Newtonsoft.Json
+
 
 @inject HttpClient Http
 @*@inject AuthenticationStateProvider AuthenticationStateProvider*@
@@ -59,7 +53,7 @@
             string email = enc.GetString(bytes);
 
             EmailModel stuff = new EmailModel();
-            stuff.email = "sinder@illinois.edu";
+            stuff.email = model.Email;
             stuff.subject = "Notes 2021 - " + model.NoteFile.NoteFileTitle;
             stuff.payload = email;
 
@@ -97,7 +91,7 @@
             sb.AppendLine("<script src = \"https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\" ></script >");
 
             sb.AppendLine("</head>");
-            sb.AppendLine("<body><div class=\"root-div\">");
+            sb.AppendLine("<body><div>");
             await sw.WriteAsync(sb.ToString());
 
             // ready to start  writing content of file
@@ -155,7 +149,7 @@
             {
                 await sw.WriteLineAsync("<div class=\"container\"><div class=\"panel-group\">" +
                     "<div class=\"panel panel-default\"><div class=\"panel-heading\"><div class=\"panel-title\"><a data-toggle=\"collapse\" href=\"#collapse" +
-                    bnh.NoteOrdinal + "\"><h5>Toggle " + bnh.ResponseCount + " Response</h5>" + (bnh.ResponseCount > 1 ? "s" : "") + "</a></div></div><div id = \"collapse" + bnh.NoteOrdinal +
+                    bnh.NoteOrdinal + "\"><h5>Toggle " + bnh.ResponseCount + " Response" + (bnh.ResponseCount > 1 ? "s" : "") + "</h5></a></div></div><div id = \"collapse" + bnh.NoteOrdinal +
                     "\" class=\"panel-collapse collapse\"><div class=\"panel-body\">");
             }
 
