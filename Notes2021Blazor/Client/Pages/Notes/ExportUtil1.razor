@@ -18,7 +18,7 @@
 @inject IJSRuntime jsRuntime
 
 <div class="roundedgrayindexinput modal-body">
-    <p>Exporting @FileName ...  Please Wait...</p>
+    <p>@message  Please Wait...</p>
 </div>
 
 @functions {
@@ -26,20 +26,33 @@
     [CascadingParameter] ModalParameters Parameters { get; set; }
 
     public ExportViewModel model { get; set; }
-    public string ProdUri { get; set; }
-    public string stylePath { get; set; }
-    public string FileName { get; set; }
+    private string FileName { get; set; }
+    private string message = "Getting ready...";
 
-    protected async override Task OnParametersSetAsync()
+    protected async override Task OnInitializedAsync()
     {
         model = Parameters.Get<ExportViewModel>("ExportViewModel");
-        ProdUri = Parameters.Get<string>("ProdUri");
-        stylePath = Parameters.Get<string>("stylePath");
         FileName = Parameters.Get<string>("FileName");
+
+        if (model.isDirectOutput)
+        {
+            message = "Exporting " + FileName + " ... ";
+        }
+        else
+        {
+            message = "Emailing ... ";
+        }
 
         MemoryStream ms = await DoExport();
 
-        await FileUtil.SaveAs(jsRuntime, FileName, ms.ToArray());
+        if (model.isDirectOutput)
+        {
+            await FileUtil.SaveAs(jsRuntime, FileName, ms.ToArray());
+        }
+        else
+        {
+            // post ms to email!
+        }
 
         Modal.Close(ModalResult.Cancel());
     }
@@ -88,11 +101,11 @@
         if (isHtml)
         {
             sb.Append("</h2>");
-            sb.Append("<h4>");
-            sb.Append("<a href=\"");
-            sb.Append(ProdUri + "/NoteDisplay/Create/" + nf.Id +
-                      "\" target=\"_blank\">New Base Note</a>");
-            sb.Append("</h4>");
+            //sb.Append("<h4>");
+            //sb.Append("<a href=\"");
+            //sb.Append(/*ProdUri + */"/NoteDisplay/Create/" + nf.Id +
+            //          "\" target=\"_blank\">New Base Note</a>");
+            //sb.Append("</h4>");
         }
 
         await sw.WriteLineAsync(sb.ToString());
@@ -131,7 +144,7 @@
             {
                 await sw.WriteLineAsync("<div class=\"container\"><div class=\"panel-group\">" +
                     "<div class=\"panel panel-default\"><div class=\"panel-heading\"><div class=\"panel-title\"><a data-toggle=\"collapse\" href=\"#collapse" +
-                    bnh.NoteOrdinal + "\">Toggle " + bnh.ResponseCount + " Response" + (bnh.ResponseCount > 1 ? "s" : "") + "</a></div></div><div id = \"collapse" + bnh.NoteOrdinal +
+                    bnh.NoteOrdinal + "\">Show " + bnh.ResponseCount + " Response" + (bnh.ResponseCount > 1 ? "s" : "") + "</a></div></div><div id = \"collapse" + bnh.NoteOrdinal +
                     "\" class=\"panel-collapse collapse\"><div class=\"panel-body\">");
             }
 

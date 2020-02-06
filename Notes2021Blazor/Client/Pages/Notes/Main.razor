@@ -152,6 +152,8 @@ else
             htmlFromIndex();
         else if (newMessage == "eXport")
             eXport();
+        else if (newMessage == "mailFromIndex")
+            mail();
 
         else
         {
@@ -516,69 +518,44 @@ else
         Modal.Show<AccessList>("", parameters);
     }
 
-    private void HtmlFromIndex()
+    private void DoExport(bool isHtml, bool isCollapsible, bool isEmail = false)
     {
         var parameters = new ModalParameters();
 
         ExportViewModel vm = new ExportViewModel();
         vm.ArchiveNumber = archiveID;
-        vm.isCollapsible = true;
-        vm.isDirectOutput = true;
-        vm.isHtml = true;
+        vm.isCollapsible = isCollapsible;
+        vm.isDirectOutput = !isEmail;
+        vm.isHtml = isHtml;
         vm.NoteFile = Model.noteFile;
         vm.NoteOrdinal = 0;
 
         parameters.Add("ExportViewModel", vm);
-        parameters.Add("ProdUri", "Broken");
-        parameters.Add("stylePath", "broken");
-        parameters.Add("FileName", Model.noteFile.NoteFileName + ".html");
+        parameters.Add("FileName", Model.noteFile.NoteFileName + (isHtml ? ".html" : ".txt"));
 
         Modal.OnClose += HideDialog;
         Modal.Show<ExportUtil1>("", parameters);
+    }
+
+    private void HtmlFromIndex()
+    {
+        DoExport(true, true);
     }
 
     private void htmlFromIndex()
     {
-        var parameters = new ModalParameters();
-
-        ExportViewModel vm = new ExportViewModel();
-        vm.ArchiveNumber = archiveID;
-        vm.isCollapsible = false;
-        vm.isDirectOutput = true;
-        vm.isHtml = true;
-        vm.NoteFile = Model.noteFile;
-        vm.NoteOrdinal = 0;
-
-        parameters.Add("ExportViewModel", vm);
-        parameters.Add("ProdUri", "Broken");
-        parameters.Add("stylePath", "broken");
-        parameters.Add("FileName", Model.noteFile.NoteFileName + ".html");
-
-        Modal.OnClose += HideDialog;
-        Modal.Show<ExportUtil1>("", parameters);
+        DoExport(true, false);
     }
 
     private void eXport()
     {
-        var parameters = new ModalParameters();
-
-        ExportViewModel vm = new ExportViewModel();
-        vm.ArchiveNumber = archiveID;
-        vm.isCollapsible = false;
-        vm.isDirectOutput = true;
-        vm.isHtml = false;
-        vm.NoteFile = Model.noteFile;
-        vm.NoteOrdinal = 0;
-
-        parameters.Add("ExportViewModel", vm);
-        parameters.Add("ProdUri", "Broken");
-        parameters.Add("stylePath", "broken");
-        parameters.Add("FileName", Model.noteFile.NoteFileName + ".txt");
-
-        Modal.OnClose += HideDialog;
-        Modal.Show<ExportUtil1>("", parameters);
+        DoExport(false, false);
     }
 
+    private void mail()
+    {
+        DoExport(true, true, true);
+    }
 
     protected class LocalInput
     {
