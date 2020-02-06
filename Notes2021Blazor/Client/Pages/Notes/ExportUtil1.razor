@@ -52,6 +52,7 @@
         else
         {
             // post ms to email!
+            await Http.PostJsonAsync("api/Email", ms);
         }
 
         Modal.Close(ModalResult.Cancel());
