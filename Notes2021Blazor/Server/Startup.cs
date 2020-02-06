@@ -129,6 +129,8 @@ namespace Notes2021Blazor.Server
                 app.UseBlazorDebugging();
             }
 
+            Globals.Env = env;
+
             app.UseStaticFiles();
             app.UseClientSideBlazorFiles<Client.Program>();
 

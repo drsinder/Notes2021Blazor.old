@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Hosting;
 using System;
 
 namespace Notes2021Blazor.Server
@@ -49,5 +50,7 @@ namespace Notes2021Blazor.Server
 
         public static string PrimeAdminName { get; set; }
         public static string PrimeAdminEmail { get; set; }
+
+        public static IWebHostEnvironment Env { get; set; }
     }
 }
