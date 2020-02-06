@@ -33,12 +33,14 @@ namespace Notes2021Blazor.Server.Controllers
             int arcId;
             int fileId;
             int noteOrd;
+            int respOrd;
 
             string[] parts = modelstring.Split(".");
 
             fileId = int.Parse(parts[0]);
             arcId = int.Parse(parts[1]);
             noteOrd = int.Parse(parts[2]);
+            respOrd = int.Parse(parts[3]);
 
             List<NoteHeader> nhl;
 
@@ -52,10 +54,10 @@ namespace Notes2021Blazor.Server.Controllers
             else
             {
                 nhl = await _db.NoteHeader
-                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal == noteOrd && p.ResponseOrdinal == 0)
+                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal == noteOrd && p.ResponseOrdinal == respOrd)
                     .ToListAsync();
             }
-
+ 
             return nhl;
         }
 

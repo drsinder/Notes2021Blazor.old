@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utils\**" />
+    <Content Remove="Utils\**" />
+    <EmbeddedResource Remove="Utils\**" />
+    <None Remove="Utils\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Pages\Notes\Enter.razor" />
     <Content Remove="Pages\Notes\NewBaseNote.razor" />
     <Content Remove="Pages\Notes\NoteEditPanel.razor" />
@@ -28,5 +35,6 @@
   </ItemGroup>
   <PropertyGroup>
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
+    <UserSecretsId>b292945e-0d35-4c50-ade7-eef47e01ed89</UserSecretsId>
   </PropertyGroup>
 </Project>

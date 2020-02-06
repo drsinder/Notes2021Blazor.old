@@ -146,6 +146,13 @@ else
 
             NavigationManager.NavigateTo("/notes/sequence", true);
         }
+        else if (newMessage == "HtmlFromIndex")
+            HtmlFromIndex();
+        else if (newMessage == "htmlFromIndex")
+            htmlFromIndex();
+        else if (newMessage == "eXport")
+            eXport();
+
         else
         {
             ShowMessage(newMessage + " Clicked");
@@ -507,6 +514,69 @@ else
         parameters.Add("FileId", Id);
         Modal.OnClose += HideDialog;
         Modal.Show<AccessList>("", parameters);
+    }
+
+    private void HtmlFromIndex()
+    {
+        var parameters = new ModalParameters();
+
+        ExportViewModel vm = new ExportViewModel();
+        vm.ArchiveNumber = archiveID;
+        vm.isCollapsible = true;
+        vm.isDirectOutput = true;
+        vm.isHtml = true;
+        vm.NoteFile = Model.noteFile;
+        vm.NoteOrdinal = 0;
+
+        parameters.Add("ExportViewModel", vm);
+        parameters.Add("ProdUri", "Broken");
+        parameters.Add("stylePath", "broken");
+        parameters.Add("FileName", Model.noteFile.NoteFileName + ".html");
+
+        Modal.OnClose += HideDialog;
+        Modal.Show<ExportUtil1>("", parameters);
+    }
+
+    private void htmlFromIndex()
+    {
+        var parameters = new ModalParameters();
+
+        ExportViewModel vm = new ExportViewModel();
+        vm.ArchiveNumber = archiveID;
+        vm.isCollapsible = false;
+        vm.isDirectOutput = true;
+        vm.isHtml = true;
+        vm.NoteFile = Model.noteFile;
+        vm.NoteOrdinal = 0;
+
+        parameters.Add("ExportViewModel", vm);
+        parameters.Add("ProdUri", "Broken");
+        parameters.Add("stylePath", "broken");
+        parameters.Add("FileName", Model.noteFile.NoteFileName + ".html");
+
+        Modal.OnClose += HideDialog;
+        Modal.Show<ExportUtil1>("", parameters);
+    }
+
+    private void eXport()
+    {
+        var parameters = new ModalParameters();
+
+        ExportViewModel vm = new ExportViewModel();
+        vm.ArchiveNumber = archiveID;
+        vm.isCollapsible = false;
+        vm.isDirectOutput = true;
+        vm.isHtml = false;
+        vm.NoteFile = Model.noteFile;
+        vm.NoteOrdinal = 0;
+
+        parameters.Add("ExportViewModel", vm);
+        parameters.Add("ProdUri", "Broken");
+        parameters.Add("stylePath", "broken");
+        parameters.Add("FileName", Model.noteFile.NoteFileName + ".txt");
+
+        Modal.OnClose += HideDialog;
+        Modal.Show<ExportUtil1>("", parameters);
     }
 
 

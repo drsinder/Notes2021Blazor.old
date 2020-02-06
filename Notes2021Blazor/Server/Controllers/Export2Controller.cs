@@ -28,16 +28,16 @@ namespace Notes2021Blazor.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<NoteHeader> Get(string modelstring)
+        public async Task<NoteContent> Get(string modelstring)
         {
             long noteid;
 
             noteid = long.Parse(modelstring);
 
-            NoteHeader nh = await _db.NoteHeader
-                .Include("NoteContent")
-                .Include("Tags")
-                .Where(p => p.Id == noteid)
+            NoteContent nh = await _db.NoteContent
+                //.Include("NoteContent")
+                //.Include("Tags")
+                .Where(p => p.NoteHeaderId == noteid)
                 .FirstOrDefaultAsync();
 
             return nh;

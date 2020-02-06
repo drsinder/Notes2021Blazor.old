@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Notes2021Blazor.Shared;
-using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using System.Net;

@@ -1,0 +1,266 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Threading.Tasks
+@using Notes2021Blazor.Shared
+@using System.IO
+@using System.Text
+@using System.Net
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.ComponentModel.DataAnnotations
+@using System.Timers
+@using Newtonsoft.Json
+
+@inject HttpClient Http
+@*@inject AuthenticationStateProvider AuthenticationStateProvider*@
+@inject IModalService Modal
+@inject IJSRuntime jsRuntime
+
+<div class="roundedgrayindexinput modal-body">
+    <p>Exporting @FileName ...  Please Wait...</p>
+</div>
+
+@functions {
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+
+    public ExportViewModel model { get; set; }
+    public string ProdUri { get; set; }
+    public string stylePath { get; set; }
+    public string FileName { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        model = Parameters.Get<ExportViewModel>("ExportViewModel");
+        ProdUri = Parameters.Get<string>("ProdUri");
+        stylePath = Parameters.Get<string>("stylePath");
+        FileName = Parameters.Get<string>("FileName");
+
+        MemoryStream ms = await DoExport();
+
+        await FileUtil.SaveAs(jsRuntime, FileName, ms.ToArray());
+
+        Modal.Close(ModalResult.Cancel());
+    }
+
+    private async Task<MemoryStream> DoExport()
+    {
+        bool isHtml = model.isHtml;
+        bool isCollapsible = model.isCollapsible;
+
+        NoteFile nf = model.NoteFile;
+        int nfid = nf.Id;
+
+        MemoryStream ms = new MemoryStream();
+        StreamWriter sw = new StreamWriter(ms);
+        StringBuilder sb = new StringBuilder();
+
+        if (isHtml)
+        {
+            // Start the document
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html>");
+            sb.AppendLine("<meta charset=\"utf-8\" />");
+            sb.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+            sb.AppendLine("<title>" + nf.NoteFileTitle + "</title>");
+
+            sb.AppendLine("<link rel = \"stylesheet\" href = \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">");
+
+            sb.AppendLine("<script src = \"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\" ></script >");
+            sb.AppendLine("<script src = \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\" ></script >");
+
+            sb.AppendLine("<link href=\"https://www.drsinder.com/Notes2021/css/ExportCSS/NotesExport31.css\" rel=\"stylesheet\" />");
+
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+            await sw.WriteAsync(sb.ToString());
+
+            // ready to start  writing content of file
+            sb = new StringBuilder();
+        }
+        if (isHtml)
+            sb.Append("<h2>");
+
+        // File Header
+        sb.Append("2021 NoteFile " + nf.NoteFileName + " - " + nf.NoteFileTitle);
+        sb.Append(" - Created " + DateTime.Now.ToUniversalTime().ToLongDateString() + " " + DateTime.Now.ToUniversalTime().ToShortTimeString());
+        if (isHtml)
+        {
+            sb.Append("</h2>");
+            sb.Append("<h4>");
+            sb.Append("<a href=\"");
+            sb.Append(ProdUri + "/NoteDisplay/Create/" + nf.Id +
+                      "\" target=\"_blank\">New Base Note</a>");
+            sb.Append("</h4>");
+        }
+
+        await sw.WriteLineAsync(sb.ToString());
+        await sw.WriteLineAsync();
+
+        // get ordered list of basenoteheaders to start process
+        List<NoteHeader> bnhl = null;
+        string req;
+        if (model.NoteOrdinal == 0)
+        {
+            req = "" + nfid + "." + model.ArchiveNumber + ".0.0";
+        }
+        else
+        {
+
+            req = "" + nfid + "." + model.ArchiveNumber + "." + model.NoteOrdinal + ".0";
+        }
+        bnhl = await Http.GetJsonAsync<List<NoteHeader>>("api/Export/" + req);
+
+        // loop over each base note in order
+        foreach (NoteHeader bnh in bnhl)
+        {
+            // get content for base note
+            NoteContent nc = null;
+            req = bnh.Id.ToString();
+            nc = await Http.GetJsonAsync<NoteContent>("api/Export2/" + req);
+
+            // format it and write it
+            await WriteNote(sw, bnh, bnh, nc, isHtml, false);
+
+            await sw.WriteLineAsync();
+
+            // extra stuff for collapsable responses
+
+            if (isCollapsible && isHtml && bnh.ResponseCount > 0)
+            {
+                await sw.WriteLineAsync("<div class=\"container\"><div class=\"panel-group\">" +
+                    "<div class=\"panel panel-default\"><div class=\"panel-heading\"><div class=\"panel-title\"><a data-toggle=\"collapse\" href=\"#collapse" +
+                    bnh.NoteOrdinal + "\">Toggle " + bnh.ResponseCount + " Response" + (bnh.ResponseCount > 1 ? "s" : "") + "</a></div></div><div id = \"collapse" + bnh.NoteOrdinal +
+                    "\" class=\"panel-collapse collapse\"><div class=\"panel-body\">");
+            }
+
+            for (int rnum = 1; rnum <= bnh.ResponseCount; rnum++)
+            {
+                NoteHeader nh = null;
+                NoteContent ncr = null;
+
+                req = "" + nfid + "." + model.ArchiveNumber + "." + bnh.NoteOrdinal + "." + rnum;
+                List<NoteHeader> zz = (await Http.GetJsonAsync<List<NoteHeader>>("api/Export/" + req));
+                nh = zz[0];
+
+                req = nh.Id.ToString();
+
+                ncr = await Http.GetJsonAsync<NoteContent>("api/Export2/" + req);
+
+                await WriteNote(sw, bnh, nh, ncr, isHtml, true);
+            }
+
+            // extra stuff to terminate collapsable responses
+            if (isCollapsible && isHtml && bnh.ResponseCount > 0)
+            {
+                await sw.WriteLineAsync("</div></div></div></div></div> ");
+            }
+        }
+
+        if (isHtml)  // end the html
+        {
+            await sw.WriteLineAsync("<script src = \"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\" ></script >");
+            await sw.WriteLineAsync("<script src = \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js\" ></script >");
+            sb.AppendLine("<script src = \"https://www.drsinder.com/Notes2021/js/prism.min.js\" ></script >");
+
+            await sw.WriteLineAsync("</body></html>");
+        }
+
+        // make sure all output is written to stream and rewind it
+        await sw.FlushAsync();
+        ms.Seek(0, SeekOrigin.Begin);
+        // send stream to caller
+        return ms;
+    }
+
+
+    private async Task<bool> WriteNote(StreamWriter sw, NoteHeader bnh, NoteHeader nh, NoteContent nc, bool isHtml, bool isResponse)
+    {
+        StringBuilder sb;
+        if (isHtml)
+        {
+            string extra = "";
+            if (nc.NoteBody.StartsWith("<DIV STYLE="))
+                extra = "-client";
+
+            if (!isResponse)
+                await sw.WriteLineAsync("<div class=\"base-note" + extra + "\">");
+            else
+                await sw.WriteLineAsync("<div class=\"response-note" + extra + "\">");
+
+            await sw.WriteLineAsync("<h3>");
+        }
+
+        if (!isResponse)
+        {
+            // write base note header
+            await sw.WriteLineAsync("Note: " + nh.NoteOrdinal + " - Subject: "
+            + nh.NoteSubject + (isHtml ? "<br />" : " - ") + "Author: " + nh.AuthorName + " - "
+            + nh.LastEdited.ToShortDateString() + " " + nh.LastEdited.ToShortTimeString() + " - "
+            + bnh.ResponseCount + " Response" + (bnh.ResponseCount > 1 || bnh.ResponseCount == 0 ? "s" : ""));
+        }
+        else
+        {
+            // write response note header
+            await sw.WriteLineAsync("Note: " + nh.NoteOrdinal + " - Subject: "
+            + nh.NoteSubject + (isHtml ? "<br />" : " - ") + "Author: " + nh.AuthorName + " - "
+            + nh.LastEdited.ToShortDateString() + " " + nh.LastEdited.ToShortTimeString() + " - "
+            + "Response " + nh.ResponseOrdinal + " of " + bnh.ResponseCount);
+            await sw.WriteLineAsync((isHtml ? "<br />" : string.Empty) + "Base Note Subject: " + bnh.NoteSubject);
+        }
+
+        if (isHtml)
+        {
+            await sw.WriteLineAsync("</h3>");
+        }
+
+        // Do tags
+
+        //if (!isHtml || (nc.Tags != null && nc.Tags.Count > 0))
+        //{
+        //    await sw.WriteAsync((isHtml ? "<h5>" : "") + "Tags - ");
+        //    foreach (Tags item in nc.Tags)
+        //    {
+        //        await sw.WriteAsync(item.Tag + " ");
+        //    }
+        //    await sw.WriteLineAsync((isHtml ? "</h5>" : ""));
+        //}
+
+        if (!isHtml || !string.IsNullOrEmpty(nc.DirectorMessage))
+        {
+            await sw.WriteLineAsync((isHtml ? "<h5>" : "") + "Director Message - " + nc.DirectorMessage + (isHtml ? "</h5>" : ""));
+        }
+        await sw.WriteLineAsync();
+        //if (isHtml)
+        //{
+        //    sb = new StringBuilder();
+        //    sb.Append("<h4>");
+        //    sb.Append("<a href=\"");
+        //    sb.Append(ProdUri + "/NoteDisplay/CreateResponse/" + nc.BaseNoteId +
+        //              "\" target=\"_blank\">New Response</a>");
+        //    sb.Append("</h4>");
+        //    await sw.WriteLineAsync(sb.ToString());
+        //}
+
+        if (isHtml)
+            await sw.WriteLineAsync(nc.NoteBody.Replace("<br />", "<br />\r\n") + "</div>");
+        else
+            await sw.WriteLineAsync(nc.NoteBody.Replace("<br />", "\r\n"));
+        await sw.WriteLineAsync();
+
+        return true;
+    }
+
+
+    public static class FileUtil
+    {
+        public async static Task SaveAs(IJSRuntime js, string filename, byte[] data)
+        {
+            await js.InvokeAsync<object>(
+                "saveAsFile",
+                filename,
+                Convert.ToBase64String(data));
+        }
+    }
+}
