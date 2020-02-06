@@ -3,12 +3,15 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
 using Notes2021Blazor.Server;
 
 namespace Notes2021Blazor.Server.Services
 {
     public class EmailSender : IEmailSender
     {
+        public StreamWriter StreamWriter { get; private set; }
+
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             var apiKey = Globals.SendGridApiKey;
@@ -19,7 +22,16 @@ namespace Notes2021Blazor.Server.Services
             var isHtml = message.StartsWith(htmlStart);
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, isHtml ? "See Html." : message, message);
 
-            // ReSharper disable once UnusedVariable
+            if (isHtml)
+            {
+                MemoryStream ms = new MemoryStream();
+                StreamWriter sw = new StreamWriter(ms);
+                await sw.WriteAsync(message);
+                await sw.FlushAsync();
+                ms.Seek(0, SeekOrigin.Begin);
+                await msg.AddAttachmentAsync("FromNotes2021.html", ms);
+            }
+
             Response response = await client.SendEmailAsync(msg);
         }
 
