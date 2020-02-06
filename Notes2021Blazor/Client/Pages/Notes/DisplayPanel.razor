@@ -178,6 +178,10 @@ else
         {
             DeleteNote();
         }
+        else if (newMessage == "Forward")
+        {
+            Forward();
+        }
         else  // pass on to list parent
         {
             await OnClick.InvokeAsync(newMessage);
@@ -240,6 +244,9 @@ else
 
                     await ContinueSeq();
                 }
+                break;
+            case "F":
+                Forward();
                 break;
 
             default:
@@ -490,6 +497,25 @@ else
     {
         Modal.OnClose -= HideDialog;
     }
+
+    private void Forward()
+    {
+        timer.Stop();
+        var parameters = new ModalParameters();
+        ForwardViewModel fv = new ForwardViewModel();
+        fv.NoteID = currentHeader.Id;
+        fv.FileID = currentHeader.NoteFileId;
+        fv.ArcID = currentHeader.ArchiveId;
+        fv.NoteOrdinal = currentHeader.NoteOrdinal;
+        fv.NoteSubject = currentHeader.NoteSubject;
+
+        parameters.Add("ForwardView", fv);
+
+        Modal.OnClose += HideDialog;
+        var options = new ModalOptions() { HideCloseButton = false };
+        Modal.Show<Forward>("", parameters, options);
+    }
+
 
     protected class LocalInput
     {

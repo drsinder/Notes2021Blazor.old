@@ -1,0 +1,48 @@
+﻿@using Notes2021Blazor.Shared
+@using Newtonsoft.Json
+@using System.Text
+@inject HttpClient Http
+@inject IModalService ModalService
+
+<div class="roundedgrayindexinput">
+
+    <h2>Forward Note(s)</h2>
+    <h4>@fv.NoteSubject</h4>
+    <p>Forward to:</p>
+    <input type="text" @bind-value="@fv.ToEmail" />
+    <br /> <br />
+    <button type="button" @onclick="Forwardit">Forward</button>
+    <button type="button" @onclick="Cancel">
+        Cancel
+    </button>
+</div>
+
+
+@code{
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+    protected ForwardViewModel fv { get; set; }
+
+    protected override void OnInitialized()
+    {
+        fv = Parameters.Get<ForwardViewModel>("ForwardView");
+    }
+
+    private async Task Forwardit()
+    {
+        if (fv.ToEmail == null || fv.ToEmail.Length < 8 || !fv.ToEmail.Contains("@") || !fv.ToEmail.Contains("."))
+            return;
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(fv), Encoding.UTF8, "application/json");
+
+        HttpResponseMessage result = await Http.PostAsync("api/Forward/", stringContent);
+
+        ModalService.Close(ModalResult.Cancel());
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+
+}
