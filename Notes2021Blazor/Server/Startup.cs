@@ -128,6 +128,8 @@ namespace Notes2021Blazor.Server
         {
             app.UsePathBase("/Notes2021Blazor");
 
+            UpdateDatabase(app);
+
             app.UseResponseCompression();
 
             if (env.IsDevelopment())
@@ -153,6 +155,19 @@ namespace Notes2021Blazor.Server
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapFallbackToClientSideBlazor<Client.Program>("index.html");
             });
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<NotesDbContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }
