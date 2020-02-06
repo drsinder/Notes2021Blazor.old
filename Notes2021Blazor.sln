@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notes2021Blazor.Client", "N
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notes2021Blazor.Shared", "Notes2021Blazor\Shared\Notes2021Blazor.Shared.csproj", "{F384F2AF-2EA8-4A27-81BA-5D20169A7572}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "License", "License", "{0F46A3A2-433C-4A0A-A318-D272D4B4BFDB}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\2017\Notes2021\License.txt = ..\..\2017\Notes2021\License.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
