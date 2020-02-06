@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="EmailSender.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Pages\Notes\Enter.razor" />
     <Content Remove="Pages\Notes\NewBaseNote.razor" />
     <Content Remove="Pages\Notes\NoteEditPanel.razor" />

@@ -12,7 +12,6 @@ namespace Notes2021Blazor.Client
         public void ConfigureServices(IServiceCollection services)
         {
    
-
             services.AddBlazoredModal();
             services.AddBlazoredLocalStorage();
             services.AddAuthorizationCore();

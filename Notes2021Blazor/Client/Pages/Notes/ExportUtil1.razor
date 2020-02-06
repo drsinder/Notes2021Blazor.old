@@ -52,7 +52,18 @@
         else
         {
             // post ms to email!
-            await Http.PostJsonAsync("api/Email", ms);
+
+            byte[] bytes = ms.GetBuffer();
+
+            System.Text.Encoding enc = System.Text.Encoding.ASCII;
+            string email = enc.GetString(bytes);
+
+            EmailModel stuff = new EmailModel();
+            stuff.email = "sinder@illinois.edu";
+            stuff.subject = "Note Notes 2021 - " + model.NoteFile.NoteFileTitle;
+            stuff.payload = email;
+
+            await Http.PostJsonAsync("api/Email", stuff);
         }
 
         Modal.Close(ModalResult.Cancel());

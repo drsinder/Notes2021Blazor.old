@@ -28,9 +28,11 @@ namespace Notes2021Blazor.Server.Controllers
         }
 
         [HttpPost]
-        public async Task Post(MemoryStream ms)
+        public async Task Post(EmailModel stuff)
         {
+            EmailSender sender = new EmailSender();
 
+            await sender.SendEmailAsync(stuff.email, stuff.subject, stuff.payload);
         }
 
     }
