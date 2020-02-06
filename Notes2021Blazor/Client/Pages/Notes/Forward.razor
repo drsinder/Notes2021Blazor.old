@@ -10,6 +10,9 @@
     <h4>@fv.NoteSubject</h4>
     <p>Forward to:</p>
     <input type="text" @bind-value="@fv.ToEmail" />
+    <p>Whole string?:</p>
+    <input type="checkbox" @bind-value="@fv.wholestring" />
+
     <br /> <br />
     <button type="button" @onclick="Forwardit">Forward</button>
     <button type="button" @onclick="Cancel">
