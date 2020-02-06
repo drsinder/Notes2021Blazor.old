@@ -29,7 +29,7 @@
         await Http.DeleteAsync("api/newbasenote/" + noteId);
 
         ModalService.Close(ModalResult.Ok($"Delete was submitted successfully."));
-        NavigationManager.NavigateTo("/notes/main/" + fileId, true);
+        NavigationManager.NavigateTo("notes/main/" + fileId, true);
     }
 
     private void Cancel()

@@ -144,7 +144,7 @@ else
             var stringContent = new StringContent(JsonConvert.SerializeObject(trackers[seqIndex]), Encoding.UTF8, "application/json");
             HttpResponseMessage result = await Http.PutAsync("api/Sequencer/", stringContent);
 
-            NavigationManager.NavigateTo("/notes/sequence", true);
+            NavigationManager.NavigateTo("notes/sequence", true);
         }
         else if (newMessage == "HtmlFromIndex")
             HtmlFromIndex();
@@ -165,7 +165,7 @@ else
     {
         scroller = string.Empty;
         seqIndex = -1;
-        if (NavigationManager.Uri.Contains("/display/"))  // display a note from the main index
+        if (NavigationManager.Uri.Contains("display/"))  // display a note from the main index
         {
             headerId = long.Parse(fileId);
             currentHeader = Model.Notes.Find(p => p.Id == headerId);
@@ -173,7 +173,7 @@ else
             mode = currentHeader.Id;
             this.StateHasChanged();
         }
-        if (NavigationManager.Uri.Contains("/main/"))     // show the main index
+        if (NavigationManager.Uri.Contains("main/"))     // show the main index
         {
             Id = int.Parse(fileId);
             archiveID = await _localStorage.GetItemAsync<int>("ArchiveId");
@@ -215,7 +215,7 @@ else
 
             basenoteCount = Model.Notes.Count;
         }
-        if (NavigationManager.Uri.Contains("/enterandshow/")) // load the index data and then display a note
+        if (NavigationManager.Uri.Contains("enterandshow/")) // load the index data and then display a note
         {
             // fileId is really noteId so use it to get base note header
 
@@ -258,7 +258,7 @@ else
             newnoteFlag = false;
             mode = myNoteId;
         }
-        if (NavigationManager.Uri.Contains("/sequence"))
+        if (NavigationManager.Uri.Contains("sequence"))
         {
             trackers = await Http.GetJsonAsync<List<Sequencer>>("api/sequencer");
             if (trackers == null || trackers.Count < 1)
@@ -363,7 +363,7 @@ else
 
     protected void ListFiles()
     {
-        NavigationManager.NavigateTo("/notes/notesfiles");
+        NavigationManager.NavigateTo("notes/notesfiles");
     }
 
     protected void KeyPressed(KeyboardEventArgs eventArgs)
@@ -406,7 +406,7 @@ else
         typedInput = typedInput.Trim().Replace("'\n", "").Replace("'\r", "").Trim();
 
         //if (typedInput == "O" && Model.isMarked && Model.myAccess.ReadAccess)
-        //    NavigationManager.NavigateTo("/notes/exportmarked/" + @Model.noteFile.Id);
+        //    NavigationManager.NavigateTo("notes/exportmarked/" + @Model.noteFile.Id);
 
         int fileId = Model.noteFile.Id;
         int noteOrd = 1;
@@ -454,7 +454,7 @@ else
     {
         mode = 0;
         newnoteFlag = false;
-        //NavigationManager.NavigateTo("/notes/main/" + Id);
+        //NavigationManager.NavigateTo("notes/main/" + Id);
         this.StateHasChanged();
     }
 

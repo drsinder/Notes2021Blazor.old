@@ -10,7 +10,7 @@
 @inject NavigationManager NavigationManager
 
 <div>
-    <h2 class="center">Welcome to Notes 2021 Blazor Edition <img src="/favicon.ico" width="32" /></h2>
+    <h2 class="center">Welcome to Notes 2021 Blazor Edition <img src="favicon.ico" width="32" /></h2>
 
     @if (model == null)
     {
@@ -33,7 +33,6 @@
 
     @if (fileList == null || nameList == null)
     {
-        @*<p class="center"><em>Loading...</em></p>*@
     }
     else
     {
@@ -52,7 +51,7 @@
                                                ValueExpression="@( () => dummyFile.NoteFileName )" />
                                 </label>
                             </p>
-                            or select a file<br />
+                            Or select a file<br />
                             <InputSelect class="btn btn-file dropdown-toggle form-control short-input"
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
@@ -62,7 +61,7 @@
                                     <option value=@item.NoteFileName>@item.NoteFileName</option>
                                 }
                             </InputSelect>
-                            <br />or select a title<br />
+                            <br />Or select a title<br />
                             <InputSelect class="btn btn-title dropdown-toggle form-control short-input"
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
@@ -73,7 +72,7 @@
                                 }
                             </InputSelect>
                         </EditForm>
-                        <h4><a href="/notes/notesfiles" class=" keep-center">See All Files</a></h4>
+                        <h4><a href="notes/notesfiles" class=" keep-center">See All Files</a></h4>
                     </div>
                 </div>
                 <div class="row">
