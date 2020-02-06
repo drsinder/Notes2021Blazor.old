@@ -264,7 +264,7 @@ else
             if (trackers == null || trackers.Count < 1)
             {
                 message = null;
-                NavigationManager.NavigateTo("/", true);
+                NavigationManager.NavigateTo(NavigationManager.BaseUri, true);
                 return;
             }
 
