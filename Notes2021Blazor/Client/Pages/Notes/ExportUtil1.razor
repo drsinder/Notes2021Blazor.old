@@ -60,7 +60,7 @@
 
             EmailModel stuff = new EmailModel();
             stuff.email = "sinder@illinois.edu";
-            stuff.subject = "Note Notes 2021 - " + model.NoteFile.NoteFileTitle;
+            stuff.subject = "Notes 2021 - " + model.NoteFile.NoteFileTitle;
             stuff.payload = email;
 
             await Http.PostJsonAsync("api/Email", stuff);
@@ -90,15 +90,14 @@
             sb.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
             sb.AppendLine("<title>" + nf.NoteFileTitle + "</title>");
 
-            sb.AppendLine("<link rel = \"stylesheet\" href = \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">");
-
-            sb.AppendLine("<script src = \"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\" ></script >");
-            sb.AppendLine("<script src = \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\" ></script >");
-
+            sb.AppendLine("<link rel = \"stylesheet\" href = \"https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\">");
             sb.AppendLine("<link href=\"https://www.drsinder.com/Notes2021/css/ExportCSS/NotesExport31.css\" rel=\"stylesheet\" />");
 
+            sb.AppendLine("<script src = \"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\" ></script >");
+            sb.AppendLine("<script src = \"https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\" ></script >");
+
             sb.AppendLine("</head>");
-            sb.AppendLine("<body>");
+            sb.AppendLine("<body><div class=\"root-div\">");
             await sw.WriteAsync(sb.ToString());
 
             // ready to start  writing content of file
@@ -156,7 +155,7 @@
             {
                 await sw.WriteLineAsync("<div class=\"container\"><div class=\"panel-group\">" +
                     "<div class=\"panel panel-default\"><div class=\"panel-heading\"><div class=\"panel-title\"><a data-toggle=\"collapse\" href=\"#collapse" +
-                    bnh.NoteOrdinal + "\">Show " + bnh.ResponseCount + " Response" + (bnh.ResponseCount > 1 ? "s" : "") + "</a></div></div><div id = \"collapse" + bnh.NoteOrdinal +
+                    bnh.NoteOrdinal + "\"><h5>Toggle " + bnh.ResponseCount + " Response</h5>" + (bnh.ResponseCount > 1 ? "s" : "") + "</a></div></div><div id = \"collapse" + bnh.NoteOrdinal +
                     "\" class=\"panel-collapse collapse\"><div class=\"panel-body\">");
             }
 
@@ -185,11 +184,9 @@
 
         if (isHtml)  // end the html
         {
-            await sw.WriteLineAsync("<script src = \"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\" ></script >");
-            await sw.WriteLineAsync("<script src = \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js\" ></script >");
             sb.AppendLine("<script src = \"https://www.drsinder.com/Notes2021/js/prism.min.js\" ></script >");
 
-            await sw.WriteLineAsync("</body></html>");
+            await sw.WriteLineAsync("</div></body></html>");
         }
 
         // make sure all output is written to stream and rewind it
