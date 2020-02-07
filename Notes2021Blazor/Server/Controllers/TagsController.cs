@@ -23,7 +23,7 @@ namespace Notes2021Blazor.Server.Controllers
         {
             long Id = long.Parse(sid);
 
-            return await _db.Tags.Where(p => p.NoteHeaderId == Id).ToListAsync();
+            return await _db.Tags.Where(p => p.NoteFileId == Id).ToListAsync();
         }
     }
 }

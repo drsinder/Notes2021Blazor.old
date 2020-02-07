@@ -662,6 +662,9 @@ else
 
     private async Task DoSearch(Search target)
     {
+        message = "Searching... Please Wait...";
+        StateHasChanged();
+
         switch (target.Option)
         {
             case SearchOption.Author:
@@ -676,8 +679,13 @@ else
                 await SearchContents(target);
                 break;
 
-
+            case SearchOption.Tag:
+                await SearchTags(target);
+                break;
         }
+
+        message = null;
+        StateHasChanged();
     }
 
     protected void SearchHeader(Search target)
@@ -743,6 +751,35 @@ else
             }
             if (isMatch)
                 results.Add(nh);
+        }
+
+        if (results.Count == 0)
+        {
+            ShowMessage("Nothing Found.");
+            return;
+        }
+
+        results = results.OrderBy(p => p.LastEdited).ToList();
+
+        mode = results[0].Id;
+        isSearch = true;
+        StateHasChanged();
+    }
+
+    protected async Task SearchTags(Search target)
+    {
+        List<Tags> tags = await Http.GetJsonAsync<List<Tags>>("api/Tags/" + Model.noteFile.Id);
+
+        results = new List<NoteHeader>();
+
+        foreach( Tags t in tags)
+        {
+            foreach( NoteHeader x in results)
+            {
+                if (x.Id == t.NoteHeaderId)
+                    break;
+                results.Add(Model.AllNotes.Find(p => p.Id == x.Id));
+            }
         }
 
         if (results.Count == 0)
