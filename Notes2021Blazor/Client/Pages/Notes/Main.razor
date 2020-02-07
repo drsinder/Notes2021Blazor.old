@@ -72,29 +72,29 @@ else
 
 @functions {
 
-        [Parameter]
-        public string fileId { get; set; }
+    [Parameter]
+    public string fileId { get; set; }
 
-        private bool newnoteFlag { get; set; }
-        public long headerId { get; set; }
-        private int Id { get; set; }
-        private int archiveID { get; set; }
-        private NoteDisplayIndexModel Model { get; set; }
-        private long mode { get; set; }
-        private int basenoteCount { get; set; }
-        private string message = "Loading...";
-        private LocalInput myInput { get; set; }
-        private NoteHeader currentHeader { get; set; }
-        private string scroller { get; set; }
+    private bool newnoteFlag { get; set; }
+    public long headerId { get; set; }
+    private int Id { get; set; }
+    private int archiveID { get; set; }
+    private NoteDisplayIndexModel Model { get; set; }
+    private long mode { get; set; }
+    private int basenoteCount { get; set; }
+    private string message = "Loading...";
+    private LocalInput myInput { get; set; }
+    private NoteHeader currentHeader { get; set; }
+    private string scroller { get; set; }
 
-        private Timer timer { get; set; }
+    private Timer timer { get; set; }
 
-        private List<Sequencer> trackers { get; set; }
-        private int seqIndex { get; set; }
+    private List<Sequencer> trackers { get; set; }
+    private int seqIndex { get; set; }
 
-        private List<NoteHeader> seqBases { get; set; }
+    private List<NoteHeader> seqBases { get; set; }
 
-        private int mailOrd {get; set;}
+    private int mailOrd {get; set;}
 
     protected async Task ClickHandler(string newMessage)
     {
@@ -388,6 +388,18 @@ else
                 break;
             case "L":
                 ListFiles();
+                break;
+            case "H":
+                HtmlFromIndex();
+                break;
+            case "h":
+                htmlFromIndex();
+                break;
+            case "X":
+                eXport();
+                break;
+            case "m":
+                mail();
                 break;
             default:
                 //var parameters = new ModalParameters();
