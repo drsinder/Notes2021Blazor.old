@@ -182,6 +182,10 @@ else
         {
             Forward();
         }
+        else if (newMessage == "Done")
+        {
+            Done();
+        }
         else  // pass on to list parent
         {
             await OnClick.InvokeAsync(newMessage);
