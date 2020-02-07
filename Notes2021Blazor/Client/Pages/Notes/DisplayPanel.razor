@@ -162,6 +162,9 @@ else
             case "Delete": DeleteNote(); break;
             case "Forward": Forward(); break;
             case "Done": Done(); break;
+            case "Html": Html(); break;
+            case "html": html(); break;
+            case "mail": mail(); break;
 
             default:
                 await OnClick.InvokeAsync(newMessage);
@@ -500,6 +503,21 @@ else
         Modal.Show<Forward>("", parameters, options);
     }
 
+    private void Html()
+    {
+        OnClick.InvokeAsync("Html:" + currentHeader.NoteOrdinal);
+    }
+
+    private void html()
+    {
+        OnClick.InvokeAsync("html:" + currentHeader.NoteOrdinal);
+    }
+
+    private void mail()
+    {
+        timer.Stop(); timer.Enabled = false;
+        OnClick.InvokeAsync("mail:" + currentHeader.NoteOrdinal);
+    }
 
     protected class LocalInput
     {

@@ -72,27 +72,29 @@ else
 
 @functions {
 
-    [Parameter]
-    public string fileId { get; set; }
+        [Parameter]
+        public string fileId { get; set; }
 
-    private bool newnoteFlag { get; set; }
-    public long headerId { get; set; }
-    private int Id { get; set; }
-    private int archiveID { get; set; }
-    private NoteDisplayIndexModel Model { get; set; }
-    private long mode { get; set; }
-    private int basenoteCount { get; set; }
-    private string message = "Loading...";
-    private LocalInput myInput { get; set; }
-    private NoteHeader currentHeader { get; set; }
-    private string scroller { get; set; }
+        private bool newnoteFlag { get; set; }
+        public long headerId { get; set; }
+        private int Id { get; set; }
+        private int archiveID { get; set; }
+        private NoteDisplayIndexModel Model { get; set; }
+        private long mode { get; set; }
+        private int basenoteCount { get; set; }
+        private string message = "Loading...";
+        private LocalInput myInput { get; set; }
+        private NoteHeader currentHeader { get; set; }
+        private string scroller { get; set; }
 
-    private Timer timer { get; set; }
+        private Timer timer { get; set; }
 
-    private List<Sequencer> trackers { get; set; }
-    private int seqIndex { get; set; }
+        private List<Sequencer> trackers { get; set; }
+        private int seqIndex { get; set; }
 
-    private List<NoteHeader> seqBases { get; set; }
+        private List<NoteHeader> seqBases { get; set; }
+
+        private int mailOrd {get; set;}
 
     protected async Task ClickHandler(string newMessage)
     {
@@ -115,6 +117,21 @@ else
 
             mode = newmode;
             this.StateHasChanged();
+        }
+        else if (newMessage.StartsWith("Html:"))
+        {
+            int nord = int.Parse(newMessage.Substring(5, newMessage.Length - 5));
+            DoExport1(nord, true, true);
+        }
+        else if (newMessage.StartsWith("html:"))
+        {
+            int nord = int.Parse(newMessage.Substring(5, newMessage.Length - 5));
+            DoExport1(nord, true, false);
+        }
+        else if (newMessage.StartsWith("mail:"))
+        {
+            mailOrd = int.Parse(newMessage.Substring(5, newMessage.Length - 5));
+            mail1();
         }
         else
         {
@@ -141,6 +158,9 @@ else
                 case "htmlFromIndex": htmlFromIndex(); break;
                 case "eXport": eXport(); break;
                 case "mailFromIndex": mail(); break;
+                case "mail":
+                    mail1(); break;
+
                 default:
                     ShowMessage(newMessage + " Clicked");
                     break;
@@ -517,6 +537,26 @@ else
         Modal.Show<ExportUtil1>("", parameters);
     }
 
+    private void DoExport1(int NoteOrd, bool isHtml, bool isCollapsible, bool isEmail = false, string emailaddr = null)
+    {
+        var parameters = new ModalParameters();
+
+        ExportViewModel vm = new ExportViewModel();
+        vm.ArchiveNumber = archiveID;
+        vm.isCollapsible = isCollapsible;
+        vm.isDirectOutput = !isEmail;
+        vm.isHtml = isHtml;
+        vm.NoteFile = Model.noteFile;
+        vm.NoteOrdinal = NoteOrd;
+        vm.Email = emailaddr;
+
+        parameters.Add("ExportViewModel", vm);
+        parameters.Add("FileName", Model.noteFile.NoteFileName + (isHtml ? ".html" : ".txt"));
+
+        Modal.OnClose += HideDialog;
+        Modal.Show<ExportUtil1>("", parameters);
+    }
+
     private void HtmlFromIndex()
     {
         DoExport(true, true);
@@ -538,9 +578,6 @@ else
         var parameters = new ModalParameters();
         Modal.OnClose += HideDialogMail;
         Modal.Show<Email>("", parameters);
-
-
-        //DoExport(true, true, true, "sinder@illinois.edu");
     }
 
     void HideDialogMail(ModalResult modalResult)
@@ -549,6 +586,21 @@ else
 
         if (!modalResult.Cancelled)
             DoExport(true, true, true, modalResult.Data.ToString());
+    }
+
+    private void mail1()
+    {
+        timer.Stop();
+        var parameters = new ModalParameters();
+        Modal.OnClose += HideDialogMail1;
+        Modal.Show<Email>("", parameters);
+    }
+
+    void HideDialogMail1(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialogMail1;
+        if (!modalResult.Cancelled)
+            DoExport1(mailOrd, true, true, true, modalResult.Data.ToString());
     }
 
     protected class LocalInput
