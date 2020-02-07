@@ -71,6 +71,9 @@
         NoteFile nf = model.NoteFile;
         int nfid = nf.Id;
 
+        List<Tags> tags = await Http.GetJsonAsync<List<Tags>>("api/Tags/" + nfid);
+
+
         MemoryStream ms = new MemoryStream();
         StreamWriter sw = new StreamWriter(ms);
         StringBuilder sb = new StringBuilder();
@@ -139,7 +142,7 @@
             nc = await Http.GetJsonAsync<NoteContent>("api/Export2/" + req);
 
             // format it and write it
-            await WriteNote(sw, bnh, bnh, nc, isHtml, false);
+            await WriteNote(sw, bnh, bnh, nc, isHtml, false, tags);
 
             await sw.WriteLineAsync();
 
@@ -166,7 +169,7 @@
 
                 ncr = await Http.GetJsonAsync<NoteContent>("api/Export2/" + req);
 
-                await WriteNote(sw, bnh, nh, ncr, isHtml, true);
+                await WriteNote(sw, bnh, nh, ncr, isHtml, true, tags);
             }
 
             // extra stuff to terminate collapsable responses
@@ -191,7 +194,7 @@
     }
 
 
-    private async Task<bool> WriteNote(StreamWriter sw, NoteHeader bnh, NoteHeader nh, NoteContent nc, bool isHtml, bool isResponse)
+    private async Task<bool> WriteNote(StreamWriter sw, NoteHeader bnh, NoteHeader nh, NoteContent nc, bool isHtml, bool isResponse, List<Tags> tags)
     {
         //StringBuilder sb;
         if (isHtml)
@@ -233,15 +236,17 @@
 
         // Do tags
 
-        //if (!isHtml || (nc.Tags != null && nc.Tags.Count > 0))
-        //{
-        //    await sw.WriteAsync((isHtml ? "<h5>" : "") + "Tags - ");
-        //    foreach (Tags item in nc.Tags)
-        //    {
-        //        await sw.WriteAsync(item.Tag + " ");
-        //    }
-        //    await sw.WriteLineAsync((isHtml ? "</h5>" : ""));
-        //}
+        List<Tags> tl = tags.Where(p => p.NoteHeaderId == nc.NoteHeaderId).ToList();
+
+        if (!isHtml || (tl != null && tl.Count > 0))
+        {
+            await sw.WriteAsync((isHtml ? "<h5>" : "") + "Tags - ");
+            foreach (Tags item in tl)
+            {
+                await sw.WriteAsync(item.Tag + " ");
+            }
+            await sw.WriteLineAsync((isHtml ? "</h5>" : ""));
+        }
 
         if (!isHtml || !string.IsNullOrEmpty(nc.DirectorMessage))
         {
