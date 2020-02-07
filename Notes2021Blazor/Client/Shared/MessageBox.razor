@@ -1,15 +1,11 @@
 ﻿@inject IModalService ModalService
-@*<div class="modal-dialog modal-lg dialog-float">
-    <div class="modal-content">*@
-        <div class="roundedgrayindexinput">
-            <h3>Informational Message</h3>
-            <p>
-                @Message
-            </p>
-            <button type="button" @onclick="Cancel">Close</button>
-        </div>
-    @*</div>
-</div>*@
+<div class="roundedgrayindexinput">
+    <h3>Informational Message</h3>
+    <p>
+        @Message
+    </p>
+    <button type="button" @onclick="Cancel">Close</button>
+</div>
 
 @functions{
 

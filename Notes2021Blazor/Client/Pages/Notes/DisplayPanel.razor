@@ -77,6 +77,8 @@ else
     [Parameter] public List<Sequencer> trackers { get; set; }
     [Parameter] public int seqIndx { get; set; }
     [Parameter] public EventCallback<string> OnClick { get; set; }
+    [Parameter] public bool isSearch { get; set; }
+    [Parameter] public List<NoteHeader> SearchResults { get; set; }
 
 
     protected bool newnoteFlag { get; set; }
@@ -108,6 +110,12 @@ else
 
         newnoteFlag = false;
         editing = false;
+
+        if (isSearch && SearchResults.Count > 0)
+        {
+            currentHeader = SearchResults[0];
+            Model.myHeader = currentHeader;
+        }
 
         DisplayModel dm = await Http.GetJsonAsync<DisplayModel>("api/NoteContent/" + currentHeader.Id);
 
@@ -165,6 +173,11 @@ else
             case "Html": Html(); break;
             case "html": html(); break;
             case "mail": mail(); break;
+            case "Search":
+                timer.Stop(); timer.Enabled = false;
+                await OnClick.InvokeAsync(newMessage);
+                break;
+
 
             default:
                 await OnClick.InvokeAsync(newMessage);
@@ -219,7 +232,19 @@ else
             case " ":
                 if (eventArgs.ShiftKey)
                 {
-                    await OnClick.InvokeAsync("ContinueSearch");
+                    if (!isSearch)
+                        return;
+
+                    SearchResults.RemoveAt(0);
+                    if (SearchResults.Count == 0)
+                    {
+                        ShowMessage("Search Complete!");
+                        isSearch = false;
+                        return;
+                    }
+
+                    currentHeader = SearchResults[0];
+                    await SetNote();
                 }
                 else
                 {
@@ -475,6 +500,14 @@ else
         }
         Model.myHeader = currentHeader;
         this.StateHasChanged();
+    }
+
+    private void ShowMessage(string message)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("Message", message);
+        Modal.OnClose += HideDialog;
+        Modal.Show<MessageBox>("", parameters);
     }
 
     private void ShowHelp()

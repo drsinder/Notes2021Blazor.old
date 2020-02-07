@@ -34,5 +34,13 @@ namespace Notes2021Blazor.Shared
         {
             return dt.AddHours(OffsetHours).AddMinutes(OffsetMinutes);
         }
+
+        public DateTime Universal(DateTime dt)
+        {
+            return dt.AddHours(-OffsetHours).AddMinutes(-OffsetMinutes);
+        }
+
+
     }
+
 }

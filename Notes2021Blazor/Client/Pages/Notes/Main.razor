@@ -61,7 +61,9 @@ else
             }
             else // note display mode
             {
-                <DisplayPanel Model="Model" currentHeader="currentHeader" Id="Id" SeqBases="seqBases" trackers="trackers" seqIndx="seqIndex" OnClick="ClickHandler" />
+                <DisplayPanel Model="Model" currentHeader="currentHeader" Id="Id" SeqBases="seqBases" 
+                              trackers="trackers" seqIndx="seqIndex" OnClick="ClickHandler" 
+                              isSearch="isSearch" SearchResults="results"/>
             }
         </Authorized>
         <NotAuthorized>
@@ -85,6 +87,7 @@ else
     private string message = "Loading...";
     private LocalInput myInput { get; set; }
     private NoteHeader currentHeader { get; set; }
+
     private string scroller { get; set; }
 
     private Timer timer { get; set; }
@@ -95,6 +98,12 @@ else
     private List<NoteHeader> seqBases { get; set; }
 
     private int mailOrd {get; set;}
+
+    private bool isIndexSearch { get; set; }
+
+    private List<NoteHeader> results { get; set; }
+
+    private bool isSearch { get; set; }
 
     protected async Task ClickHandler(string newMessage)
     {
@@ -160,7 +169,14 @@ else
                 case "mailFromIndex": mail(); break;
                 case "mail":
                     mail1(); break;
-
+                case "Search":
+                    isIndexSearch = false;
+                    Search();
+                    break;
+                case "SearchFromIndex":
+                    isIndexSearch = true;
+                    Search();
+                    break;
                 default:
                     ShowMessage(newMessage + " Clicked");
                     break;
@@ -613,6 +629,133 @@ else
         Modal.OnClose -= HideDialogMail1;
         if (!modalResult.Cancelled)
             DoExport1(mailOrd, true, true, true, modalResult.Data.ToString());
+    }
+
+
+    void Search()
+    {
+        timer.Stop();
+        var parameters = new ModalParameters();
+        parameters.Add("TimeZone", Model.tZone);
+
+        //if (isIndexSearch)
+        parameters.Add("Text", "Whole File");
+        //else
+        //    parameters.Add("Text", "Note String");
+
+        Modal.OnClose += HideDialogSearch;
+        Modal.Show<SearchDlg>("", parameters);
+    }
+
+    void HideDialogSearch(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialogSearch;
+
+        if (modalResult.Cancelled)
+            return;
+
+        Search target = (Search)modalResult.Data;
+
+        DoSearch(target).GetAwaiter();
+    }
+
+
+    private async Task DoSearch(Search target)
+    {
+        switch (target.Option)
+        {
+            case SearchOption.Author:
+            case SearchOption.Title:
+            case SearchOption.TimeIsAfter:
+            case SearchOption.TimeIsBefore:
+                SearchHeader(target);
+                break;
+
+            case SearchOption.Content:
+            case SearchOption.DirMess:
+                await SearchContents(target);
+                break;
+
+
+        }
+    }
+
+    protected void SearchHeader(Search target)
+    {
+        results = new List<NoteHeader>();
+        List<NoteHeader> lookin = Model.AllNotes;
+
+        foreach(NoteHeader nh in lookin)
+        {
+            bool isMatch = false;
+            switch (target.Option)
+            {
+                case SearchOption.Author:
+                    isMatch = nh.AuthorName.Contains(target.Text);
+                    break;
+                case SearchOption.Title:
+                    isMatch = nh.NoteSubject.ToLower().Contains(target.Text.ToLower());
+                    break;
+                case SearchOption.TimeIsAfter:
+                    isMatch = DateTime.Compare(nh.LastEdited, target.Time) > 0;
+                    break;
+                case SearchOption.TimeIsBefore:
+                    isMatch = DateTime.Compare(nh.LastEdited, target.Time) < 0;
+                    break;
+            }
+            if (isMatch)
+                results.Add(nh);
+        }
+
+        if (results.Count == 0)
+        {
+            ShowMessage("Nothing Found.");
+            return;
+        }
+
+        results = results.OrderBy(p => p.LastEdited).ToList();
+
+        mode = results[0].Id;
+        isSearch = true;
+        StateHasChanged();
+    }
+
+    protected async Task SearchContents(Search target)
+    {
+        results = new List<NoteHeader>();
+        List<NoteHeader> lookin = Model.AllNotes;
+
+        foreach (NoteHeader nh in lookin)
+        {
+            DisplayModel dm = await Http.GetJsonAsync<DisplayModel>("api/NoteContent/" + nh.Id);
+            NoteContent nc = dm.content;
+            List<Tags> tags = dm.tags;
+
+            bool isMatch = false;
+            switch (target.Option)
+            {
+                case SearchOption.Content:
+                    isMatch = nc.NoteBody.ToLower().Contains(target.Text.ToLower());
+                    break;
+                case SearchOption.DirMess:
+                    isMatch = nc.DirectorMessage.ToLower().Contains(target.Text.ToLower());
+                    break;
+            }
+            if (isMatch)
+                results.Add(nh);
+        }
+
+        if (results.Count == 0)
+        {
+            ShowMessage("Nothing Found.");
+            return;
+        }
+
+        results = results.OrderBy(p => p.LastEdited).ToList();
+
+        mode = results[0].Id;
+        isSearch = true;
+        StateHasChanged();
     }
 
     protected class LocalInput

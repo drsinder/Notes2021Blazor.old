@@ -1,0 +1,79 @@
+﻿@using System
+@using Notes2021Blazor.Shared
+@*@using Newtonsoft.Json
+@using System.Text*@
+
+@inject IModalService ModalService
+
+<div class="roundedgrayindexinput">
+    <h3>Search @searchtype</h3>
+    <hr />
+    <h5>Search By</h5>
+    <select id="option" @bind="@option">
+        <option value="0">-- Select a Search Option --</option>
+        <option value="1">Author</option>
+        <option value="2">Subject</option>
+        <option value="3">Content</option>
+        <option value="4">Director Message</option>
+        <option value="5">Tag</option>
+        <option value="6">Time Before</option>
+        <option value="7">Time After</option>
+    </select>
+    <h5>Search Text</h5>
+    <input id="searchtext" type="text" @bind="@text" />
+    <h5>Search Date/Time</h5>
+    <input id="searchtime" type="text" @bind="@datetime" />
+    <hr />
+    <button type="button" @onclick="Searchfor">Search</button>
+    <button type="button" @onclick="Cancel">Cancel</button>
+</div>
+
+@functions{
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+    string Message { get; set; }
+
+    private int option { get; set; }
+    private string text { get; set; }
+    private string datetime { get; set; }
+    private DateTime theTime { get; set; }
+    private TZone zone { get; set; }
+    private string searchtype { get; set; }
+
+    protected override void OnInitialized()
+    {
+        option = 0;
+        theTime = DateTime.Now.ToUniversalTime();
+        zone = Parameters.Get<TZone>("TimeZone");
+        searchtype = Parameters.Get<string>("Text");
+        theTime = zone.Local(theTime);
+        datetime = theTime.ToString();
+    }
+    private void Searchfor()
+    {
+        Search target = new Search(); switch (option)
+        {
+            case 1: target.Option = SearchOption.Author; break;
+            case 2: target.Option = SearchOption.Title; break;
+            case 3: target.Option = SearchOption.Content; break;
+            case 4: target.Option = SearchOption.DirMess; break;
+            case 5: target.Option = SearchOption.Tag; break;
+            case 6: target.Option = SearchOption.TimeIsBefore; break;
+            case 7: target.Option = SearchOption.TimeIsAfter; break;
+            default: return;
+        }
+
+        target.Text = text;
+
+        theTime = DateTime.Parse(datetime);
+        theTime = zone.Universal(theTime);
+        target.Time = theTime;
+
+        ModalService.Close(ModalResult.Ok<Search>(target));
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+}
