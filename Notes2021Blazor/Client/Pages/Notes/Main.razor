@@ -116,48 +116,36 @@ else
             mode = newmode;
             this.StateHasChanged();
         }
-        else if (newMessage == "ListHelp")
-        {
-            ShowHelp();
-        }
-        else if (newMessage == "NewBaseNote")
-        {
-            newnoteFlag = true;
-            this.StateHasChanged();
-        }
-        else if (newMessage == "CancelEdit")
-        {
-            newnoteFlag = false;
-            this.StateHasChanged();
-            NavigationManager.NavigateTo((NavigationManager.Uri), true);
-        }
-        else if (newMessage == "AccessControls")
-        {
-            EditAccess();
-        }
-        else if (newMessage == "ListNoteFiles")
-        {
-            ListFiles();
-        }
-        else if (newMessage == "SeqFileDone")
-        {
-            var stringContent = new StringContent(JsonConvert.SerializeObject(trackers[seqIndex]), Encoding.UTF8, "application/json");
-            HttpResponseMessage result = await Http.PutAsync("api/Sequencer/", stringContent);
-
-            NavigationManager.NavigateTo("notes/sequence", true);
-        }
-        else if (newMessage == "HtmlFromIndex")
-            HtmlFromIndex();
-        else if (newMessage == "htmlFromIndex")
-            htmlFromIndex();
-        else if (newMessage == "eXport")
-            eXport();
-        else if (newMessage == "mailFromIndex")
-            mail();
-
         else
         {
-            ShowMessage(newMessage + " Clicked");
+            switch (newMessage)
+            {
+                case "ListHelp": ShowHelp(); break;
+                case "NewBaseNote":
+                    newnoteFlag = true;
+                    this.StateHasChanged();
+                    break;
+                case "CancelEdit":
+                    newnoteFlag = false;
+                    this.StateHasChanged();
+                    NavigationManager.NavigateTo((NavigationManager.Uri), true);
+                    break;
+                case "AccessControls": EditAccess(); break;
+                case "ListNoteFiles": ListFiles(); break;
+                case "SeqFileDone":
+                    var stringContent = new StringContent(JsonConvert.SerializeObject(trackers[seqIndex]), Encoding.UTF8, "application/json");
+                    HttpResponseMessage result = await Http.PutAsync("api/Sequencer/", stringContent);
+                    NavigationManager.NavigateTo("notes/sequence", true);
+                    break;
+                case "HtmlFromIndex": HtmlFromIndex(); break;
+                case "htmlFromIndex": htmlFromIndex(); break;
+                case "eXport": eXport(); break;
+                case "mailFromIndex": mail(); break;
+                default:
+                    ShowMessage(newMessage + " Clicked");
+                    break;
+            }
+
         }
     }
 
@@ -198,15 +186,6 @@ else
                 message = "Model is null";
                 return;
             }
-            //TEMP
-
-            //ExportViewModel exv = new ExportViewModel();
-            //exv.NoteFile = Model.noteFile;
-
-            //string zzz = Id + ".0.0";
-
-            //await Http.GetJsonAsync<List<NoteHeader>>("api/Export/" + zzz );
-
 
             if (!string.IsNullOrEmpty(Model.message))
                 message = Model.message;

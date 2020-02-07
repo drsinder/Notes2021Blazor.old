@@ -144,51 +144,28 @@ else
 
     public async Task ClickHandler(string newMessage)
     {
-        if (newMessage == "ShowHelp")
+        switch (newMessage)
         {
-            ShowHelp();
-        }
-        else if (newMessage == "NextBaseNote")
-        {
-            await NextBaseNote();
-        }
-        else if (newMessage == "PreviousBaseNote")
-        {
-            await PreviousBaseNote();
-        }
-        else if (newMessage == "NextNote")
-        {
-            await TextHasChanged("");
-        }
-        else if (newMessage == "PreviousNote")
-        {
-            await PreviousNote();
-        }
-        else if (newMessage == "NewResponse")
-        {
-            newnoteFlag = true;
-            this.StateHasChanged();
-        }
-        else if (newMessage == "Edit")
-        {
-            editing = true;
-            this.StateHasChanged();
-        }
-        else if (newMessage == "Delete")
-        {
-            DeleteNote();
-        }
-        else if (newMessage == "Forward")
-        {
-            Forward();
-        }
-        else if (newMessage == "Done")
-        {
-            Done();
-        }
-        else  // pass on to list parent
-        {
-            await OnClick.InvokeAsync(newMessage);
+            case "ShowHelp":     ShowHelp(); break;
+            case "NextBaseNote": await NextBaseNote(); break;
+            case "PreviousBaseNote": await PreviousBaseNote(); break;
+            case "NextNote": await TextHasChanged(""); break;
+            case "PreviousNote": await PreviousNote(); break;
+            case "NewResponse":
+                newnoteFlag = true;
+                this.StateHasChanged();
+                break;
+            case "Edit":
+                editing = true;
+                this.StateHasChanged();
+                break;
+            case "Delete": DeleteNote(); break;
+            case "Forward": Forward(); break;
+            case "Done": Done(); break;
+
+            default:
+                await OnClick.InvokeAsync(newMessage);
+                break;
         }
     }
 

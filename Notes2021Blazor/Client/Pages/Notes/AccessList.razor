@@ -19,7 +19,8 @@ else
         {
             <table class="table">
                 <tr>
-                    <th>UserName</th>
+                    <th>Archive #</th>
+                    <th>User Name</th>
                     <th>
                         Read
                     </th>
@@ -62,6 +63,9 @@ else
                         AccessItem view = new AccessItem { isChecked = item.ViewAccess, which = AccessX.ViewAccess, Item = item, canEdit = myAccess.EditAccess };
                         AccessItem edaccess = new AccessItem { isChecked = item.EditAccess, which = AccessX.EditAccess, Item = item, canEdit = myAccess.EditAccess };
                         <tr>
+                            <td>
+                                @item.ArchiveId
+                            </td>
                             <td>
                                 @userName
                             </td>
