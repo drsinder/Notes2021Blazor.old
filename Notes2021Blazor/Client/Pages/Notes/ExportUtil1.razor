@@ -22,11 +22,17 @@
     public ExportViewModel model { get; set; }
     private string FileName { get; set; }
     private string message = "Getting ready...";
+    private bool marked { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
         model = Parameters.Get<ExportViewModel>("ExportViewModel");
         FileName = Parameters.Get<string>("FileName");
+
+        if (model.Marks != null && model.Marks.Count > 0)
+            marked = true;
+        else
+            marked = false;
 
         if (model.isDirectOutput)
         {
@@ -136,6 +142,9 @@
         // loop over each base note in order
         foreach (NoteHeader bnh in bnhl)
         {
+            if (marked && !model.Marks.Where(p => p.NoteOrdinal == bnh.NoteOrdinal).Any())
+                continue;
+
             // get content for base note
             NoteContent nc = null;
             req = bnh.Id.ToString();

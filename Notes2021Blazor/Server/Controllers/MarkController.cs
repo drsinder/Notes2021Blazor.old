@@ -11,6 +11,8 @@ namespace Notes2021Blazor.Server.Controllers
 {
     [Authorize(Roles = "User")]
     [Route("api/[controller]")]
+    [Route("api/[controller]/{deleteId}")]
+
     [ApiController]
     public class MarkController : ControllerBase
     {
@@ -34,7 +36,7 @@ namespace Notes2021Blazor.Server.Controllers
             return list;
         }
 
-        [HttpPost] 
+        [HttpPost]
         public async Task Post(Mark mrk)
         {
             UserData me = NoteDataManager.GetUserData(_userManager, User, _db);
@@ -83,6 +85,15 @@ namespace Notes2021Blazor.Server.Controllers
             await _db.SaveChangesAsync();
         }
 
+        [HttpDelete]
+        public async Task Delete(string deleteId)
+        {
+            int fileId = int.Parse(deleteId);
+            UserData me = NoteDataManager.GetUserData(_userManager, User, _db);
+            List<Mark> list = await _db.Mark.Where(p => p.UserId == me.UserId && p.NoteFileId == fileId).ToListAsync();
 
+            _db.RemoveRange(list);
+            await _db.SaveChangesAsync();
+        }
     }
 }

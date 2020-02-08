@@ -57,12 +57,14 @@ else
                         <th>
                             Last Edited
                         </th>
+                        <th>Marks</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (NoteFile file in files)
                     {
+                        bool marked = marks.Where(p => p.NoteFileId == file.Id).Any();
                         <tr>
                             <td>
                                 @file.NoteFileName
@@ -73,6 +75,8 @@ else
                             <td>
                                 @timeZone.Local(file.LastEdited).ToShortTimeString() @timeZone.Local(file.LastEdited).ToShortDateString()
                             </td>
+                            <td>@if(marked)
+                                @marked</td>
                             <td>
                                 <button @onclick="@(() => ViewNoteFile(file.Id))">View</button>
                             </td>
@@ -96,16 +100,19 @@ else
     private List<NoteFile> files { get; set; }
     private TZone timeZone { get; set; }
     private string message;
+    private List<Mark> marks { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         HomePageModel model = await Http.GetJsonAsync<HomePageModel>("api/HomePageData");
         timeZone = model.TimeZone;
 
+        marks = await Http.GetJsonAsync<List<Mark>>("api/Mark");
+
         files = model.NoteFiles;
     }
 
- 
+
     void ViewNoteFile(int Id)
     {
         _localStorage.SetItemAsync("ArchiveId", 0);
@@ -114,6 +121,6 @@ else
         NavigationManager.NavigateTo("notes/main/" + Id);
     }
 
- 
+
 }
 

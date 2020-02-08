@@ -180,6 +180,9 @@ else
                 case "MarkMine":
                     await MarkMine();
                     break;
+                case "OutputMarked":
+                    await OutputMarked();
+                    break;
                 default:
                     ShowMessage(newMessage + " Clicked");
                     break;
@@ -859,6 +862,53 @@ else
 
         ShowMessage("Mark Completed. Marked " + marks.Count + " Strings");
 
+    }
+
+    private async Task OutputMarked()
+    {
+        List<Mark> marks = await Http.GetJsonAsync<List<Mark>>("api/Mark");
+
+        var parameters = new ModalParameters();
+
+        ExportViewModel vm = new ExportViewModel();
+        vm.ArchiveNumber = archiveID;
+        vm.isCollapsible = false;
+        vm.isDirectOutput = true;
+        vm.isHtml = true;
+        vm.NoteFile = Model.noteFile;
+        vm.NoteOrdinal = 0;
+        vm.Email = "";
+        vm.Marks = marks.Where(p => p.NoteFileId == Model.noteFile.Id && p.ArchiveId == archiveID).ToList();
+
+        if (vm.Marks == null || vm.Marks.Count == 0)
+            return;
+
+        parameters.Add("ExportViewModel", vm);
+        parameters.Add("FileName", Model.noteFile.NoteFileName + (true ? ".html" : ".txt"));
+
+        Modal.OnClose += HideDialogOutput;
+        Modal.Show<ExportUtil1>("", parameters);
+    }
+
+    void HideDialogOutput(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialogOutput;
+
+        OutputCleanup();
+    }
+
+    private async Task OutputCleanup()
+    {
+        List<Mark> marks = await Http.GetJsonAsync<List<Mark>>("api/Mark");
+
+        List<Mark> FileMarks = marks.Where(p => p.NoteFileId == Model.noteFile.Id && p.ArchiveId == archiveID).ToList();
+
+        await Http.DeleteAsync("api/Mark/" + FileMarks[0].NoteFileId);
+
+        Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id + "." + archiveID);
+        Model.Notes = Model.AllNotes.Where(p => p.ResponseOrdinal == 0).OrderBy(p => p.NoteOrdinal).ToList();
+
+        StateHasChanged();
     }
 
     protected class LocalInput

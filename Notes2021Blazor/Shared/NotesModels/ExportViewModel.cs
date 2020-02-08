@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Notes2021Blazor.Shared
 {
     public class ExportViewModel
@@ -14,6 +16,8 @@ namespace Notes2021Blazor.Shared
         public bool isDirectOutput { get; set; }
 
         public int NoteOrdinal { get; set; }
+
+        public List<Mark> Marks { get; set; }
 
         public string Email { get; set; }
 
