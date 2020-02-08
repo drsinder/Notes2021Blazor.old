@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Notes2021Blazor.Shared
+﻿namespace Notes2021Blazor.Shared
 {
     public class EmailModel
     {

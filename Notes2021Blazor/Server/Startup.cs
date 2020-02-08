@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +13,6 @@ using Notes2021Blazor.Shared;
 using System;
 using System.Linq;
 using System.Text;
-using Hangfire;
 
 namespace Notes2021Blazor.Server
 {

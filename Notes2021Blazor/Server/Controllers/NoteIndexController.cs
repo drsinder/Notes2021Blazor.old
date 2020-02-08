@@ -36,9 +36,9 @@ namespace Notes2021Blazor.Server.Controllers
                 idxModel.message = "string passed to server must be in form fileId.ArciveID";
                 return idxModel;
             }
-            
+
             string[] stuff = sid.Split(".");
-            
+
             int id = int.Parse(stuff[0]);
 
             int arcId = int.Parse(stuff[1]);
@@ -67,7 +67,7 @@ namespace Notes2021Blazor.Server.Controllers
             idxModel.AllNotes = await NoteDataManager.GetAllHeaders(_db, id, arcId);
 
             // Extract the Base Notes Objects on the client side from AllNotes
-                
+
             //idxModel.ExpandOrdinal = 0;
 
             idxModel.tZone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _db);
