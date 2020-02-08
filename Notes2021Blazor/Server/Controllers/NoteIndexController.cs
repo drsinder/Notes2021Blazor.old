@@ -77,6 +77,10 @@ namespace Notes2021Blazor.Server.Controllers
 
             List<Mark> marks = await _db.Mark.Where(p => p.UserId == uid).ToListAsync();
             idxModel.isMarked = (marks != null && marks.Count > 0);
+            if (idxModel.isMarked)
+            {
+                idxModel.isMarked = marks.Where(p => p.NoteFileId == id && p.ArchiveId == arcId).Any();
+            }
 
             //idxModel.rPath = Request.PathBase;
 
