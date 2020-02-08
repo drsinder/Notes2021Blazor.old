@@ -1,0 +1,101 @@
+﻿@using Notes2021Blazor.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@using Newtonsoft.Json
+@using System.Text
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IModalService Modal
+
+
+@if (string.IsNullOrEmpty(currentText))
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <AuthorizeView Roles="User">
+        <Authorized>
+            <div class="roundedgrayindexinput">
+                <h2>Set Time Zone</h2>
+                <h5>
+                    @currentText
+                </h5>
+                <p>Select your Time Zone:</p>
+                <select class="form-control medium-input" @bind="@myZid" >
+                    <option value=""></option>
+                    @foreach (LocalModel item in MyList)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+                <br />
+                <button type="button" @onclick="OnSubmit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            Access Denied!
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@code{
+
+    private UserData UserData { get; set; }
+    private List<TZone> TZones { get; set; }
+    private TZone MyZone { get; set; }
+    private string currentText { get; set; }
+    private int myZid { get; set; }
+    private LocalModel stuff { get; set; }
+    private List<LocalModel> MyList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TZones = await Http.GetJsonAsync<List<TZone>>("api/TimeZones/");
+
+        TZones = TZones.OrderBy(p => p.OffsetHours).ThenBy(p => p.OffsetMinutes).ToList();
+
+        UserData = await Http.GetJsonAsync<UserData>("api/User/");
+
+        MyZone = TZones.SingleOrDefault(p => p.Id == UserData.TimeZoneID);
+
+        myZid = UserData.TimeZoneID;
+
+        MyList = new List<LocalModel>();
+        foreach (TZone item in TZones)
+        {
+            LocalModel x = new LocalModel(item.Id.ToString(), item.Name + " - " + item.Abbreviation + " - " + item.Offset);
+            MyList.Add(x);
+        }
+
+        currentText = "Current Time Zone: " + MyZone.Name + " - " + MyZone.Abbreviation + " - " + MyZone.Offset;
+    }
+
+    private async Task OnSubmit()
+    {
+        UserData.TimeZoneID = myZid;
+        MyZone = TZones.SingleOrDefault(p => p.Id == UserData.TimeZoneID);
+        currentText = "Current Time Zone: " + MyZone.Name + " - " + MyZone.Abbreviation + " - " + MyZone.Offset;
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(UserData), Encoding.UTF8, "application/json");
+        HttpResponseMessage result = await Http.PutAsync("api/User/", stringContent);
+
+        await Cancel();
+    }
+
+    private async Task Cancel()
+    {
+        Modal.Close(ModalResult.Cancel());
+    }
+
+    public class LocalModel
+    {
+        public LocalModel(string id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+}

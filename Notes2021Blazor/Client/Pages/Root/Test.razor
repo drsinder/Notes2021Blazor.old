@@ -1,0 +1,19 @@
+﻿@page "/test"
+
+@using System
+
+
+<h3>@stuff</h3>
+
+@code {
+    private string stuff { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        DateTime now = DateTime.Now.ToLocalTime();
+        DateTime nowU = DateTime.Now.ToUniversalTime();
+        long ticks = now.Ticks - nowU.Ticks;
+
+        stuff = now.ToString();
+    }
+}

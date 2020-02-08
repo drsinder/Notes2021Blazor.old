@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IModalService Modal
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">&nbsp; <span class="oi oi-home" aria-hidden="true"></span> Notes 2021 </a>
@@ -33,10 +34,13 @@
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="options/timezone">
-                        <span class="oi oi-clock" aria-hidden="true"></span> Time Zone
-                    </NavLink>
-                </li>
+                        <NavLink class="nav-link" href="options/timezone">
+                            <span class="oi oi-clock" aria-hidden="true"></span> Time Zone
+                        </NavLink>
+                    </li>
+                @*<li class="nav-item px-3">
+                    <button type="button" class="link nav-link" @onclick="OnClick" aria-hidden="true"><span class="oi oi-clock link nav-link"></span>&nbsp; Time Zone</button>
+                </li>*@
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Roles="Admin">
@@ -61,4 +65,18 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    private void OnClick()
+    {
+        var parameters = new ModalParameters();
+        Modal.OnClose += HideDialog;
+        Modal.Show<TimeZoneDlg>("", parameters);
+    }
+
+    void HideDialog(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialog;
+        StateHasChanged();
+    }
+
 }
