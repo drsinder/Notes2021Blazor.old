@@ -181,7 +181,7 @@ else
                     await MarkMine();
                     break;
                 case "OutputMarked":
-                    await OutputMarked();
+                    await OutputMarkedAsk();
                     break;
                 default:
                     ShowMessage(newMessage + " Clicked");
@@ -430,6 +430,11 @@ else
             case "M":
                 await MarkMine();
                 break;
+            case "O":
+                if (Model.isMarked)
+                    await OutputMarkedAsk();
+                break;
+
 
             default:
                 //var parameters = new ModalParameters();
@@ -864,7 +869,27 @@ else
 
     }
 
-    private async Task OutputMarked()
+    private async Task OutputMarkedAsk()
+    {
+        timer.Stop();
+        var parameters = new ModalParameters();
+        Modal.OnClose += HideDialogOutputAsk;
+        Modal.Show<OutputDlg>("", parameters);
+    }
+
+    void HideDialogOutputAsk(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialogOutputAsk;
+
+        if (!modalResult.Cancelled)
+        {
+            MarkedOutputModel mo = (MarkedOutputModel)modalResult.Data;
+
+            OutputMarked(mo.isHtml, mo.isCollapsible, mo.isEmail, mo.Email);
+        }
+    }
+
+    private async Task OutputMarked(bool isHtml, bool isCollapsible, bool isEmail, string Email)
     {
         List<Mark> marks = await Http.GetJsonAsync<List<Mark>>("api/Mark");
 
@@ -872,12 +897,12 @@ else
 
         ExportViewModel vm = new ExportViewModel();
         vm.ArchiveNumber = archiveID;
-        vm.isCollapsible = false;
-        vm.isDirectOutput = true;
-        vm.isHtml = true;
+        vm.isCollapsible = isCollapsible;
+        vm.isDirectOutput = !isEmail;
+        vm.isHtml = isHtml;
         vm.NoteFile = Model.noteFile;
         vm.NoteOrdinal = 0;
-        vm.Email = "";
+        vm.Email = Email;
         vm.Marks = marks.Where(p => p.NoteFileId == Model.noteFile.Id && p.ArchiveId == archiveID).ToList();
 
         if (vm.Marks == null || vm.Marks.Count == 0)
@@ -903,7 +928,7 @@ else
 
         List<Mark> FileMarks = marks.Where(p => p.NoteFileId == Model.noteFile.Id && p.ArchiveId == archiveID).ToList();
 
-        await Http.DeleteAsync("api/Mark/" + FileMarks[0].NoteFileId);
+        await Http.DeleteAsync("api/Mark/" + FileMarks[0].NoteFileId + "." + archiveID);
 
         Model = await Http.GetJsonAsync<NoteDisplayIndexModel>("api/NoteIndex/" + Id + "." + archiveID);
         Model.Notes = Model.AllNotes.Where(p => p.ResponseOrdinal == 0).OrderBy(p => p.NoteOrdinal).ToList();

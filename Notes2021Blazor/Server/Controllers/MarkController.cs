@@ -88,9 +88,12 @@ namespace Notes2021Blazor.Server.Controllers
         [HttpDelete]
         public async Task Delete(string deleteId)
         {
-            int fileId = int.Parse(deleteId);
+            string[] stuff = deleteId.Split(".");
+
+            int fileId = int.Parse(stuff[0]);
+            int arcId = int.Parse(stuff[1]);
             UserData me = NoteDataManager.GetUserData(_userManager, User, _db);
-            List<Mark> list = await _db.Mark.Where(p => p.UserId == me.UserId && p.NoteFileId == fileId).ToListAsync();
+            List<Mark> list = await _db.Mark.Where(p => p.UserId == me.UserId && p.NoteFileId == fileId && p.ArchiveId == arcId).ToListAsync();
 
             _db.RemoveRange(list);
             await _db.SaveChangesAsync();

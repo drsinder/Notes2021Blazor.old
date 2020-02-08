@@ -1,0 +1,54 @@
+﻿@using Notes2021Blazor.Shared
+@inject IModalService ModalService
+
+<div class="roundedgrayindexinput modal-body">
+    <h3>Output Specs</h3>
+
+    <input type="checkbox" @bind="isHtml" /> As Html - otherwise plain text.<br />
+    <input type="checkbox" @bind="isCollapsible" /> Collapsible/Expandable<br />
+    <input type="checkbox" @bind="isEmail" /> Email - Otherwise download.<br />
+    Email Address:<br />
+    <input type="text" @bind="Email" /><br />
+
+    <button type="button" @onclick="Submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
+
+</div>
+
+@functions{
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+
+    private bool isHtml { get; set; }
+    private bool isCollapsible { get; set; }
+    private bool isEmail { get; set; }
+    private string Email { get; set; }
+
+
+    protected async override Task OnParametersSetAsync()
+    {
+        isEmail = false;
+        isCollapsible = true;
+        isHtml = true;
+        Email = "";
+    }
+
+    private void Submit()
+    {
+        MarkedOutputModel mo = new MarkedOutputModel();
+        mo.isHtml = isHtml;
+        mo.isCollapsible = isCollapsible;
+        mo.isEmail = isEmail;
+        mo.Email = Email;
+
+        ModalService.Close(ModalResult.Ok<MarkedOutputModel>(mo));
+    }
+
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+
+
+
+}

@@ -36,10 +36,6 @@
             { title: 'Example 2', inline: 'span', classes: 'example2' },
             { title: 'Table styles' },
             { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
-        ],
-        content_css: [
-            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-            '//www.tiny.cloud/css/codepen.min.css'
         ]
     });
     //window.alert("TinyMCE Init");
