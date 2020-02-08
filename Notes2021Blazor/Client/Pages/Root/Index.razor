@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService _localStorage
 @inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
 
 <div>
     <h2 class="center">Welcome to Notes 2021 Blazor Edition <img src="favicon.ico" width="32" /></h2>
@@ -52,20 +53,22 @@
                                 </label>
                             </p>
                             Or select a file<br />
-                            <InputSelect class="btn btn-file dropdown-toggle form-control short-input"
+                            <InputSelect id="select1" class="btn btn-file dropdown-toggle form-control short-input"
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
                                          ValueExpression="@( () => dummyFile.NoteFileName )">
+                                <option value="none" selected="selected">-- Select from list --</option>
                                 @foreach (var item in fileList)
                                 {
                                     <option value=@item.NoteFileName>@item.NoteFileName</option>
                                 }
                             </InputSelect>
                             <br />Or select a title<br />
-                            <InputSelect class="btn btn-title dropdown-toggle form-control short-input"
+                            <InputSelect id="select2" class="btn btn-title dropdown-toggle form-control short-input"
                                          ValueChanged="@( (string val) => TextHasChanged(val) )"
                                          Value="@dummyFile.NoteFileName"
                                          ValueExpression="@( () => dummyFile.NoteFileName )">
+                                <option value="none" selected="selected">-- Select from list --</option>
                                 @foreach (var item in nameList)
                                 {
                                     <option value=@item.NoteFileName>@item.NoteFileTitle</option>
@@ -123,6 +126,7 @@
     private HomePageModel model;
     private Timer myTimer;
     private string myTime;
+
     [Parameter] public List<localFile> fileList { get; set; }
     [Parameter] public List<localFile> nameList { get; set; }
     [Parameter] public localFile dummyFile { get; set; }
@@ -157,7 +161,6 @@
         histfileList = new List<localFile>();
         impfileList = new List<localFile>();
 
-
         List<NoteFile> fileList1 = model.NoteFiles.OrderBy(p => p.NoteFileName).ToList();
         List<NoteFile> nameList1 = model.NoteFiles.OrderBy(p => p.NoteFileTitle).ToList();
 
@@ -177,6 +180,12 @@
                 impfileList.Add(work);
         }
 
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        jsRuntime.InvokeAsync<object>("setselect0", "select1");
+        jsRuntime.InvokeAsync<object>("setselect0", "select2");
     }
 
     protected void OnTimedEvent(Object source, ElapsedEventArgs e)

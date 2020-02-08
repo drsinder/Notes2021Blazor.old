@@ -55,6 +55,10 @@ function setfocus(elm) {
     arrow.focus();
 }
 
+function setselect0(s) {
+    document.getElementById(s).selectedIndex = '0';
+}
+
 function setlocation(elm) {
     var arrow = document.getElementById(elm);
     arrow.scrollIntoView(true);
