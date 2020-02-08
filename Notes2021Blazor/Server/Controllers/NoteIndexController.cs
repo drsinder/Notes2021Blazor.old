@@ -71,8 +71,12 @@ namespace Notes2021Blazor.Server.Controllers
             //idxModel.ExpandOrdinal = 0;
 
             idxModel.tZone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _db);
-            Mark mark = await _db.Mark.Where(p => p.UserId == _userManager.GetUserId(User)).FirstOrDefaultAsync();
-            idxModel.isMarked = (mark != null);
+            string myname = User.Identity.Name;
+            var IdUser = await _userManager.FindByEmailAsync(myname);
+            string uid = await _userManager.GetUserIdAsync(IdUser);
+
+            List<Mark> marks = await _db.Mark.Where(p => p.UserId == uid).ToListAsync();
+            idxModel.isMarked = (marks != null && marks.Count > 0);
 
             //idxModel.rPath = Request.PathBase;
 
@@ -80,8 +84,6 @@ namespace Notes2021Blazor.Server.Controllers
 
             return idxModel;
         }
-
-
 
         /// <summary>
         /// Get Access Control Object for file and user

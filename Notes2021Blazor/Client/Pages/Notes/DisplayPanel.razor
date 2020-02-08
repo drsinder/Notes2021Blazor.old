@@ -177,7 +177,9 @@ else
                 timer.Stop(); timer.Enabled = false;
                 await OnClick.InvokeAsync(newMessage);
                 break;
-
+            case "Mark":
+                await Markit();
+                break;
 
             default:
                 await OnClick.InvokeAsync(newMessage);
@@ -266,6 +268,14 @@ else
             case "m":
                 mail();
                 break;
+            case "S":
+                timer.Stop(); timer.Enabled = false;
+                await OnClick.InvokeAsync("Search");
+                break;
+            case "M":
+                await Markit();
+                break;
+
             default:
 
                 //var parameters = new ModalParameters();
@@ -558,6 +568,40 @@ else
     {
         timer.Stop(); timer.Enabled = false;
         OnClick.InvokeAsync("mail:" + currentHeader.NoteOrdinal);
+    }
+
+    private async Task Markit()
+    {
+        List<Mark> list = await Http.GetJsonAsync<List<Mark>>("api/Mark");
+
+        if ( list != null && list.Count > 0)
+        {
+            List<Mark> list2 = list.Where(p => p.NoteFileId == currentHeader.NoteFileId
+                && p.ArchiveId == currentHeader.ArchiveId
+                && p.NoteOrdinal == currentHeader.NoteOrdinal)
+                .ToList();
+
+            if (list2 != null && list2.Count > 0)
+            {
+                ShowMessage("Already Marked for Output");
+                return;
+            }
+        }
+
+        Mark myMark = new Mark();
+        myMark.UserId = "Temp";
+        myMark.NoteFileId = currentHeader.NoteFileId;
+        myMark.ArchiveId = currentHeader.ArchiveId;
+        myMark.NoteHeaderId = currentHeader.Id;
+        myMark.NoteOrdinal = currentHeader.NoteOrdinal;
+        myMark.MarkOrdinal = 1;
+        myMark.ResponseOrdinal = -1;
+
+        await Http.PostJsonAsync("api/Mark", myMark);
+
+        Model.isMarked = true;
+
+        ShowMessage("Marked for Output");
     }
 
     protected class LocalInput

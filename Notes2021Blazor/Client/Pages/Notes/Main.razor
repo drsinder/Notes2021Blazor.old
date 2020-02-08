@@ -177,6 +177,9 @@ else
                     isIndexSearch = true;
                     Search();
                     break;
+                case "MarkMine":
+                    await MarkMine();
+                    break;
                 default:
                     ShowMessage(newMessage + " Clicked");
                     break;
@@ -381,7 +384,7 @@ else
         NavigationManager.NavigateTo("notes/notesfiles");
     }
 
-    protected void KeyPressed(KeyboardEventArgs eventArgs)
+    protected async Task KeyPressed(KeyboardEventArgs eventArgs)
     {
         switch (eventArgs.Key)
         {
@@ -417,6 +420,14 @@ else
             case "m":
                 mail();
                 break;
+            case "S":
+                isIndexSearch = true;
+                Search();
+                break;
+            case "M":
+                await MarkMine();
+                break;
+
             default:
                 //var parameters = new ModalParameters();
                 //parameters.Add("Message", eventArgs.Key);
@@ -793,6 +804,61 @@ else
         mode = results[0].Id;
         isSearch = true;
         StateHasChanged();
+    }
+
+    private async Task MarkMine()
+    {
+        List<Mark> list = await Http.GetJsonAsync<List<Mark>>("api/Mark");
+
+        List<Mark> marks = new List<Mark>();
+        int ord = 1;
+        foreach (NoteHeader nh in Model.AllNotes)
+        {
+            if (nh.AuthorID == Model.myAccess.UserID)
+            {
+                Mark myMark = new Mark();
+                myMark.UserId = Model.myAccess.UserID;
+                myMark.NoteFileId = nh.NoteFileId;
+                myMark.ArchiveId = nh.ArchiveId;
+                myMark.NoteHeaderId = nh.Id;
+                myMark.NoteOrdinal = nh.NoteOrdinal;
+                myMark.MarkOrdinal = ord++;
+                myMark.ResponseOrdinal = -1;
+
+                // Need to check if string already included in this notefile
+
+                List<Mark> list2 = marks.Where(p => p.NoteFileId == nh.NoteFileId
+                    && p.ArchiveId == nh.ArchiveId
+                    && p.NoteOrdinal == nh.NoteOrdinal)
+                    .ToList();
+                if (list2 != null && list2.Count > 0)
+                {
+                    continue;
+                }
+
+                // need to check if already in my marks
+
+                List<Mark> list3 = marks.Where(p => p.NoteFileId == nh.NoteFileId
+                    && p.ArchiveId == nh.ArchiveId
+                    && p.NoteOrdinal == nh.NoteOrdinal)
+                    .ToList();
+                if (list3 != null && list3.Count > 0)
+                {
+                    continue;
+                }
+
+                marks.Add(myMark);
+            }
+        }
+        if (marks.Count > 0)
+        {
+            await Http.PutJsonAsync("api/Mark", marks);
+            Model.isMarked = true;
+            StateHasChanged();
+        }
+
+        ShowMessage("Mark Completed. Marked " + marks.Count + " Strings");
+
     }
 
     protected class LocalInput
