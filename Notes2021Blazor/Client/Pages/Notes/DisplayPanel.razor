@@ -64,8 +64,8 @@ else
                     </EditForm>
 
                     <br /><input type="submit" value="Navigate" class="btn btn-sm" /> b#.r#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-)b#&nbsp;&nbsp;|&nbsp;&nbsp;(+/-).r#
-                </div>
-            </div>
+        </div>
+    </div>
 }
 
 @functions
@@ -155,7 +155,7 @@ else
     {
         switch (newMessage)
         {
-            case "ShowHelp":     ShowHelp(); break;
+            case "ShowHelp": ShowHelp(); break;
             case "NextBaseNote": await NextBaseNote(); break;
             case "PreviousBaseNote": await PreviousBaseNote(); break;
             case "NextNote": await TextHasChanged(""); break;
@@ -307,7 +307,7 @@ else
         // else goto next base
 
         seqBaseIndx++;
-        if ( seqBaseIndx >= SeqBases.Count)  // finished with this file
+        if (seqBaseIndx >= SeqBases.Count)  // finished with this file
         {
             await OnClick.InvokeAsync("SeqFileDone");
             return;
@@ -576,7 +576,7 @@ else
     {
         List<Mark> list = await Http.GetJsonAsync<List<Mark>>("api/Mark");
 
-        if ( list != null && list.Count > 0)
+        if (list != null && list.Count > 0)
         {
             List<Mark> list2 = list.Where(p => p.NoteFileId == currentHeader.NoteFileId
                 && p.ArchiveId == currentHeader.ArchiveId

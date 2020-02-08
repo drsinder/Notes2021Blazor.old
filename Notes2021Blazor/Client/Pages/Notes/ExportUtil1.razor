@@ -47,7 +47,7 @@
 
         if (model.isDirectOutput)
         {
-            await FileUtil.SaveAs(jsRuntime, FileName, ms.ToArray());
+            await FileUtil.SaveAs(jsRuntime, FileName, ms.GetBuffer());
         }
         else
         {

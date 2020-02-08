@@ -15,6 +15,8 @@ namespace Notes2021Blazor.Shared
 
         public bool isDirectOutput { get; set; }
 
+        //public bool isOnPage { get; set; }
+
         public int NoteOrdinal { get; set; }
 
         public List<Mark> Marks { get; set; }

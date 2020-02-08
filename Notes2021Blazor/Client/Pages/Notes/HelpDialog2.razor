@@ -12,8 +12,8 @@
         <b>C</b> - Copy to another file.<br />
         <b>m</b> - mail note string. (as html)<br />
         <b>M</b>- Mark a note for later output.<br />
-        <b>H</b> - Show note string as expandable Html.<br />
-        <b>h</b> - Show note string as Html.<br />
+        <b>H</b> - Show/Download note string as expandable Html.<br />
+        <b>h</b> - Show/Download note string as Html.<br />
         <b>S</b> - Start a Search<br />
         <b>N</b> - write a response. This option may not appear if you do not have permission to write notes.<br />
         <b>E</b> - Edit the note/response (if permitted)<br />
@@ -28,7 +28,6 @@
     </p>
     <button type="button" @onclick="Cancel">Close</button>
 </div>
-
 
 @code{
     [CascadingParameter] ModalParameters Parameters { get; set; }

@@ -199,5 +199,9 @@
   <PropertyGroup>
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
     <UserSecretsId>b292945e-0d35-4c50-ade7-eef47e01ed89</UserSecretsId>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>false</Optimize>
   </PropertyGroup>
 </Project>
