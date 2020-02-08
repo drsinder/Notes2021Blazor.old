@@ -135,7 +135,7 @@ else
 
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
@@ -143,6 +143,7 @@ else
             timer.Elapsed += TimerTick;
             timer.Enabled = true;
         }
+        await jsRuntime.InvokeVoidAsync("Prism.highlightAll");
     }
 
     protected void TimerTick(Object source, ElapsedEventArgs e)

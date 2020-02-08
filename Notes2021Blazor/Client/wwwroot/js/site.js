@@ -1,7 +1,7 @@
 ﻿function inittinymce(s) {
     tinymce.init({
         selector: "textarea#mynote",
-        theme: "silver",
+        theme: "modern",
         browser_spellcheck: true,
 
         width: 950,
@@ -18,6 +18,16 @@
         convert_urls: false,
         contextmenu: "link image inserttable | cell row column deletetable",
         toolbar: "insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media codesample | print preview | nonbreaking forecolor backcolor emoticons insertdatetime fullscreen",
+        codesample_languages: [
+            { text: 'C#', value: 'csharp' },
+            { text: 'C', value: 'c' },
+            { text: 'C++', value: 'cpp' },
+            { text: 'HTML/XML', value: 'markup' },
+            { text: 'JavaScript', value: 'javascript' },
+            { text: 'CSS', value: 'css' },
+            { text: 'Python', value: 'python' },
+            { text: 'Java', value: 'java' }
+        ],
         style_formats: [
             { title: 'Bold text', inline: 'b' },
             { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
@@ -26,6 +36,10 @@
             { title: 'Example 2', inline: 'span', classes: 'example2' },
             { title: 'Table styles' },
             { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+        ],
+        content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+            '//www.tiny.cloud/css/codepen.min.css'
         ]
     });
     //window.alert("TinyMCE Init");
