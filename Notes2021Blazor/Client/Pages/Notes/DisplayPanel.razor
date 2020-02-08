@@ -532,6 +532,7 @@ else
     void HideDialog(ModalResult modalResult)
     {
         Modal.OnClose -= HideDialog;
+        timer.Start();
     }
 
     private void Forward()

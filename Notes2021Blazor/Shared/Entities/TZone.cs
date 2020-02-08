@@ -39,8 +39,6 @@ namespace Notes2021Blazor.Shared
         {
             return dt.AddHours(-OffsetHours).AddMinutes(-OffsetMinutes);
         }
-
-
     }
 
 }

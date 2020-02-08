@@ -33,7 +33,6 @@ namespace Notes2021Blazor.Shared
         public int ResponseOrdinal { get; set; }  // -1 == whole string, 0 base note only, > 0 Response
 
         [ForeignKey("NoteFileId")]
-        // ReSharper disable once UnusedMember.Global
         public NoteFile NoteFile { get; set; }
     }
 }

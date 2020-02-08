@@ -544,6 +544,7 @@ else
     void HideDialogArchive(ModalResult modalResult)
     {
         Modal.OnClose -= HideDialogArchive;
+        timer.Start();
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
     }
 
@@ -630,7 +631,7 @@ else
     void HideDialogMail(ModalResult modalResult)
     {
         Modal.OnClose -= HideDialogMail;
-
+        timer.Start();
         if (!modalResult.Cancelled)
             DoExport(true, true, true, modalResult.Data.ToString());
     }
@@ -646,6 +647,7 @@ else
     void HideDialogMail1(ModalResult modalResult)
     {
         Modal.OnClose -= HideDialogMail1;
+        timer.Start();
         if (!modalResult.Cancelled)
             DoExport1(mailOrd, true, true, true, modalResult.Data.ToString());
     }
@@ -669,7 +671,7 @@ else
     void HideDialogSearch(ModalResult modalResult)
     {
         Modal.OnClose -= HideDialogSearch;
-
+        timer.Start();
         if (modalResult.Cancelled)
             return;
 
@@ -880,7 +882,7 @@ else
     void HideDialogOutputAsk(ModalResult modalResult)
     {
         Modal.OnClose -= HideDialogOutputAsk;
-
+        timer.Start();
         if (!modalResult.Cancelled)
         {
             MarkedOutputModel mo = (MarkedOutputModel)modalResult.Data;

@@ -19,7 +19,6 @@ namespace Notes2021Blazor.Shared
         public int ArchiveId { get; set; }
 
         [ForeignKey("NoteFileId")]
-        // ReSharper disable once UnusedMember.Global
         public NoteFile NoteFile { get; set; }
 
         // Control options
