@@ -144,7 +144,6 @@ namespace Notes2021Blazor.Shared
                 .ToListAsync();
         }
 
-        // ReSharper disable once UnusedParameter.Global
         public static async Task<bool> Audit(NotesDbContext db, string eventType, string userName, string userId,
             string Event   /*, TelemetryClient telemetry*/)
         {
@@ -164,19 +163,25 @@ namespace Notes2021Blazor.Shared
             return (await db.SaveChangesAsync()) == 1;
         }
 
-        public static async Task<bool> TestLinkAccess(/*HttpContext httpContext,*/
-            NotesDbContext NotesDbContext,
-            NoteFile noteFile)
+        public static async Task<bool> TestLinkAccess(NotesDbContext NotesDbContext,
+            NoteFile noteFile, string secret)
         {
-            // no way to get client uri.  grr
-            // just check that we are accepting from someone
-
-            try
+             try
             {
-                List<LinkedFile> linkedFiles = await NotesDbContext.LinkedFile
-                    .Where(p => p.RemoteFileName == noteFile.NoteFileName && p.AcceptFrom)
-                    .ToListAsync();
+                List<LinkedFile> linkedFiles;
 
+                if (string.IsNullOrEmpty(secret))
+                {
+                    linkedFiles = await NotesDbContext.LinkedFile
+                        .Where(p => p.RemoteFileName == noteFile.NoteFileName && p.AcceptFrom)
+                        .ToListAsync();
+                }
+                else
+                {
+                    linkedFiles = await NotesDbContext.LinkedFile
+                        .Where(p => p.RemoteFileName == noteFile.NoteFileName && p.AcceptFrom && p.Secret == secret )
+                        .ToListAsync();
+                }
                 if (linkedFiles == null || linkedFiles.Count < 1)
                     return false;
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Notes2021Blazor.Shared;
 
 namespace Notes2021Blazor.Shared.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    partial class NotesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200209064145_LinkSecret2")]
+    partial class LinkSecret2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

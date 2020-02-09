@@ -30,5 +30,8 @@ namespace Notes2021Blazor.Shared
 
         [Required]
         public bool SendTo { get; set; }
+
+        [StringLength(50)]
+        public string Secret { get; set; }
     }
 }

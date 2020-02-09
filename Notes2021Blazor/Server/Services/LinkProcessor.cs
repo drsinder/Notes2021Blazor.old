@@ -55,6 +55,7 @@ namespace Notes2021Blazor.Server.Services
                     LinkCreateModel inputModel = new LinkCreateModel();
 
                     inputModel.linkedfile = notefilename;
+                    inputModel.Secret = q.Secret;
 
                     inputModel.header = (db.NoteHeader.SingleOrDefault(p => p.LinkGuid == q.LinkGuid)).CloneForLink();
                     inputModel.content = (db.NoteContent.SingleOrDefault(p => p.NoteHeaderId == inputModel.header.Id)).CloneForLink();
@@ -106,6 +107,7 @@ namespace Notes2021Blazor.Server.Services
                     LinkCreateRModel inputModel2 = new LinkCreateRModel();
 
                     inputModel2.linkedfile = notefilename;
+                    inputModel2.Secret = q.Secret;
 
                     inputModel2.header = (await db.NoteHeader.SingleAsync(p => p.LinkGuid == q.LinkGuid)).CloneForLinkR();
                     inputModel2.content = (await db.NoteContent.SingleAsync(p => p.NoteHeaderId == inputModel2.header.Id)).CloneForLink();
@@ -162,7 +164,8 @@ namespace Notes2021Blazor.Server.Services
                     {
                         tags = string.Empty,
                         linkedfile = notefilename,
-                        myGuid = q.LinkGuid
+                        myGuid = q.LinkGuid,
+                        Secret = q.Secret
                     };
 
                     model.header = (await db.NoteHeader.SingleAsync(p => p.LinkGuid == q.LinkGuid)).CloneForLinkR();

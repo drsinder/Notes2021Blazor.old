@@ -237,7 +237,8 @@ namespace Notes2021Blazor.Shared
                             Activity = newHeader.ResponseOrdinal == 0 ? LinkAction.CreateBase : LinkAction.CreateResponse,
                             LinkGuid = newHeader.LinkGuid,
                             LinkedFileId = newHeader.NoteFileId,
-                            BaseUri = link.RemoteBaseUri
+                            BaseUri = link.RemoteBaseUri,
+                            Secret = link.Secret
                         };
 
                         db.LinkQueue.Add(q);
@@ -416,7 +417,8 @@ namespace Notes2021Blazor.Shared
                             Activity = LinkAction.Delete,
                             LinkGuid = nh.LinkGuid,
                             LinkedFileId = nh.NoteFileId,
-                            BaseUri = link.RemoteBaseUri
+                            BaseUri = link.RemoteBaseUri,
+                            Secret = link.Secret
                         };
 
                         db.LinkQueue.Add(q);
@@ -483,7 +485,8 @@ namespace Notes2021Blazor.Shared
                             Activity = LinkAction.Edit,
                             LinkGuid = eHeader.LinkGuid,
                             LinkedFileId = eHeader.NoteFileId,
-                            BaseUri = link.RemoteBaseUri
+                            BaseUri = link.RemoteBaseUri,
+                            Secret = link.Secret
                         };
 
                         db.LinkQueue.Add(q);

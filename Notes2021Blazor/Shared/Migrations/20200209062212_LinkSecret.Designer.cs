@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Notes2021Blazor.Shared;
 
 namespace Notes2021Blazor.Shared.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    partial class NotesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200209062212_LinkSecret")]
+    partial class LinkSecret
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace Notes2021Blazor.Shared.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "20fc3e46-a7d2-441f-ab3f-66ffa17b3047",
-                            ConcurrencyStamp = "51e8cdb1-b6a4-4368-ad93-8619e1df8cae",
+                            Id = "5069c754-4365-4c51-9c04-4a96ddf71a63",
+                            ConcurrencyStamp = "1bd84932-7868-40cf-bb82-3d19e4d72039",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "25eb3d03-8032-4357-9311-31f11105bd26",
-                            ConcurrencyStamp = "0d9894ac-2de6-4905-833f-2c4be4e54f24",
+                            Id = "c3045b25-8c9f-4371-8766-b42446b540c9",
+                            ConcurrencyStamp = "90eaa2d8-c760-45e7-81b7-5640865ebc95",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -338,10 +340,6 @@ namespace Notes2021Blazor.Shared.Migrations
 
                     b.Property<int>("LinkedFileId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Secret")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 

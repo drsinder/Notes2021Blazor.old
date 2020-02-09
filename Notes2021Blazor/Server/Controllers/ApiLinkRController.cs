@@ -33,7 +33,7 @@ namespace Notes2021Blazor.Server.Controllers
 
             // check for acceptance
 
-            if (!await AccessManager.TestLinkAccess(_context, file))
+            if (!await AccessManager.TestLinkAccess(_context, file, inputModel.Secret))
                 return "Access Denied";
 
             // find local base note for this and modify header

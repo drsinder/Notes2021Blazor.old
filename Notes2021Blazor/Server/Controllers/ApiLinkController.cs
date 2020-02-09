@@ -17,6 +17,7 @@ namespace Notes2021Blazor.Server.Controllers
         public List<Tags> tags { get; set; }
 
         public string linkedfile { get; set; }
+        public string Secret { get; set; }
     }
 
     public class LinkCreateEModel
@@ -30,6 +31,7 @@ namespace Notes2021Blazor.Server.Controllers
         public string linkedfile { get; set; }
 
         public string myGuid { get; set; }
+        public string Secret { get; set; }
     }
 
     public class LinkCreateRModel
@@ -43,6 +45,8 @@ namespace Notes2021Blazor.Server.Controllers
         public string linkedfile { get; set; }
 
         public string baseGuid { get; set; }
+        public string Secret { get; set; }
+
     }
 
     /// <summary>
@@ -71,7 +75,7 @@ namespace Notes2021Blazor.Server.Controllers
 
             // check for acceptance
 
-            if (!await AccessManager.TestLinkAccess(_context, file))
+            if (!await AccessManager.TestLinkAccess(_context, file, inputModel.Secret))
                 return "Access Denied";
 
             inputModel.header.NoteFileId = file.Id;
@@ -117,7 +121,7 @@ namespace Notes2021Blazor.Server.Controllers
 
             // check for acceptance
 
-            if (!await AccessManager.TestLinkAccess(_context, file))
+            if (!await AccessManager.TestLinkAccess(_context, file, inputModel.Secret))
                 return "Access Denied";
 
             // find local base note for this and modify header
@@ -171,7 +175,7 @@ namespace Notes2021Blazor.Server.Controllers
                     if (file == null)
                         return "Target file does not exist";
 
-                    if (!await AccessManager.TestLinkAccess( _context, file))
+                    if (!await AccessManager.TestLinkAccess( _context, file, string.Empty))
                         return "Access Denied";
                 }
                 catch
