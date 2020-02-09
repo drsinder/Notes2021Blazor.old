@@ -8,7 +8,8 @@
 <div class="roundedgrayindexinput">
     <h3>Delete Note?</h3>
     <EditForm id="deleteform" Model="noteId" OnValidSubmit="HandleValidSubmit">
-        <button type="submit">Confirm</button> <button type="button" @onclick="Cancel">Cancel</button>
+        <button type="submit" class="btn btn-danger btn-sm"><img src="icons/glyphicons-basic-638-triangle-alert.svg" width="25" class="svgwhite" />Confirm</button> 
+        <button type="button" @onclick="Cancel" class="btn btn-info btn-sm">Cancel</button>
     </EditForm>
 </div>
 
