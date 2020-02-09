@@ -76,6 +76,8 @@ else
 
      private List<LinkedFile> Model { get; set; }
 
+     private int deleteId { get; set; }
+
      protected override async Task OnInitializedAsync()
      {
          Model = await Http.GetJsonAsync<List<LinkedFile>>("api/Linked");
@@ -86,15 +88,32 @@ else
          NavigationManager.NavigateTo("admin/createlinked");
      }
 
-     protected async Task DeleteLink(int id)
+     protected void DeleteLink(int id)
      {
-         await Http.DeleteAsync("api/Linked/" + id);
-         Model = await Http.GetJsonAsync<List<LinkedFile>>("api/Linked");
-         StateHasChanged();
+         deleteId = id;
+         Confirm();         
      }
 
      protected void EditLink(int id)
      {
          NavigationManager.NavigateTo("admin/editlinked/" + id);
      }
+
+     private void Confirm()
+     {
+         var parameters = new ModalParameters();
+         Modal.OnClose += HideDialog;
+         Modal.Show<ConfirmDelete>("", parameters);
+     }
+
+     public void HideDialog(ModalResult modalResult)
+     {
+         Modal.OnClose -= HideDialog;
+         if (modalResult.Cancelled)
+             return;
+
+         Http.DeleteAsync("api/Linked/" + deleteId);
+         NavigationManager.NavigateTo("admin/linkedfiles", true);
+     }
+
  }

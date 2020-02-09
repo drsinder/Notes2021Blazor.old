@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using System.Net.Http
+@using Notes2021Blazor.Shared
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IModalService ModalService
+
+<AuthorizeView Roles="Admin">
+    <Authorized Context="Other">
+        <div class="roundedgrayindexinput">
+            <h3>Confirm Delete.</h3>
+                <button type="submit" @onclick="Submit">Confirm</button> <button type="button" @onclick="Cancel">Cancel</button>
+
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        Access denied.
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+
+    private void Submit()
+    {
+        ModalService.Close(ModalResult.Ok($"Delete was submitted successfully."));
+    }
+
+    private void Cancel()
+    {
+        ModalService.Close(ModalResult.Cancel());
+    }
+}
