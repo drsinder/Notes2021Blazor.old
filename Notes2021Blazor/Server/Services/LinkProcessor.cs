@@ -265,7 +265,6 @@ namespace Notes2021Blazor.Server.Services
             try
             {
                 resp3 = await MyClient.DeleteAsync("api/ApiLink/" + q.LinkGuid);
-                  
             }
             catch (Exception ex)
             {
@@ -288,7 +287,6 @@ namespace Notes2021Blazor.Server.Services
             try
             {
                 resp3 = await MyClient.GetAsync("api/ApiLink");
-                    
             }
             catch
             {

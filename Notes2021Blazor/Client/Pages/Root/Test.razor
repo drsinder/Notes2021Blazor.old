@@ -1,19 +1,33 @@
 ﻿@page "/test"
-
 @using System
+@using Notes2021Blazor.Shared
+@inject HttpClient Http
 
 
 <h3>@stuff</h3>
 
 @code {
     private string stuff { get; set; }
+    private Stringy fv { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         DateTime now = DateTime.Now.ToLocalTime();
         DateTime nowU = DateTime.Now.ToUniversalTime();
-        long ticks = now.Ticks - nowU.Ticks;
+        long ticks = now.Ticks;
 
-        stuff = now.ToString();
+        bool result = false;
+
+        string inp = "https://localhost:44336/";
+
+        fv = new Stringy { value = inp };
+
+        result = await Http.PostJsonAsync<bool>("api/LinkTest", fv);
+
+
+        stuff = result.ToString();
+        StateHasChanged();
     }
+
+    // "https://localhost:44336/"
 }
