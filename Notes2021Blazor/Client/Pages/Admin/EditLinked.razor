@@ -40,7 +40,7 @@ else
                 <br />
                 Send to: <input type="checkbox" @bind="@send" />
                 <br /><br />
-                <button type="button" @onclick="Submit">Submit</button>
+                <button type="button" @onclick="Submit">Submit</button> <button type="button" @onclick="Cancel">Cancel</button>
             </div>
         </Authorized>
         <NotAuthorized>
@@ -79,6 +79,11 @@ else
         appUri = myLink.RemoteBaseUri;
         secret = myLink.Secret;
 
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("admin/linkedfiles");
     }
 
     protected async Task Submit()

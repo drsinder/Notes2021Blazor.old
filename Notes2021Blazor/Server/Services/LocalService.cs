@@ -21,7 +21,7 @@ namespace Notes2021Blazor.Server.Services
                     + "<p>Subject: " + nc.NoteSubject + "</p>"
                     + nc.LastEdited.ToShortDateString() + " " + nc.LastEdited.ToShortTimeString() + " UTC" + "</p>"
                     + nc.NoteContent.NoteBody
-                    + "<hr/>" + "<a href=\"" + Globals.ProductionUrl + "NoteDisplay/Display/" + fv.NoteID + "\" >Link to note</a>";
+                    + "<hr/>" + "<a href=\"" + Globals.ProductionUrl + "notes/enterandshow/" + fv.NoteID + "\" >Link to note</a>";
             }
             else
             {
@@ -55,7 +55,7 @@ namespace Notes2021Blazor.Server.Services
                     sb.Append(notes[i].NoteContent.NoteBody);
                     sb.Append("<hr/>");
                     sb.Append("<a href=\"");
-                    sb.Append(Globals.ProductionUrl + "NoteDisplay/Display/" + notes[i].Id + "\" >Link to note</a>");
+                    sb.Append(Globals.ProductionUrl + "notes/enterandshow/" + notes[i].Id + "\" >Link to note</a>");
                 }
 
                 return sb.ToString();
