@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -72,6 +73,8 @@ namespace Notes2021Blazor.Server.Controllers
                 created = await NoteDataManager.CreateResponse(_db, _userManager, nheader, tvm.MyNote, tvm.TagLine, tvm.DirectorMessage, true, false);
             }
 
+            await ProcessLinkedNotes();
+
             await SendNewNoteToSubscribers(created);
 
             return created;
@@ -101,6 +104,8 @@ namespace Notes2021Blazor.Server.Controllers
 
             await NoteDataManager.EditNote(_db, _userManager, tvm.NoteHeader, nc, tvm.TagLine);
 
+            await ProcessLinkedNotes();
+
             return;
         }
 
@@ -114,6 +119,8 @@ namespace Notes2021Blazor.Server.Controllers
                 return;
 
             await NoteDataManager.DeleteNote(_db, nh);
+
+            await ProcessLinkedNotes();
         }
 
 
@@ -138,6 +145,21 @@ namespace Notes2021Blazor.Server.Controllers
                 IdentityUser usr = await _userManager.FindByIdAsync(s.SubscriberId);
                 await emailSender.SendEmailAsync(usr.UserName, myNote.NoteSubject, myEmail);
             }
+        }
+
+        private async Task ProcessLinkedNotes()
+        {
+            List<LinkQueue> items = await _db.LinkQueue.Where(p => p.Enqueued == false).ToListAsync();
+            foreach (LinkQueue item in items)
+            {
+                LinkProcessor lp = new LinkProcessor(_db);
+                BackgroundJob.Enqueue(() => lp.ProcessLinkAction(item.Id));
+                item.Enqueued = true;
+                _db.Update(item);
+            }
+            if (items.Count > 0)
+                await _db.SaveChangesAsync();
+
         }
 
     }
