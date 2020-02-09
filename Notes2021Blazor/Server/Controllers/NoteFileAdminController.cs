@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Notes2021Blazor.Shared;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Notes2021Blazor.Server.Controllers
@@ -22,6 +23,12 @@ namespace Notes2021Blazor.Server.Controllers
         {
             _db = db;
             _userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<List<NoteFile>> Get()
+        {
+            return await NoteDataManager.GetNoteFilesOrderedByName(_db);
         }
 
         [HttpPost]

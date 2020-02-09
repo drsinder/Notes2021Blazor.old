@@ -1,0 +1,128 @@
+﻿@page "/admin/editlinked/{id}"
+@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IModalService Modal
+@inject IJSRuntime jsRuntime
+
+<h3>Create Linked File</h3>
+
+@if (Model == null)
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <div>
+                Select File to link:
+                <br />
+                <select id="select1" @bind="myFile">
+                    <option value="0" selected="selected">-- Select from list --</option>
+                    @foreach (NoteFile item in Files)
+                    {
+                        <option value="@item.Id">@item.NoteFileName</option>
+                    }
+                </select>
+                <br />
+                Name of remote file:<br />
+                <input type="text" @bind="@remoteFile" />
+                <br />Uri of remote App:<br />
+                <input type="text" @bind="@appUri" class="long-input" />
+                <br />Shared Secret:<br />
+                <input type="text" @bind="@secret" class="long-input" />
+                <br />
+                Accept From: <input type="checkbox" @bind="@accept" />
+                <br />
+                Send to: <input type="checkbox" @bind="@send" />
+                <br /><br />
+                <button type="button" @onclick="Submit">Submit</button>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            You do not have access!
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+
+@code {
+
+    [Parameter]
+    public string id { get; set; }
+
+    private List<LinkedFile> Model { get; set; }
+    private List<NoteFile> Files { get; set; }
+    private int myFile { get; set; }
+    private string remoteFile { get; set; }
+    private string appUri { get; set; }
+    private string secret { get; set; }
+    private bool accept { get; set; }
+    private bool send { get; set; }
+
+    private LinkedFile myLink { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Files = await Http.GetJsonAsync<List<NoteFile>>("api/notefileadmin");
+        myFile = int.Parse(id);
+        Model = await Http.GetJsonAsync<List<LinkedFile>>("api/Linked");
+        myLink = Model.Find(p => p.Id == myFile);
+
+        accept = myLink.AcceptFrom;
+        send = myLink.SendTo;
+        remoteFile = myLink.RemoteFileName;
+        appUri = myLink.RemoteBaseUri;
+        secret = myLink.Secret;
+
+    }
+
+    protected async Task Submit()
+    {
+        Stringy test = new Stringy { value = appUri };
+        bool result = await Http.PostJsonAsync<bool>("api/LinkTest", test);
+
+        if (myFile == 0)
+        {
+            ShowMessage("Select a file!");
+            return;
+        }
+        if (!result)
+        {
+            ShowMessage("Remote system not responding...");
+            return;
+        }
+
+        LinkedFile linker = new LinkedFile();
+        linker.HomeFileId = myFile;
+        linker.HomeFileName = Files.Find(p => p.Id == myFile).NoteFileName;
+        linker.RemoteBaseUri = appUri;
+        linker.RemoteFileName = remoteFile;
+        linker.Secret = secret;
+        linker.SendTo = send;
+        linker.AcceptFrom = accept;
+        linker.Id = myLink.Id;
+
+        await Http.PutJsonAsync("api/Linked", linker);
+
+        NavigationManager.NavigateTo("admin/linkedfiles");
+    }
+
+    private void ShowMessage(string message)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("Message", message);
+        Modal.OnClose += HideDialog;
+        Modal.Show<MessageBox>("", parameters);
+    }
+
+    public void HideDialog(ModalResult modalResult)
+    {
+        Modal.OnClose -= HideDialog;
+    }
+
+}

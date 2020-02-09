@@ -1,0 +1,100 @@
+﻿@page "/admin/linkedfiles"
+@using Notes2021Blazor.Shared
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IModalService Modal
+
+<h3>Linked File Index</h3>
+@if (Model == null)
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <button type="button" @onclick="Create">Create</button>
+            <div class="row">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Home File Id
+                            </th>
+                            <th>
+                                Home File Name
+                            </th>
+                            <th>
+                                Remote File Name
+                            </th>
+                            <th>
+                                Remote Base Uri
+                            </th>
+                            <th>
+                                Accept From
+                            </th>
+                            <th>
+                                Send To
+                            </th>
+                            <th>
+                                Shared Secret
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.HomeFileId</td>
+                                <td>@item.HomeFileName</td>
+                                <td>@item.RemoteFileName</td>
+                                <td>@item.RemoteBaseUri</td>
+                                <td>@item.AcceptFrom</td>
+                                <td>@item.SendTo</td>
+                                <td>@item.Secret</td>
+                                <td>
+                                    <button @onclick="@(() => EditLink(item.Id))">Edit</button>
+                                    <button @onclick="@(() => DeleteLink(item.Id))">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            You do not have access!
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+ @code {
+
+     private List<LinkedFile> Model { get; set; }
+
+     protected override async Task OnInitializedAsync()
+     {
+         Model = await Http.GetJsonAsync<List<LinkedFile>>("api/Linked");
+     }
+
+     protected void Create()
+     {
+         NavigationManager.NavigateTo("admin/createlinked");
+     }
+
+     protected async Task DeleteLink(int id)
+     {
+         await Http.DeleteAsync("api/Linked/" + id);
+         Model = await Http.GetJsonAsync<List<LinkedFile>>("api/Linked");
+         StateHasChanged();
+     }
+
+     protected void EditLink(int id)
+     {
+         NavigationManager.NavigateTo("admin/editlinked/" + id);
+     }
+ }
