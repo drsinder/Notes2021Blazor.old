@@ -97,13 +97,13 @@ namespace Notes2021Blazor.Server
             Globals.SendGridEmail = Configuration["SendGridEmail"];
             Globals.SendGridName = Configuration["SendGridName"];
 
-            Globals.PusherAppId = Configuration["Pusher:AppId"];
-            Globals.PusherKey = Configuration["Pusher:AppKey"];
-            Globals.PusherSecret = Configuration["Pusher:AppSecret"];
-            Globals.PusherCluster = Configuration["Pusher:Cluster"];
+            //Globals.PusherAppId = Configuration["Pusher:AppId"];
+            //Globals.PusherKey = Configuration["Pusher:AppKey"];
+            //Globals.PusherSecret = Configuration["Pusher:AppSecret"];
+            //Globals.PusherCluster = Configuration["Pusher:Cluster"];
 
-            Globals.ChatKitAppLoc = Configuration["ChatKit:InstanceLocator"];
-            Globals.ChatKitKey = Configuration["ChatKit:AppKey"];
+            //Globals.ChatKitAppLoc = Configuration["ChatKit:InstanceLocator"];
+            //Globals.ChatKitKey = Configuration["ChatKit:AppKey"];
 
             Globals.DBConnectString = Configuration.GetConnectionString("DefaultConnection");
 

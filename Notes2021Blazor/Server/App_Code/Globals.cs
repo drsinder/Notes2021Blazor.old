@@ -16,7 +16,6 @@ namespace Notes2021Blazor.Server
 
         public static string PathBase { get; set; }
 
-        //public static string AdminEmail { get; set; }
 
         public static string SendGridEmail { get; set; }
 
@@ -36,15 +35,15 @@ namespace Notes2021Blazor.Server
 
         public static int TimeZoneDefaultID { get; set; }
 
-        public static string PusherAppId { get; set; }
-        public static string PusherKey { get; set; }
-        public static string PusherSecret { get; set; }
-        public static string PusherCluster { get; set; }
+        //public static string PusherAppId { get; set; }
+        //public static string PusherKey { get; set; }
+        //public static string PusherSecret { get; set; }
+        //public static string PusherCluster { get; set; }
 
-        public static string ChatKitAppLoc { get; set; }
-        public static string ChatKitKey { get; set; }
+        //public static string ChatKitAppLoc { get; set; }
+        //public static string ChatKitKey { get; set; }
 
-        public static IEmailSender EmailSender { get; set; }
+        //public static IEmailSender EmailSender { get; set; }
 
         public static string DBConnectString { get; set; }
 
