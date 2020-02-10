@@ -1,0 +1,63 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Edit.cshtml
+    **
+    **  Description:
+    **      Edit a users Roles
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021.Controllers.EditUserViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Edit User Roles</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(m => m.UserName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Roles", "Roles", new { @class = "col-form-label col-md-2" })
+            <span class="col-md-10">
+                @foreach (var item in Model.RolesList)
+                {
+                    <input type="checkbox" name="SelectedRole" value="@item.Value" checked="@item.Selected" @*class="checkbox-inline"*@ />
+                    @Html.Label(item.Value, item.Value, new { @class = "col-form-label" })
+                }
+            </span>
+        </div>
+        <div class="form-group">
+            <div class="ml-md-auto col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

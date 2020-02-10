@@ -1,0 +1,64 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Import.cshtml
+    **
+    **  Description:
+    **      Import a notefile
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021Blazor.Shared.NoteFile
+@{
+    ViewBag.Title = "Import";
+}
+
+<h2>Import</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>NoteFile</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.LastEdited)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NoteFileName, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.NoteFileName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NoteFileName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NoteFileTitle, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.NoteFileTitle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NoteFileTitle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

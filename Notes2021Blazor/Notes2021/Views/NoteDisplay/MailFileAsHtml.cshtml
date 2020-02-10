@@ -1,0 +1,61 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: MailFileAsHtml.cshtml
+    **
+    **  Description:
+    **      Email whole file as Html
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021.Models.ForwardViewModel
+@{
+    ViewBag.Title = "Mail File";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-controller="NoteDisplay" asp-action="MailFileAsHtml" method="post" class="form-horizontal" role="form">
+    @Html.HiddenFor(model => model.FileID)
+    @Html.HiddenFor(model => model.NoteOrdinal)
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        @if (Model.IsAdmin)
+        {
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-8">
+                @Html.Raw("Send to all users: ") @Html.CheckBoxFor(m => m.toAllUsers, null)<br /><br />
+            </div>
+        }
+        <label asp-for="ToEmail" class="col-md-4 col-form-label"></label>
+        <div class="col-md-8">
+            <input asp-for="ToEmail" class="form-control short-input" autofocus />
+            <span asp-validation-for="ToEmail" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div @*class="form-actions no-color" *@>
+        @*<input type="submit" value="Mail" class="btn btn-primary" />*@
+        <button type="submit" class="btn btn-info" tabindex="4">
+            <img src="~/icons/glyphicons-basic-11-envelope.svg" width="25" class="svgwhite" /> Mail
+        </button>        |
+        <a asp-action="Listing" asp-route-id=@Model.FileID class="btn btn-primary">Back to Index</a>
+    </div>
+</form>

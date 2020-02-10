@@ -1,0 +1,101 @@
+@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Create.cshtml
+    **
+    **  Description:
+    **      Create a SQLFile
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021Blazor.Shared.SQLFile
+
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<h2>Upload</h2>
+
+<form method="post" asp-action="Create" asp-controller="SqlFiles" enctype="multipart/form-data">
+    <div class="form-horizontal">
+        <h4>SQLFile</h4>
+        <hr />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Comments" class="col-md-2 col-form-label" ></label>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Comments, 10, 80, null)
+@*                <input asp-for="Comments" class="form-control" />*@
+                @* ReSharper disable once Html.TagShouldNotBeSelfClosed *@
+                <span asp-validation-for="Comments" class="text-danger" />
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            <label asp-for="ContentID" class="col-md-2 col-form-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ContentID" class="form-control" disabled value="0" />
+                <span asp-validation-for="ContentID" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ContentType" class="col-md-2 col-form-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ContentType" class="form-control" disabled value="TBD" />
+                <span asp-validation-for="ContentType" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Contributor" class="col-md-2 col-form-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Contributor" class="form-control" disabled value="TBD"  />
+                <span asp-validation-for="Contributor" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FileName" class="col-md-2 col-form-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FileName" class="form-control" disabled value="TBD"  />
+                <span asp-validation-for="FileName" class="text-danger" />
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            <span class = "col-form-label col-md-2"> File: </span>
+            <div class="col-md-10">
+                <input type="file" id="file" name="file" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="ml-md-auto col-md-10">
+                <input type="submit" value="Upload" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

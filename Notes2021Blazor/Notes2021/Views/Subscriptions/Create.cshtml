@@ -1,0 +1,87 @@
+@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Create.cshtml
+    **
+    **  Description:
+    **      Create a subscription to a notefile
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021Blazor.Shared.Subscription
+
+@{
+    IEnumerable<SelectListItem> filesList = (IEnumerable<SelectListItem>)ViewBag.FilesList;
+    string userId = ViewBag.UserID.ToString();
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create" >
+    <div class="form-horizontal">
+        <h4>Subscription</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="NoteFileId" class="col-md-2 col-form-label"></label>
+            <div class="col-md-10">
+                @Html.DropDownList("AFiles", filesList, htmlAttributes: new { @class = "short-input" })
+
+                <input asp-for="NoteFileId" class="form-control" />
+                @* ReSharper disable once Html.TagShouldNotBeSelfClosed *@
+                <span asp-validation-for="NoteFileId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <span class="col-md-2 col-form-label"></span>
+            <div class="col-md-10">
+                <input asp-for="SubscriberId" value=@userId class="form-control" />
+                @* ReSharper disable once Html.TagShouldNotBeSelfClosed *@
+                <span asp-validation-for="SubscriberId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="ml-md-auto col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var mytextbox = document.getElementById('NoteFileId');
+        var mytextbox2 = document.getElementById('SubscriberId');
+        var mydropdown = document.getElementById('AFiles');
+        mytextbox.style.visibility = "hidden";
+        mytextbox2.style.visibility = "hidden";
+        mydropdown.onchange = function () {
+        mytextbox.value = this.value;
+        mytextbox.focus();
+        }
+    </script>
+
+</form>
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

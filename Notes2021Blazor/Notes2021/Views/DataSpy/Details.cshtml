@@ -1,0 +1,79 @@
+@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2017, Dale Sinder
+    **
+    **  Name: Details.cshtml
+    **
+    **  Description:
+    **      Show raw Notefile detail data
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021Blazor.Shared.NoteFile
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NoteFile</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdited)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastEdited)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NoteFileName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NoteFileName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NoteFileTitle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NoteFileTitle)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberArchives)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NumberArchives)
+        </dd>
+        <dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.OwnerId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OwnerId)
+        </dd>
+    </dl>
+</div>
+<p>
+    <a asp-action="Index">Back to List</a>
+</p>

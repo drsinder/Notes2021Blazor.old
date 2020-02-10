@@ -1,0 +1,53 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: SystemMesage.cshtml
+    **
+    **  Description:
+    **      Admin send Notes 2019 wide message
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021Blazor.Shared.SystemMessage
+@{
+    ViewBag.Title = "Send System Message";
+}
+@*<style type="text/css">
+    .form-actions {
+    }
+
+    .no-color {
+    }
+</style>*@
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-controller="Home" asp-action="SystemMessage" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <input asp-for="message" class="form-control" autofocus />
+        </div>
+    </div>
+
+    <div @*class="form-actions no-color"*@>
+        <input type="submit" value="Send Message" class="btn btn-primary" />
+    </div>
+</form>
+
+

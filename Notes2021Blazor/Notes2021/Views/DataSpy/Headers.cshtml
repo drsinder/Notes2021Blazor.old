@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Notes2021Blazor.Shared.NoteHeader>
+
+@{
+    ViewData["Title"] = "Headers";
+}
+
+<h1>Headers</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BaseNoteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteOrdinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResponseOrdinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteSubject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastEdited)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ThreadLastEdited)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResponseCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BaseNoteId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteOrdinal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResponseOrdinal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteSubject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastEdited)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThreadLastEdited)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResponseCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuthorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuthorName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<p>
+    <a asp-action="Index">Back to List</a>
+</p>

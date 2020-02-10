@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Notes 2021</title>
+
+    <environment include="Development">
+        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/open-iconic-bootstrap.css" />*@
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/prism.css" />
+
+    </environment>
+    <environment exclude="Development">
+        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/open-iconic-bootstrap.min.css" />*@
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.min.css" />
+        <link rel="stylesheet" href="~/css/prism.min.css" />
+    </environment>
+
+    <style>
+        @{
+            string mystyle = "";
+            if (ViewBag.MyStyle != null)
+            {
+                mystyle = ViewBag.MyStyle;
+            }
+            @Html.Raw(mystyle)
+        }
+    </style>
+    @{
+        string myurl = Context.Request.Path;
+        if (myurl.Contains("/NoteDisplay/Create/")
+            || myurl.Contains("/NoteDisplay/CreateResponse/")
+            || myurl.Contains("/NoteDisplay/Edit/")
+            || myurl.Contains("/HomePageMessages/Edit")
+            || myurl.Contains("/HomePageMessages/Create")
+            )
+        {
+            <script src="~/tinymce/tinymce.min.js"></script>
+            <script src="/tinymce/jquery.tinymce.min.js"></script>
+        }
+    }
+    <script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+
+</head>
+<body>
+    <header>
+        @* ReSharper disable once UnknownCssClass *@
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Notes 2021@*@((Context.Request.Host.Port == 443) ? "Notes 2020" : "Notes 2020 *")*@</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Users</a>
+                            </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="usercount" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Test</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="keep-center">&nbsp;<span id="digitalclock"></span>&nbsp;</div>
+    </header>
+
+    <div class="modal fade" id="mySysMessage" tabindex="-1" role="dialog" aria-labelledby="mySysMessage-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="mySysMessage-label">System Message</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="sysmessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myChatMessage" tabindex="-1" role="dialog" aria-labelledby="myChatMessage-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myChatMessage-label">Chat Request</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="sysmessagechat"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="oktochatfunc()" class="btn btn-primary">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div id="oktochat" hidden></div>
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - Dale Sinder - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <span hidden id="notesusername">@ViewBag.UserDisplayName</span>
+            <span hidden id="notesuserid">@ViewBag.UserId</span>
+            <span hidden id="pusherkey">@ViewBag.PusherKey</span>
+            <span hidden id="pushercluster">@ViewBag.PusherCluster</span>
+            <span hidden id="pathbase">@ViewBag.PathBase</span>
+        </div>
+    </footer>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/prism.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/prism.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @{
+        string myurl2 = Context.Request.Path;
+        if (!myurl2.Contains("/Home/Users/"))
+        {
+
+            <script>
+            function showUsers() {
+                document.getElementById('usercount').innerHTML = '<a href="' + '@ViewBag.PathBase' + '/Home/Users/" >Users: ' + membercount + '</a>';
+            }
+
+            function add_member(userid, userinfo) {
+                membercount = membercount + 1;
+                showUsers();
+            }
+
+            function remove_member(userid, userinfo) {
+                membercount = membercount - 1;
+                showUsers();
+            }
+            </script>
+        }
+    }
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

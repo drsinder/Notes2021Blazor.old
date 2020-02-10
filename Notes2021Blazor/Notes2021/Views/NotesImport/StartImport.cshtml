@@ -1,0 +1,81 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: StartImport.cshtml
+    **
+    **  Description:
+    **      Run the import
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+@model Notes2021Blazor.Shared.NoteFile
+@{
+    ViewBag.Title = "Import";
+    ViewBag.FileName = Model.NoteFileName + ".txt";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<h2>Import</h2>
+<form asp-controller="NotesImport" asp-action="Import" method="post" class="form-horizontal" role="form" id="myform">
+    <div class="form-horizontal">
+        <h4>NoteFile</h4>
+        <div id="spinner" style="visibility:hidden;">
+            <p>Importing:</p>
+            <i class="fa fa-gear fa-spin" style="font-size:48px"></i>
+        </div>
+        <div><p id="import_status"></p></div>
+        <hr />
+        <p>Note: You must have your import file named "@ViewBag.FileName" in the Web Application's "ImportFiles" folder.</p>
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.LastEdited)
+        @Html.HiddenFor(model => model.NoteFileName)
+        @Html.HiddenFor(model => model.NoteFileTitle)
+        <div class="form-group">
+            @Html.LabelFor(model => model.NoteFileName, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10 medium">
+                @Html.DisplayFor(model => model.NoteFileName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NoteFileTitle, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10 medium">
+                @Html.DisplayFor(model => model.NoteFileTitle, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <input type="submit" value="Begin Import" id="submit" />
+        <script type="text/javascript">
+            //setIntervalStatus(function () {
+            //    var status = document.getElementById('status');
+            //    if (status !== null) {
+            //        status.
+            //    }
+            //}, 2000);
+            var mysubmit = document.getElementById('submit');
+            var myspin = document.getElementById('spinner');
+            mysubmit.onclick = function () { myspin.style.visibility = "visible"; this.disabled = true; }
+        </script>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+

@@ -1,0 +1,45 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=SERVER;Database=Notes2021;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+  "Authentication": {
+    "Google": {
+      "ClientId": "xxxxxxxxxxxxxxxxxxx-hgi71v3alj5tfob3gtfst8el7h8maiiv.apps.googleusercontent.com",
+      "ClientSecret": "xxxxxxxxxxxtHdQdegCLvY"
+    },
+    "Microsoft": {
+      "ApplicationId": "xxxxxxxxx-464a-8126-6996c839b38e",
+      "Password": "xxxxxxxxxxxxxxxxxxxTEF76:(!;"
+    }
+  },
+  "Pusher": {
+    "AppId": "xxxxx97",
+    "AppKey": "xxxxxb0f3709af41",
+    "AppSecret": "xxxx6d3d23e0c7834",
+    "Cluster": "us2"
+  },
+  "ChatKit": {
+    "InstanceLocator": "v1:us1:xxxxxxxb-1cdd-4423-b9ee-07ab4f773cd6",
+    "AppKey": "xxxxxxxx-28b3-4638-bbdc-603ca8320122:kUrxYRGy0WN47BVBCzJWpxixRf8a52VU81z+p8sWkKo="
+  },
+  "PrimeAdminName": "Dale Sinder",
+  "PrimeAdminEmail": "sinder@illinois.edu",
+  "InstKey": "xxxxxx-4695-9384-4538dce932cd",
+  "ProductionUrl": "https://www.drsinder.com/Notes2021/",
+  "DefaultTZ": "54",
+  "SendGridApiKey": "xxxxxxxxxxxxxxxxxLkw.f64np_imp9AJ7R7r1rWpwe1RIqPsX_5BaPg1j-umJmQ",
+  "SendGridEmail": "sinder@illinois.edu",
+  "SendGridName": "Dale Sinder on behalf of Notes 2021",
+  "ApiLoginSecret": "xxxxxxxxxxxxxxxxevdbys1a4c61urzp",
+  "AllowedHosts": "*",
+  "ApplicationInsights": {
+    "InstrumentationKey": "xxxxxxxxxxx-4695-9384-4538dce932cd"
+  },
+  "PathBase": "/Notes2021"
+
+}

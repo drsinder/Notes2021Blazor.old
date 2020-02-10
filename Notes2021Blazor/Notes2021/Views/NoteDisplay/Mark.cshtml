@@ -1,0 +1,71 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Mark.cshtml
+    **
+    **  Description:
+    **      Mark a note (string) for output
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model MarkViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Mark";
+}
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-8">
+        <h3>Mark Note For Output</h3>
+        <form asp-controller="NoteDisplay" asp-action="MarkProc" method="post" class="form-horizontal" role="form">
+            <div class="form-group">
+                @Html.HiddenFor(p => p.NoteID)
+                @Html.HiddenFor(p => p.SelectedValue)
+                <div class="form-group">
+                    <div class="ml-md-auto col-md-10">
+                        @Html.DropDownList("MarkOptions", Model.option)
+
+                        <script type="text/javascript">
+                                var mytextbox = document.getElementById('SelectedValue');
+                                var mydropdown = document.getElementById('MarkOptions');
+
+                                mydropdown.onchange = function () {
+                                mytextbox.value = this.value;
+                                //this.form.submit();
+                                }
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="ml-md-auto col-md-10">
+                    @*<button type="submit" class="btn btn-primary">Mark</button>*@
+                    <button type="submit" class="btn btn-info btn-sm" tabindex="4">
+                        <img src="~/icons/glyphicons-basic-603-user-flag.svg" width="25" class="svgwhite"> Mark
+                    </button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

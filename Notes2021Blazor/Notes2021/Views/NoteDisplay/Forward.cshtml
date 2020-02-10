@@ -1,0 +1,62 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Forward.cshtml
+    **
+    **  Description:
+    **      Forward a note (string) by email
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model Notes2021.Models.ForwardViewModel
+@{
+    ViewBag.Title = "Forward Note(s)";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<form asp-controller="NoteDisplay" asp-action="Forward" method="post" class="form-horizontal" role="form">
+    @Html.HiddenFor(model => model.NoteID)
+    @Html.HiddenFor(model => model.NoteSubject)
+    @Html.HiddenFor(model => model.hasstring)
+
+    <h4>Subject: @Model.NoteSubject</h4>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="ToEmail" class="col-md-4 col-form-label"></label>
+        <div class="col-md-8">
+            <input asp-for="ToEmail" class="form-control short-input" autofocus />
+            <span asp-validation-for="ToEmail" class="text-danger"></span>
+        </div>
+        <label asp-for="wholestring" class="col-md-4 col-form-label"></label>
+        <div class="col-md-8">
+            <input asp-for="wholestring" class="form-control short-input" />
+        </div>
+    </div>
+
+    <div @*class="form-actions no-color" *@>
+        @*<input type="submit" value="Forward" class="btn btn-primary" />*@
+        <button type="submit" class="btn btn-info" tabindex="4">
+            <img src="~/icons/glyphicons-basic-435-forward-email.svg" width="25" class="svgwhite" /> Forward
+        </button>
+        |
+        <a asp-action="Display" asp-route-id=@Model.NoteID class="btn btn-primary">Back to Note</a>
+    </div>
+</form>

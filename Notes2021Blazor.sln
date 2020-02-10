@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "License", "License", "{0F46
 		..\..\2017\Notes2021\License.txt = ..\..\2017\Notes2021\License.txt
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notes2021", "Notes2021Blazor\Notes2021\Notes2021.csproj", "{65004E71-E0F1-48F2-B5DD-27DF1A80A548}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{F384F2AF-2EA8-4A27-81BA-5D20169A7572}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F384F2AF-2EA8-4A27-81BA-5D20169A7572}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F384F2AF-2EA8-4A27-81BA-5D20169A7572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65004E71-E0F1-48F2-B5DD-27DF1A80A548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65004E71-E0F1-48F2-B5DD-27DF1A80A548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65004E71-E0F1-48F2-B5DD-27DF1A80A548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65004E71-E0F1-48F2-B5DD-27DF1A80A548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

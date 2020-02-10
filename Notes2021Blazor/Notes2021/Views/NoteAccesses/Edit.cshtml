@@ -1,0 +1,107 @@
+﻿@model Notes2021Blazor.Shared.NoteAccess
+
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit </h2>
+<h3>NoteFile:  @ViewBag.NoteFileName  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User:  @ViewBag.NoteUserName</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>NoteFile Access</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.UserID)
+
+        @Html.HiddenFor(model => model.NoteFileId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReadAccess, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.ReadAccess)
+                    @Html.ValidationMessageFor(model => model.ReadAccess, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Respond, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Respond)
+                    @Html.ValidationMessageFor(model => model.Respond, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Write, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Write)
+                    @Html.ValidationMessageFor(model => model.Write, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SetTag, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.SetTag)
+                    @Html.ValidationMessageFor(model => model.SetTag, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeleteEdit, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.DeleteEdit)
+                    @Html.ValidationMessageFor(model => model.DeleteEdit, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ViewAccess, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.ViewAccess)
+                    @Html.ValidationMessageFor(model => model.ViewAccess, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EditAccess, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.EditAccess)
+                    @Html.ValidationMessageFor(model => model.EditAccess, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="ml-md-auto col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", new { id = Model.NoteFileId })
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

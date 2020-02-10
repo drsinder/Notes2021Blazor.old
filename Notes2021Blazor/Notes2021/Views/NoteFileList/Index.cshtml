@@ -1,0 +1,60 @@
+﻿@*@using Notes2020WebLib.Models*@
+@model IEnumerable<Notes2021Blazor.Shared.NoteFile>
+
+@{
+    ViewData["Title"] = "Index";
+    TZone tz = (TZone)ViewBag.TZ;
+}
+
+<h2>NoteFile List</h2>
+
+<p>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Owner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteFileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteFileTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberArchives)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastEdited)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner.DisplayName)
+            </td>
+            <td>
+                <a asp-action="Viewit" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.NoteFileName)</a>
+            </td>
+            <td>
+                <a asp-action="Viewit" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.NoteFileTitle)</a>
+            </td>
+            <td>
+                <a asp-action="Viewit" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.NumberArchives)</a>
+            </td>
+            <td>
+                @tz.Local(item.LastEdited) @tz.Abbreviation
+            </td>
+            <td>
+                <a asp-action="Viewit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">View</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Details</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

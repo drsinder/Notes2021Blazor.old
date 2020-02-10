@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Notes2021Blazor.Shared.NoteContent>
+
+@{
+    ViewData["Title"] = "Content";
+}
+
+<h1>Content</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NoteHeaderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NoteBody)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DirectorMessage)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteHeaderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteBody)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DirectorMessage)
+            </td>
+            <td>
+                <a asp-action="EditContent" asp-route-id="@item.NoteHeaderId">Edit Content</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<p>
+    <a asp-action="Index">Back to List</a>
+</p>

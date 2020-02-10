@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Notes2021Blazor.Shared.NoteFile>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>NoteFile List</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+    @if (ViewBag.announce)
+    {@Html.ActionLink(" | Create Announce", "CreateAnnounce")}
+    @if (ViewBag.pbnotes)
+    {@Html.ActionLink(" | Create Pbnotes", "CreatePbnotes")}
+    @if (ViewBag.noteshelp)
+    {@Html.ActionLink(" | Create Noteshelp", "CreateNoteshelp")}
+    @if (ViewBag.pad)
+    {@Html.ActionLink(" | Create Pad", "CreatePad")}
+
+    <span class="keep-right">@Html.ActionLink("Import", "Index", "NotesImport")</span>
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteFileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteFileTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastEdited)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Owner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteFileName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteFileTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastEdited) UCT
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

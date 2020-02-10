@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Notes2021Blazor.Shared.LinkedFile>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.HomeFileId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomeFileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RemoteFileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RemoteBaseUri)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AcceptFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SendTo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.HomeFileId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HomeFileName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RemoteFileName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RemoteBaseUri)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AcceptFrom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SendTo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

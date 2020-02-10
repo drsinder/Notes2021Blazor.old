@@ -1,0 +1,62 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Copy.cshtml
+    **
+    **  Description:
+    **      Copy a note (string)
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model CopyViewModel
+@{
+    ViewBag.Title = "Copy Note(s)";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<form asp-controller="NoteDisplay" asp-action="Copy" method="post" class="form-horizontal" role="form">
+    @Html.HiddenFor(model => model.NoteID)
+    @Html.HiddenFor(model => model.NoteSubject)
+    @Html.HiddenFor(model => model.Hasstring)
+
+    <h4>Subject: @Model.NoteSubject</h4>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="ToFile" class="col-md-4 col-form-label"></label>
+        <div class="col-md-8">
+            <input asp-for="ToFile" class="form-control short-input" autofocus />
+            <span asp-validation-for="ToFile" class="text-danger"></span>
+        </div>
+        <label asp-for="Wholestring" class="col-md-4 col-form-label"></label>
+        <div class="col-md-8">
+            <input asp-for="Wholestring" class="form-control short-input" />
+        </div>
+    </div>
+
+    <div @*class="form-actions no-color" *@>
+        @*<input type="submit" value="Copy" class="btn btn-primary" />*@
+        <button type="submit" class="btn btn-info" tabindex="4">
+            <span class="oi oi.oi-share"></span>Copy
+        </button>
+        |
+        <a asp-action="Display" asp-route-id=@Model.NoteID class="btn btn-primary">Back to Note</a>
+    </div>
+</form>

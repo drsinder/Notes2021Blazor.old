@@ -1,0 +1,63 @@
+@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Index.cshtml
+    **
+    **  Description:
+    **      Show Index of users notefile subscriptions
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model IEnumerable<Notes2021Blazor.Shared.Subscription>
+
+@{
+    ViewData["Title"] = "Subscription Index";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            NoteFile
+        </th>
+        <th>
+            Subscriber Name
+        </th>
+        <th></th>
+    </tr>
+    
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.NoteFile.NoteFileName
+        </td>
+        <td>
+            @ViewBag.UserSafeName.ToString()
+        </td>
+        <td>
+            @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
+            @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
+            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+        </td>
+    </tr>
+}
+</table>

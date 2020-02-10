@@ -1,0 +1,90 @@
+﻿@using Notes2021Blazor.Shared
+@model IEnumerable<NoteAccess>
+
+@{
+    ViewBag.Title = "Access List ";
+    NoteAccess myaccess = ViewBag.MyAccess;
+    List<string> ds = (List<string>)(ViewBag.IDs); // 2 long
+}
+
+<h2>Access List for @ViewBag.NoteFileName</h2>
+<p>
+    @if (myaccess.EditAccess)
+    {@Html.ActionLink("Add", "Create", new { id = ViewBag.NoteFileID })}
+</p>
+<table class="table">
+    <tr>
+        <th>User Name</th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReadAccess)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Respond)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Write)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SetTag)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeleteEdit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ViewAccess)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EditAccess)
+        </th>
+        <th></th>
+    </tr>
+
+    @{
+        int cnt = 0;
+        foreach (var item in Model)
+        {
+            <tr>
+                @{
+                    string myname = ViewBag.names[cnt++];
+                    <td>
+                        @myname
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReadAccess)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Respond)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Write)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SetTag)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeleteEdit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ViewAccess)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EditAccess)
+                    </td>
+                    <td>
+                        @if (myaccess.EditAccess)
+                        {@Html.ActionLink("Edit", "Edit", new { id = item.UserID, id2 = item.NoteFileId })
+                        if (!(ds[0] == item.UserID || ds[1] == item.UserID))
+                        { <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.UserID, id2 = item.NoteFileId })}
+                }
+                    </td>
+                }
+            </tr>
+        }
+
+    }
+
+</table>
+@Html.ActionLink("Back to file", "Listing", "NoteDisplay", new { id = @ViewBag.NoteFileID }, null)
+
+

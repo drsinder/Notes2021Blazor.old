@@ -1,0 +1,68 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Contact.cshtml
+    **
+    **  Description:
+    **      User List
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+
+@{
+    ViewData["Title"] = "Users";
+}
+<h2>@ViewData["Title"].</h2>
+
+<address>
+    <strong>Support:</strong> <a href="mailto:@Globals.PrimeAdminEmail">@Globals.PrimeAdminEmail</a><br />
+</address>
+<hr />
+<h5>User List - Click to chat</h5>
+<ul id="userlist"></ul>
+
+<script>
+    function add_member(userid, userinfo)
+    {
+// ReSharper disable once AssignToImplicitGlobalInFunctionScope
+        membercount = membercount + 1;
+        var username = document.getElementById("notesusername");
+        var uname = username.innerHTML;
+
+        if (userinfo.name !== uname)
+            $('#userlist').append('<li id="' + userid + '"><a href="/Notes2020/Home/Chat/' + userinfo.name + '?id2=true"> <strong>' + userinfo.name + '</strong></a></li>');
+        else
+            $('#userlist').append('<li id="' + userid + '">' + userinfo.name + '</li>');
+
+        //if (userinfo.name != uname)
+        //    $('#userlist').append('<li id="' + userid + '"><a href="/Home/Chat/' + userinfo.name + '?id2=true"> <strong>' + userinfo.name + '</strong></a> at ' + userinfo.base_url + '</li>');
+        //else
+        //    $('#userlist').append('<li id="' + userid + '">' + userinfo.name + '</strong> at ' + userinfo.base_url + '</li>');
+
+    }
+
+    function  remove_member(userid, userinfo)
+    {
+// ReSharper disable once AssignToImplicitGlobalInFunctionScope
+        membercount = membercount - 1;
+        var userlist = document.getElementById(userid);
+        if (userlist == null)
+            return;
+        userlist.remove();
+    }
+</script>

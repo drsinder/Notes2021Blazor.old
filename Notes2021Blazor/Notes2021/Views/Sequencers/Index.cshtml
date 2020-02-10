@@ -1,0 +1,80 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: Index.cshtml
+    **
+    **  Description:
+    **      Show list of users sequencer items
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@model IEnumerable<Notes2021Blazor.Shared.Sequencer>
+
+@{
+    ViewData["Title"] = "Index";
+    List<string> names = (List<string>)ViewData["Names"];
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Ordinal)
+        </th>
+        <td>
+            <strong> NoteFile Name </strong>        
+        </td>
+        <th>
+            @Html.DisplayNameFor(model => model.LastTime)
+        </th>
+
+        <th></th>
+    </tr>
+
+@{ 
+    int cnt = 0;
+    foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ordinal)
+        </td>
+        <td>
+            @names.ElementAt(cnt++)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastTime)
+        </td>
+        <td>
+            @Html.ActionLink("Delete", "Delete", new { id = item.UserId, id2 = item.NoteFileId }) | @Html.ActionLink("Edit", "Edit", new { id = item.UserId, id2 = item.NoteFileId })
+                @if (item.Ordinal > 1)
+                {<span> | </span>@Html.ActionLink("Move Up", "MoveUp", new { id = item.UserId, id2 = item.NoteFileId })}
+        @if (item.Ordinal < ViewBag.MaxOrdinal)
+                {<span> | </span>@Html.ActionLink("Move Down", "MoveDown", new { id = item.UserId, id2 = item.NoteFileId })}
+
+
+        </td>
+    </tr>
+        }
+}
+
+</table>

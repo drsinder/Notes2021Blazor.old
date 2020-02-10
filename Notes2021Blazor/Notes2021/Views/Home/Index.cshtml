@@ -1,0 +1,199 @@
+﻿@using Notes2021Blazor.Shared
+@model Notes2021.Controllers.HomePageModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    Layout = "/Views/Shared/_LayoutHome.cshtml";
+}
+
+<div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-6">
+            <div>
+                <h2>Welcome to Notes 2021 <img src="~/favicon.ico" width="32" /></h2>
+                <h5>
+                    <span id="homepagetime">
+                        @((Model.Tzone.Local(@DateTime.Now.ToUniversalTime())).ToShortTimeString()) @Model.Tzone.Abbreviation -
+                        @((Model.Tzone.Local(@DateTime.Now.ToUniversalTime())).ToLongDateString())
+                    </span>
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Message != null && Model.Message.Length > 5)
+    {
+        <div class="sysmessage">@Html.Raw(Model.Message)</div>
+    }
+
+    <div class="row">
+        <div class="col-md-4"></div>
+        @if (User.IsInRole("User"))
+        {
+            <div class="col-md-4 roundedgrayindexinput">
+                <form asp-controller="NoteDisplay" asp-action="EnterFile" method="post" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <strong>Enter a NoteFile Name and press Enter:</strong><input asp-for="FileName" class="form-control short-input" autofocus />
+                        <strong>or</strong>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-file dropdown-toggle form-control short-input" data-toggle="dropdown">
+                                <strong><object type="image/svg+xml" width="25" data="~/icons/glyphicons-basic-145-folder-open.svg" class="svgwhite"></object> -- Select a File --</strong> <span></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                @foreach (var item in Model.AFiles)
+                                {
+                                    string link = @Globals.ProductionUrl + "NoteDisplay/Enter/" + @item.Value;
+                                    <li><a href=@link><strong>@item.Text</strong></a></li>
+                                }
+                            </ul>
+                        </div>
+                        <br /><strong>or</strong>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-title dropdown-toggle form-control short-input" data-toggle="dropdown">
+                                <strong><img src="~/icons/glyphicons-basic-145-folder-open.svg" width="25" class="svgwhite" /> -- Select a Title --</strong> <span></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                @foreach (var item in Model.ATitles)
+                                {
+                                    string link = @Globals.ProductionUrl + "NoteDisplay/Enter/" + @item.Value;
+                                    <li><a href=@link><strong>@item.Text</strong></a></li>
+                                }
+                            </ul>
+                        </div>
+
+                        <script type="text/javascript">
+                            var mytextbox = document.getElementById('FileName');
+                            var mydropdown = document.getElementById('AFiles');
+                            var mydropdown2 = document.getElementById('ATitles');
+
+                            document.onfocus = function () { mytextbox.focus(); }
+
+                            mydropdown.onchange = function () {
+                                mytextbox.value = this.value;
+                                mytextbox.focus();
+                                this.form.submit();
+                            }
+
+                            mydropdown2.onchange = function () {
+                                mytextbox.value = this.value;
+                                mytextbox.focus();
+                                this.form.submit();
+                            }
+
+                        </script>
+
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1"></div>
+        @if (User.IsInRole("User"))
+        {
+            <div class="col-md-3">
+                <h4>NoteFile Functions</h4>
+                Press a number for the function.
+                <ol>
+                    <li><strong><a id="nf1" asp-controller="NoteFileList" title="Complete list of NoteFiles">NoteFile List</a></strong></li>
+                    <li><a id="nf2" asp-controller="Sequencers" title="Manage your Sequencer to keep up to date">Manage Sequencer</a></li>
+                    <li><a id="nf3" asp-controller="NoteDisplay" asp-action="BeginSequence" title="See Notes written since last sequence">Use Sequencer</a></li>
+                    <li><a id="nf4" href="~/SQLFiles/Index" title="Find images in Notes and upload new ones" target="_blank">Image File Database</a></li>
+                    <li><a id="nf5" asp-controller="Subscriptions" title="Get email copies of new Notes">Manage Subscriptions</a></li>
+                    <li><a id="nf6" asp-controller="Export" title="Download a complete NoteFile as Text or Html">Export a NoteFile</a></li>
+                    <li><strong><a id="nf7" asp-action="SetTimeZone" title="Set your prefered Time Zone">Set Time Zone</a></strong></li>
+                    <li><a id="nf8" asp-action="Preferences" title="Set other perferences">Set Preferences</a></li>
+                </ol>
+            </div>
+        }
+        <div class="col-md-3">
+            <h4>HELP</h4>
+            <ul>
+                <li><a asp-controller="Navigation" title="Help with navigating Notes">Navigation</a></li>
+                <li><a asp-action="About">About Notes 2021</a></li>
+                <li><a href="~/Home/Index" title="Open another window" target="_blank">Open another window</a></li>
+                <li><a href="https://www.drsinder.com/index/Notes2020Dist.zip" target="_blank">Notes 2021 distribution</a></li>
+                <li><a href="https://www.drsinder.com/Notes2020/InstallingNotes2020.pdf" target="_blank">Notes 2021 Install notes</a></li>
+            </ul>
+        </div>
+        @if (!User.IsInRole("User"))
+        {
+            <div class="col-md-3">
+                <h4>Login Please</h4>
+                <p>
+                    If you have not already registered, please do so.  Click the REGISTER link at the
+                    upper right corner.  If you are registered, please login.  If you have just logged in
+                    for the first time and are seeing this message, please log out and log back in again.
+                </p>
+            </div>
+        }
+        @if (User.IsInRole("User"))
+        {
+            <div class="col-md-5">
+                <h4>Important Files</h4>
+                <ul>
+                    @foreach (NoteFile x in Model.IFiles)
+                    {
+                        <li>
+                            <strong>
+                                @Html.ActionLink(x.NoteFileName + " - " + x.NoteFileTitle,
+                                    "Listing", "NoteDisplay", new { id = x.Id }, null)
+                            </strong>
+                        </li>
+                    }
+                </ul>
+                <h4>History Files</h4>
+                <ul>
+                    @foreach (NoteFile x in Model.HFiles)
+                    {
+                        <li>
+                            <strong>
+                                @Html.ActionLink(x.NoteFileName + " - " + x.NoteFileTitle,
+                                    "Listing", "NoteDisplay", new { id = x.Id }, null)
+                            </strong>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+    <br />
+
+    @if (User.IsInRole("Admin"))
+    {
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><button type="button" class="btn btn-outline-danger" data-toggle="collapse" data-target="#collapse">
+            Admin Options
+        </button>
+        <div id="collapse" class="collapse">
+            <div class="row bolderface">
+                <div class="col-md-1"></div>
+                <div class="col-md-3 roundedgray">
+                    <ul>
+                        <li><a asp-controller="NoteFiles">NoteFile Manager</a></li>
+                        <li><a asp-controller="Role">Role Manager</a></li>
+                        <li><a asp-controller="User">User Manager</a></li>
+                        <li><a asp-controller="LinkedFiles">Linked Files Manager</a></li>
+                        <li><a asp-controller="HomePageMessages">Home Page Message</a></li>
+                        <li><a href="~/Home/SystemMessage" target="_blank">Send System Message</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 roundedgray">
+                    <ul>
+                        <li><a href="~/SQLFiles/Index" title="Find images in Notes and upload new ones" target="_blank">Image File Database</a></li>
+                        <li><a asp-controller="DataSpy">Raw Data Viewer <strong>(Audited)</strong></a></li>
+                        <li><a href="~/Hangfire" target="_blank">Hangfire Dashboard</a></li>
+                        <li><a href="https://portal.azure.com/#" target="_blank">Azure Portal</a></li>
+                        <li><a href="https://dashboard.pusher.com/apps/@Globals.PusherAppId/" target="_blank">Pusher Dashboard</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script src="~/js/MainIndex.min.js" asp-append-version="true"></script>
+
+

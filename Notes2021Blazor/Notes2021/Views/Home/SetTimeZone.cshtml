@@ -1,0 +1,68 @@
+﻿@*/*--------------------------------------------------------------------------
+    **
+    **  Copyright (c) 2019, Dale Sinder
+    **
+    **  Name: SetTimeZone.cshtml
+    **
+    **  Description:
+    **      Set User Time Zone preference
+    **
+    **  This program is free software: you can redistribute it and/or modify
+    **  it under the terms of the GNU General Public License version 3 as
+    **  published by the Free Software Foundation.
+    **
+    **  This program is distributed in the hope that it will be useful,
+    **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    **  GNU General Public License version 3 for more details.
+    **
+    **  You should have received a copy of the GNU General Public License
+    **  version 3 along with this program in file "license-gpl-3.0.txt".
+    **  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+    **
+    **--------------------------------------------------------------------------
+    */*@
+
+@using Notes2021.Controllers
+
+@model TimeZoneModel
+
+@{
+    ViewData["Title"] = "Set Time Zone";
+}
+
+<h2>@ViewData["Title"].</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        <p>
+            Current Time Zone: @Model.timeZone.Name - @Model.timeZone.Abbreviation - @Model.timeZone.Offset  @*<span id="digitalclock" class="keep-right"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*@
+        </p>
+
+        @Html.HiddenFor(model => model.TimeZoneID)
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.DropDownList("OptionList")
+            </div>
+            <script type="text/javascript">
+                var myOption = document.getElementById('TimeZoneID');
+                var mydropdown = document.getElementById('OptionList');
+                document.onfocus = function () { mydropdown.focus(); }
+
+                mydropdown.onchange = function () {
+                    myOption.value = this.value;
+                }
+            </script>
+        </div>
+        <div class="form-group">
+            <div class="ml-md-auto col-md-10">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,270 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-Notes2021-31919C52-A469-4333-8692-77AEB6708467</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\NotesDbContext.cs" />
+    <Compile Remove="Data\Audit.cs" />
+    <Compile Remove="Data\HomePageMessage.cs" />
+    <Compile Remove="Data\LinkedFile.cs" />
+    <Compile Remove="Data\LinkLog.cs" />
+    <Compile Remove="Data\LinkQueue.cs" />
+    <Compile Remove="Data\Mark.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200119084224_UserData.cs" />
+    <Compile Remove="Data\Migrations\20200119084224_UserData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200119085002_UserDataAndTZone.cs" />
+    <Compile Remove="Data\Migrations\20200119085002_UserDataAndTZone.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200119085312_UserDataAndTZone.cs" />
+    <Compile Remove="Data\Migrations\20200119085312_UserDataAndTZone.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200119101755_RestOfTables.cs" />
+    <Compile Remove="Data\Migrations\20200119101755_RestOfTables.Designer.cs" />
+    <Compile Remove="Data\NoteAccess.cs" />
+    <Compile Remove="Data\NoteContent.cs" />
+    <Compile Remove="Data\NoteFile.cs" />
+    <Compile Remove="Data\NoteHeader.cs" />
+    <Compile Remove="Data\Search.cs" />
+    <Compile Remove="Data\Sequencer.cs" />
+    <Compile Remove="Data\SQLFile.cs" />
+    <Compile Remove="Data\Subscription.cs" />
+    <Compile Remove="Data\SystemMessage.cs" />
+    <Compile Remove="Data\Tags.cs" />
+    <Compile Remove="Data\TZone.cs" />
+    <Compile Remove="Data\UserData.cs" />
+    <Compile Remove="Manager\AccessManager.cs" />
+    <Compile Remove="Manager\NoteDataManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\NoteDisplay\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\DataSpy\Access.cshtml" />
+    <None Include="Views\DataSpy\Audit.cshtml" />
+    <None Include="Views\DataSpy\Content.cshtml" />
+    <None Include="Views\DataSpy\Details.cshtml" />
+    <None Include="Views\DataSpy\EditContent.cshtml" />
+    <None Include="Views\DataSpy\Headers.cshtml" />
+    <None Include="Views\DataSpy\Index.cshtml" />
+    <None Include="Views\DataSpy\Marks.cshtml" />
+    <None Include="Views\DataSpy\Search.cshtml" />
+    <None Include="Views\DataSpy\Sequencer.cshtml" />
+    <None Include="Views\DataSpy\TimeZones.cshtml" />
+    <None Include="Views\DataSpy\Users2.cshtml" />
+    <None Include="Views\Export\Download.cshtml" />
+    <None Include="Views\Export\ExportMarked.cshtml" />
+    <None Include="Views\Export\Index.cshtml" />
+    <None Include="Views\Export\PreExport.cshtml" />
+    <None Include="Views\HomePageMessages\Create.cshtml" />
+    <None Include="Views\HomePageMessages\Delete.cshtml" />
+    <None Include="Views\HomePageMessages\Details.cshtml" />
+    <None Include="Views\HomePageMessages\Edit.cshtml" />
+    <None Include="Views\HomePageMessages\Index.cshtml" />
+    <None Include="Views\LinkedFiles\Create.cshtml" />
+    <None Include="Views\LinkedFiles\Delete.cshtml" />
+    <None Include="Views\LinkedFiles\Details.cshtml" />
+    <None Include="Views\LinkedFiles\Edit.cshtml" />
+    <None Include="Views\LinkedFiles\Error.cshtml" />
+    <None Include="Views\LinkedFiles\Index.cshtml" />
+    <None Include="Views\NoteAccesses\Create.cshtml" />
+    <None Include="Views\NoteAccesses\Delete.cshtml" />
+    <None Include="Views\NoteAccesses\Edit.cshtml" />
+    <None Include="Views\NoteAccesses\Index.cshtml" />
+    <None Include="Views\NoteDisplay\CompleteSequence.cshtml" />
+    <None Include="Views\NoteDisplay\Copy.cshtml" />
+    <None Include="Views\NoteDisplay\Create.cshtml" />
+    <None Include="Views\NoteDisplay\Delete.cshtml" />
+    <None Include="Views\NoteDisplay\Display.cshtml" />
+    <None Include="Views\NoteDisplay\Edit.cshtml" />
+    <None Include="Views\NoteDisplay\Error.cshtml" />
+    <None Include="Views\NoteDisplay\Forward.cshtml" />
+    <None Include="Views\NoteDisplay\Listing.cshtml" />
+    <None Include="Views\NoteDisplay\MailFileAsHtml.cshtml" />
+    <None Include="Views\NoteDisplay\MailStringAsHtml.cshtml" />
+    <None Include="Views\NoteDisplay\Mark.cshtml" />
+    <None Include="Views\NoteDisplay\Marked.cshtml" />
+    <None Include="Views\NoteDisplay\NoDelete.cshtml" />
+    <None Include="Views\NoteDisplay\Search.cshtml" />
+    <None Include="Views\NoteFileList\Details.cshtml" />
+    <None Include="Views\NoteFileList\Index.cshtml" />
+    <None Include="Views\NoteFiles\Archive.cshtml" />
+    <None Include="Views\NoteFiles\Create.cshtml" />
+    <None Include="Views\NoteFiles\Delete.cshtml" />
+    <None Include="Views\NoteFiles\Details.cshtml" />
+    <None Include="Views\NoteFiles\Edit.cshtml" />
+    <None Include="Views\NoteFiles\Index.cshtml" />
+    <None Include="Views\NotesImport\Import.cshtml" />
+    <None Include="Views\NotesImport\Index.cshtml" />
+    <None Include="Views\NotesImport\StartImport.cshtml" />
+    <None Include="Views\Role\Create.cshtml" />
+    <None Include="Views\Role\Delete.cshtml" />
+    <None Include="Views\Role\Index.cshtml" />
+    <None Include="Views\Sequencers\Create.cshtml" />
+    <None Include="Views\Sequencers\Delete.cshtml" />
+    <None Include="Views\Sequencers\Details.cshtml" />
+    <None Include="Views\Sequencers\Edit.cshtml" />
+    <None Include="Views\Sequencers\Index.cshtml" />
+    <None Include="Views\SQLFiles\Create.cshtml" />
+    <None Include="Views\SQLFiles\Delete.cshtml" />
+    <None Include="Views\SQLFiles\Details.cshtml" />
+    <None Include="Views\SQLFiles\Edit.cshtml" />
+    <None Include="Views\SQLFiles\Index.cshtml" />
+    <None Include="Views\SQLFiles\ThumbNails.cshtml" />
+    <None Include="Views\Subscriptions\Create.cshtml" />
+    <None Include="Views\Subscriptions\Delete.cshtml" />
+    <None Include="Views\Subscriptions\Index.cshtml" />
+    <None Include="Views\User\Edit.cshtml" />
+    <None Include="Views\User\Index.cshtml" />
+    <None Include="wwwroot\icons\glyphicons-basic-11-envelope.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-145-folder-open.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-17-bin.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-197-circle-empty-alert.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-199-save.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-238-chat-message.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-28-search.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-435-forward-email.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-546-cloud-download.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-603-user-flag.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-614-copy.svg" />
+    <None Include="wwwroot\icons\glyphicons-basic-638-triangle-alert.svg" />
+    <None Include="wwwroot\ImportFiles\TZone.xlsx" />
+    <None Include="wwwroot\tinymce\jquery.tinymce.min.js" />
+    <None Include="wwwroot\tinymce\langs\readme.md" />
+    <None Include="wwwroot\tinymce\plugins\advlist\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\advlist\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\anchor\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\anchor\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\autolink\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\autolink\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\autoresize\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\autoresize\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\autosave\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\autosave\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\bbcode\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\bbcode\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\charmap\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\charmap\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\codesample\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\codesample\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\code\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\code\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\colorpicker\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\colorpicker\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\compat3x\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\compat3x\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\compat3x\tiny_mce_popup.js" />
+    <None Include="wwwroot\tinymce\plugins\compat3x\utils\editable_selects.js" />
+    <None Include="wwwroot\tinymce\plugins\compat3x\utils\form_utils.js" />
+    <None Include="wwwroot\tinymce\plugins\compat3x\utils\mctabs.js" />
+    <None Include="wwwroot\tinymce\plugins\compat3x\utils\validate.js" />
+    <None Include="wwwroot\tinymce\plugins\contextmenu\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\contextmenu\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\directionality\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\directionality\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\emoticons\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\emoticons\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\fullpage\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\fullpage\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\fullscreen\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\fullscreen\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\help\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\help\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\hr\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\hr\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\imagetools\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\imagetools\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\image\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\image\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\importcss\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\importcss\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\insertdatetime\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\insertdatetime\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\legacyoutput\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\legacyoutput\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\link\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\link\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\lists\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\lists\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\media\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\media\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\nonbreaking\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\nonbreaking\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\noneditable\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\noneditable\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\pagebreak\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\pagebreak\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\paste\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\paste\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\preview\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\preview\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\print\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\print\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\save\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\save\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\searchreplace\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\searchreplace\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\spellchecker\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\spellchecker\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\tabfocus\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\tabfocus\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\table\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\table\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\template\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\template\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\textcolor\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\textcolor\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\textpattern\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\textpattern\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\toc\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\toc\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\visualblocks\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\visualblocks\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\visualchars\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\visualchars\plugin.min.js" />
+    <None Include="wwwroot\tinymce\plugins\wordcount\plugin.js" />
+    <None Include="wwwroot\tinymce\plugins\wordcount\plugin.min.js" />
+    <None Include="wwwroot\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
+    <None Include="wwwroot\tinymce\skins\lightgray\fonts\tinymce.svg" />
+    <None Include="wwwroot\tinymce\themes\inlite\theme.js" />
+    <None Include="wwwroot\tinymce\themes\inlite\theme.min.js" />
+    <None Include="wwwroot\tinymce\themes\mobile\theme.js" />
+    <None Include="wwwroot\tinymce\themes\mobile\theme.min.js" />
+    <None Include="wwwroot\tinymce\themes\modern\theme.js" />
+    <None Include="wwwroot\tinymce\themes\modern\theme.min.js" />
+    <None Include="wwwroot\tinymce\tinymce.js" />
+    <None Include="wwwroot\tinymce\tinymce.min.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
+    <PackageReference Include="Hangfire" Version="1.7.8" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="PusherServer" Version="4.2.0" />
+    <PackageReference Include="SendGrid" Version="9.12.5" />
+    <PackageReference Include="TinyMCE" Version="5.1.5" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Notes2021Blazor.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
