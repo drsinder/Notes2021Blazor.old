@@ -11,11 +11,65 @@
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="css/prism2.css" rel="stylesheet" />
+
+    <style>
+        /* This CSS is specific to the current HTML.
+            Note that this snippet only contains the necessary changes and not the full Blazor app template */
+        .loading-section {
+            text-align: center;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+        }
+
+            .loading-section h2 {
+                color: #00b5dc;
+            }
+
+        .loader-dot {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background-color: #00b5dc;
+            display: inline-block;
+            -webkit-animation: grow 2.1s infinite ease-in-out both;
+            animation: grow 2.1s infinite ease-in-out both;
+        }
+
+            .loader-dot.dot1 {
+                -webkit-animation-delay: -0.96s;
+                animation-delay: -0.96s;
+            }
+
+            .loader-dot.dot2 {
+                -webkit-animation-delay: -0.48s;
+                animation-delay: -0.48s;
+            }
+
+        @-webkit-keyframes grow {
+            0%, 80%, 100% {
+                -webkit-transform: scale(0)
+            }
+
+            40% {
+                -webkit-transform: scale(1.0)
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <app>Loading...</app>
-
+    <app>
+        <div class="loading-section">
+            <h2>Getting Ready...</h2>
+            <div class="loader mt-5">
+                <div class="loader-dot dot1"></div>
+                <div class="loader-dot dot2"></div>
+                <div class="loader-dot dot3"></div>
+            </div>
+        </div>
+    </app>
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
