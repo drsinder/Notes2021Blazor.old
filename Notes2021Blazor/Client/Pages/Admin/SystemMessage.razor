@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@page "/admin/systemmessage"
+@inject NavigationManager NavigationManager
+
+
+<div class="form-group">
+    <label for="messageInput">System Message:</label><br/>
+    <input id="messageInput" @bind="messageInput" class="long-input"/>
+</div>
+<button @onclick="Send" disabled="@(!IsConnected)">Send Message</button>
+
+<hr />
+
+<ul id="messagesList">
+    @foreach (var message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+@code {
+    HubConnection hubConnection;
+    List<string> messages = new List<string>();
+    string messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/SysMessageHub"))
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var encodedMsg = user + " says " + message;
+            messages.Add(encodedMsg);
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    Task Send() => hubConnection.SendAsync("SendMessage", "System", messageInput);
+
+    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+}

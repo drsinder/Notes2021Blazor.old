@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
-<BlazoredModal Style="blazored-custom-modal" DisableBackgroundCancel="true" HideCloseButton="true" HideHeader="true"/>
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@inject IModalService Modal
+<BlazoredModal Style="blazored-custom-modal" DisableBackgroundCancel="true" HideCloseButton="true" HideHeader="true" />
 <div class="sidebar">
     <NavMenu />
 </div>
@@ -14,3 +17,43 @@
         @Body
     </div>
 </div>
+
+@functions{
+
+    HubConnection hubConnection;
+    string userInput;
+    string messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/SysMessageHub"))
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+
+        // popup message
+
+        var parameters = new ModalParameters();
+            parameters.Add("Message", message);
+            Modal.OnClose += HidePopUp;
+            Modal.Show<SysMessageBox>("", parameters);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    public void HidePopUp(ModalResult x)
+    {
+        Modal.OnClose -= HidePopUp;
+    }
+
+    Task Send() => hubConnection.SendAsync("SendMessage", userInput, messageInput);
+
+    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+
+
+}
+
+

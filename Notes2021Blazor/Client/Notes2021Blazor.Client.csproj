@@ -23,6 +23,8 @@
     <Content Remove="Pages\Notes\NoteEditPanel.razor" />
     <Content Remove="Pages\Notes\SampleHtmlEditor.razor" />
     <Content Remove="Pages\Root\FetchData.razor" />
+    <Content Remove="Shared\SampleImages.razor" />
+    <Content Remove="Shared\SurveyPrompt.razor" />
   </ItemGroup>
 
   <ItemGroup>
