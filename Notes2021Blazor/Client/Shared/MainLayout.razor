@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
-@using Microsoft.AspNetCore.SignalR.Client
-@inject NavigationManager NavigationManager
-@inject IModalService Modal
+@*@using Microsoft.AspNetCore.SignalR.Client
+    @inject NavigationManager NavigationManager
+    @inject IModalService Modal*@
 <BlazoredModal Style="blazored-custom-modal" DisableBackgroundCancel="true" HideCloseButton="true" HideHeader="true" />
 <div class="sidebar">
     <NavMenu />
@@ -18,42 +18,42 @@
     </div>
 </div>
 
-@functions{
+@*@functions{
 
-    HubConnection hubConnection;
-    string userInput;
-    string messageInput;
+        HubConnection hubConnection;
+        string userInput;
+        string messageInput;
 
-    protected override async Task OnInitializedAsync()
-    {
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("/SysMessageHub"))
-            .Build();
-
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        protected override async Task OnInitializedAsync()
         {
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/SysMessageHub"))
+                .Build();
 
-        // popup message
+            hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+            {
 
-        var parameters = new ModalParameters();
-            parameters.Add("Message", message);
-            Modal.OnClose += HidePopUp;
-            Modal.Show<SysMessageBox>("", parameters);
-        });
+            // popup message
 
-        await hubConnection.StartAsync();
-    }
+            var parameters = new ModalParameters();
+                parameters.Add("Message", message);
+                Modal.OnClose += HidePopUp;
+                Modal.Show<SysMessageBox>("", parameters);
+            });
 
-    public void HidePopUp(ModalResult x)
-    {
-        Modal.OnClose -= HidePopUp;
-    }
+            await hubConnection.StartAsync();
+        }
 
-    Task Send() => hubConnection.SendAsync("SendMessage", userInput, messageInput);
+        public void HidePopUp(ModalResult x)
+        {
+            Modal.OnClose -= HidePopUp;
+        }
 
-    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+        Task Send() => hubConnection.SendAsync("SendMessage", userInput, messageInput);
+
+        public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
 
 
-}
+    }*@
 
 
