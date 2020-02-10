@@ -21,6 +21,7 @@
     <Content Remove="Pages\Notes\NewBaseNote.razor" />
     <Content Remove="Pages\Notes\NoteEditPanel.razor" />
     <Content Remove="Pages\Notes\SampleHtmlEditor.razor" />
+    <Content Remove="Pages\Root\FetchData.razor" />
   </ItemGroup>
 
   <ItemGroup>
