@@ -12,6 +12,14 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
+            <LoginDisplayNav />
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="about">
+                <span class="oi oi-badge" aria-hidden="true"></span> About
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
             <NavLink class="nav-link" href="help">
                 <span class="oi oi-question-mark" aria-hidden="true"></span> Help
             </NavLink>
@@ -34,10 +42,10 @@
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="options/timezone">
-                            <span class="oi oi-clock" aria-hidden="true"></span> Time Zone
-                        </NavLink>
-                    </li>
+                    <NavLink class="nav-link" href="options/timezone">
+                        <span class="oi oi-clock" aria-hidden="true"></span> Time Zone
+                    </NavLink>
+                </li>
                 @*<li class="nav-item px-3">
                     <button type="button" class="link nav-link" @onclick="OnClick" aria-hidden="true"><span class="oi oi-clock link nav-link"></span>&nbsp; Time Zone</button>
                 </li>*@
