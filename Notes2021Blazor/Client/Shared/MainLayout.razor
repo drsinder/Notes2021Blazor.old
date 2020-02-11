@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
-@*@using Microsoft.AspNetCore.SignalR.Client
-    @inject NavigationManager NavigationManager
-    @inject IModalService Modal*@
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@inject IModalService Modal
 <BlazoredModal Style="blazored-custom-modal" DisableBackgroundCancel="true" HideCloseButton="true" HideHeader="true" />
 <div class="sidebar">
     <NavMenu />
@@ -18,7 +18,7 @@
     </div>
 </div>
 
-@*@functions{
+@functions{
 
         HubConnection hubConnection;
         string userInput;
@@ -54,6 +54,6 @@
         public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
 
 
-    }*@
+    }
 
 

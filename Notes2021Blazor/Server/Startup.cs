@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-//using Notes2021Blazor.Server.Hubs;
+using Notes2021Blazor.Server.Hubs;
 using Notes2021Blazor.Shared;
 using System;
 using System.Linq;
@@ -52,7 +52,7 @@ namespace Notes2021Blazor.Server
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<NotesDbContext>();
 
-            //services.AddSignalR();
+            services.AddSignalR();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -145,8 +145,8 @@ namespace Notes2021Blazor.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                //endpoints.MapHub<ChatHub>("/chatHub");
-                //endpoints.MapHub<SysMessageHub>("/SysMessageHub");
+                endpoints.MapHub<ChatHub>("/chatHub");
+                endpoints.MapHub<SysMessageHub>("/SysMessageHub");
                 endpoints.MapFallbackToClientSideBlazor<Client.Program>("index.html");
             });
         }

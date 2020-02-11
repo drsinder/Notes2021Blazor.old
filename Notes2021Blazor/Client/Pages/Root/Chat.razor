@@ -1,25 +1,40 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client
-@page "/chat"
+﻿@page "/chat"
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.Components.Authorization
+@using Notes2021Blazor.Shared
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-<div>
-    <label for="userInput">User:</label>
-    <input id="userInput" @bind="userInput" />
-</div>
-<div class="form-group">
-    <label for="messageInput">Message:</label>
-    <input id="messageInput" @bind="messageInput" />
-</div>
-<button @onclick="Send" disabled="@(!IsConnected)">Send Message</button>
+@if (string.IsNullOrEmpty(userInput))
+{
+    <p class="center"><em>Loading...</em></p>
+}
+else
+{
+    <AuthorizeView>
+        <Authorized Context="Outer">
+            <div class="form-group">
+                <label for="messageInput">Message:</label>
+                <input id="messageInput" class="long-input" @bind="messageInput" />
+            </div>
+            <button @onclick="Send" disabled="@(!IsConnected)">Send Message</button>
 
-<hr />
+            <hr />
 
-<ul id="messagesList">
-    @foreach (var message in messages)
-    {
-        <li>@message</li>
-    }
-</ul>
+            <ul id="messagesList">
+                @foreach (var message in messages)
+                {
+                    <li>@message</li>
+                }
+            </ul>
+        </Authorized>
+        <NotAuthorized>
+            You must be logged in to chat.
+        </NotAuthorized>
+    </AuthorizeView>
+
+}
 
 @code {
     HubConnection hubConnection;
@@ -29,16 +44,21 @@
 
     protected override async Task OnInitializedAsync()
     {
+        userInput = (await Http.GetJsonAsync<UserData>("api/User")).DisplayName;
+
+
         hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri("/chatHub"))
             .Build();
 
         hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
         {
-            var encodedMsg = user + " says " + message;
+            var encodedMsg = user + " says: " + message;
             messages.Add(encodedMsg);
             StateHasChanged();
         });
+
+        userInput = (await Http.GetJsonAsync<UserData>("api/User")).DisplayName;
 
         await hubConnection.StartAsync();
     }
