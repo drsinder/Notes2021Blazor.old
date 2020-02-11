@@ -133,14 +133,14 @@ namespace Notes2021Blazor.Server
             Globals.Env = env;
 
             app.UseStaticFiles();
-            app.UseClientSideBlazorFiles<Client.Program>();
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseHangfireServer();
+
+            app.UseClientSideBlazorFiles<Client.Program>();
 
             app.UseEndpoints(endpoints =>
             {
