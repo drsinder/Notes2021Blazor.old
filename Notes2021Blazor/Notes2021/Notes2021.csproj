@@ -254,7 +254,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
     <PackageReference Include="PusherServer" Version="4.2.0" />
     <PackageReference Include="SendGrid" Version="9.12.5" />
-    <PackageReference Include="TinyMCE" Version="5.1.5" />
+    <PackageReference Include="TinyMCE" Version="5.10.0" />
   </ItemGroup>
 
 
